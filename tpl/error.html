@@ -1,0 +1,1 @@
+<!-- BEGIN MESSAGE --><p>{message}</p><!-- END MESSAGE -->
