@@ -85,17 +85,19 @@ define( 'COOKIE_LIFETIME', 60 * 60 * 24 * 365 );
 define( 'MEMCACHED_LIMIT_TIME', time() + 60 * 60 * 24 * 180 );
 define( 'LOGIN_LIFETIME', time() + 60 * 60 * 24 * 3 );//ログイン有効期間
 define( 'TIMESTAMP', date( 'Y-m-d H:i:s' ) );
-if ( !empty ( $_SERVER['HTTP_CLIENT_IP'] ) ){
-  $ip = $_SERVER['HTTP_CLIENT_IP'];
-} else if ( !empty ( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-  $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+$http_client_ip = filter_input( INPUT_SERVER, 'HTTP_CLIENT_IP' );
+$http_x_forwarded_for = filter_input( INPUT_SERVER, 'HTTP_X_FORWARDED_FOR' );
+if ( $http_client_ip ){
+  $ip = $http_client_ip;
+} else if ( $http_x_forwarded_for ) {
+  $ip = $http_x_forwarded_for;
 } else {
-  $ip = @$_SERVER['REMOTE_ADDR'];
+  $ip = filter_input( INPUT_SERVER, 'REMOTE_ADDR' );
 }
 define( 'IP_ADDRESS', $ip );
-define( 'USER_AGENT', @$_SERVER['HTTP_USER_AGENT'] );
+define( 'USER_AGENT', filter_input( INPUT_SERVER, 'HTTP_USER_AGENT' ) );
 define( 'MOBILE_FLAG', preg_match( '/(iPhone|iPod|Android|BlackBerry|Windows Phone)/', USER_AGENT ) ? true : false );
-define( 'REFERER', @$_SERVER['HTTP_REFERER'] );
+define( 'REFERER', filter_input( INPUT_SERVER, 'HTTP_REFERER' ) );
 define( 'USLEEP_TIME', 1 );
 define( 'AUTO_UPDATE_TIME', 1 );//DBに作成・更新日時を自動保存する場合1
 
