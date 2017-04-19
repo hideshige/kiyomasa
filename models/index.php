@@ -7,12 +7,11 @@
  */
  
 class index {
-  public $tpl = array( 'header', 'index', 'footer' );
-  public $equipment = array(  );
-  public $obj;
+  public $tpl = array('header', 'index', 'footer');
+  public $equipment = array();
 
   public function logic() {
-    citadel::set( 'sample' );
+    citadel::set('sample');
   }
 }
 

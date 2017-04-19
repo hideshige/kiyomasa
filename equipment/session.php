@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Hideshige Sawada
- * @version  1.1.2.4
+ * @version  1.1.2.5
  * @package  equipment
  * 
  * セッションの保存方法は3種類から選べる
@@ -21,7 +21,7 @@
  * を実行させること
  * 
  * セッションの消し方
- * setcookie( 'login_session_id', '', - time() - 60*60*24*365, '/' );//COOKIEを消す
+ * setcookie('login_session_id', '', - time() - 60*60*24*365, '/');//COOKIEを消す
  * session_destroy();//DBのレコードを消す
  * 
  */
@@ -32,18 +32,18 @@ class session {
     $handler = new session_handler_mem();
     //$handler = new session_handler();
     session_set_save_handler(
-      array ( $handler, 'open' ),
-      array ( $handler, 'close' ),
-      array ( $handler, 'read' ),
-      array ( $handler, 'write' ),
-      array ( $handler, 'destroy' ),
-      array ( $handler, 'gc' )
-    );
-    ini_set( 'session.gc_maxlifetime', COOKIE_LIFETIME );
-    ini_set( 'session.cookie_httponly', 1 );
-    session_save_path( SERVER_PATH . 'session' );
-    session_name( 'login' );
-    session_set_cookie_params( COOKIE_LIFETIME, '/', '', false, true );
+      array ($handler, 'open'),
+      array ($handler, 'close'),
+      array ($handler, 'read'),
+      array ($handler, 'write'),
+      array ($handler, 'destroy'),
+      array ($handler, 'gc')
+   );
+    ini_set('session.gc_maxlifetime', COOKIE_LIFETIME);
+    ini_set('session.cookie_httponly', 1);
+    session_save_path(SERVER_PATH . 'session');
+    session_name('login');
+    session_set_cookie_params(COOKIE_LIFETIME, '/', '', false, true);
     session_start();
   }
   
@@ -67,12 +67,12 @@ class session {
      `created_at` DATETIME,
      `updated_at` DATETIME,
      PRIMARY KEY  (`session_id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8
  * 
  */
 class session_handler {
   
-  function open( $save_path, $session_name ) {
+  function open($save_path, $session_name) {
     return true;
   }
   
@@ -80,35 +80,35 @@ class session_handler {
     return true;
   }
   
-  function read( $ses_id ) {
-    $params = array ( $ses_id, time() );
-    S::$dbm->select( 't_session', 'value', 'WHERE session_id = ? AND expires > ?' );
-    $res = S::$dbm->bind_select( $params );
-    if ( !$res ) return '';
+  function read($ses_id) {
+    $params = array ($ses_id, time());
+    S::$dbm->select('t_session', 'value', 'WHERE session_id = ? AND expires > ?');
+    $res = S::$dbm->bind_select($params);
+    if (!$res) return '';
     return $res[0]['value'];
   }
   
-  function write( $ses_id, $data ) {
+  function write($ses_id, $data) {
     $params = array ();
     $params['session_id'] = $ses_id;
     $params['value'] = $data;
     $params['expires'] = time() + COOKIE_LIFETIME;
-    S::$dbm->insert( 't_session', $params, true );
-    S::$dbm->bind( $params );
+    S::$dbm->insert('t_session', $params, true);
+    S::$dbm->bind($params);
     return true;
   }
   
-  function destroy( $ses_id ) {
-    $params = array ( $ses_id );
-    S::$dbm->delete( 't_session', 'WHERE session_id = ?' );
-    S::$dbm->bind( $params );
+  function destroy($ses_id) {
+    $params = array ($ses_id);
+    S::$dbm->delete('t_session', 'WHERE session_id = ?');
+    S::$dbm->bind($params);
     return true;
   }
   
-  function gc( $ses_time ) {
-    $params = array ( time() );
-    S::$dbm->delete( 't_session', 'WHERE expires < ?' );
-    S::$dbm->bind( $params );
+  function gc($ses_time) {
+    $params = array (time());
+    S::$dbm->delete('t_session', 'WHERE expires < ?');
+    S::$dbm->bind($params);
     return true;
   }
 }
@@ -118,7 +118,7 @@ class session_handler {
  */
 class session_handler_mem {
   
-  function open( $save_path, $session_name ) {
+  function open($save_path, $session_name) {
     return true;
   }
   
@@ -126,23 +126,23 @@ class session_handler_mem {
     return true;
   }
   
-  function read( $ses_id ) {
-    $res = S::$mem->get( $ses_id );
-    if ( !$res ) return '';
+  function read($ses_id) {
+    $res = S::$mem->get($ses_id);
+    if (!$res) return '';
     return $res;
   }
   
-  function write( $ses_id, $data ) {
-    S::$mem->set( $ses_id, $data, false, MEMCACHED_LIMIT_TIME );
+  function write($ses_id, $data) {
+    S::$mem->set($ses_id, $data, false, MEMCACHED_LIMIT_TIME);
     return true;
   }
   
-  function destroy( $ses_id ) {
-    S::$mem->delete( $ses_id );
+  function destroy($ses_id) {
+    S::$mem->delete($ses_id);
     return true;
   }
   
-  function gc( $ses_time ) {
+  function gc($ses_time) {
     return true;
   }
 }

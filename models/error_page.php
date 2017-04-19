@@ -9,15 +9,14 @@
 class error_page {
   public $tpl = array();
   public $equipment = array();
-  public $obj;
 
   public function logic() {
     $title = 'エラー';
-    citadel::set( $title );
+    citadel::set($title);
     $message = 'ページが見つかりません。';
-    if ( isset ( $_SESSION['error_message'] ) ) {
+    if (isset($_SESSION['error_message'])) {
       $message = $_SESSION['error_message'];
-      unset ( $_SESSION['error_message'] );
+      unset($_SESSION['error_message']);
     }
     S::$disp[1]['MESSAGE'][0]['message'] = $message;
   }
