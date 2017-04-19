@@ -36,13 +36,14 @@ class citadel {
    * @param string $word 戻したい文字
    * @return string 戻した文字
    */
-  public static function h_decode( $word ) {
-    $word = htmlspecialchars_decode( $word, ENT_QUOTES );
+  public static function h_decode($word) {
+    $res = htmlspecialchars_decode($word, ENT_QUOTES);
     global $g_change_chara;
-    foreach ( $g_change_chara as $ck => $cv ) {
-      $word = str_replace( $ck, $cv, $word );
+    if (!$g_change_chara) { return $res; } 
+    foreach ($g_change_chara as $ck => $cv) {
+      $res2 = str_replace($ck, $cv, $res);
     }
-    return $word;
+    return $res2;
   }
 }
 

@@ -9,7 +9,6 @@
 
 header("P3P: CP='UNI CUR OUR'");//コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block');//XSS対策
-header('Content-Security-Policy: reflected-xss block');//XSS対策
 header('Content-Type: text/html;charset=UTF-8');
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;
@@ -152,12 +151,12 @@ class castle {
       session_write_close();
         
       if (!S::$jflag) {
-        $tpl = array ();
+        $tpl = array();
         for ($i = 0; $i < count($model->tpl); $i ++) {
           if (isset(S::$disp[$i])) {
             $tpl[$model->tpl[$i]] = S::$disp[$i];
           } else {
-            $tpl[$model->tpl[$i]] = array ();
+            $tpl[$model->tpl[$i]] = array();
           }
         }
 
@@ -169,7 +168,7 @@ class castle {
 
         $this->_disp_debug();
       } else {
-        if (is_array ($res)) {
+        if (is_array($res)) {
           $json = $res;
           if ($this->_debug) {
             global $dump;
@@ -217,7 +216,7 @@ class castle {
           }
         }
       } else {
-        $array = array ();
+        $array = array();
         $array['alert'] = $this->_debug ? $error : 'エラー';
         echo json_encode($array);
       }
