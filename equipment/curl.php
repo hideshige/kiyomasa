@@ -3,7 +3,7 @@
  * クライアントURLモジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.4.0
+ * @version  1.0.4.1
  * @package  equipment
  */
 
@@ -19,38 +19,37 @@ class curl {
    * @param boolean $disp_headers ヘッダを取得するか否か
    * @return array or false 結果データ(情報と内容)
    */
-  public static function get_res( $url, $type = 1, $post_data = '', $headers = array (), $disp_headers = false ) {
+  public static function get_res($url, $type = 1, $post_data = '', $headers = array (), $disp_headers = false) {
 
     //クライアントURLの実行
     $ch = curl_init();
-    curl_setopt( $ch, CURLOPT_URL, $url );
-    curl_setopt( $ch, CURLOPT_HEADER, $disp_headers );
-    curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-    curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 2 );
-    curl_setopt( $ch, CURLOPT_CAINFO, SERVER_PATH . 'equipment/cacert.pem' );//cacert.pemを用意しておく
-    curl_setopt( $ch, CURLOPT_TIMEOUT, 30 );
-    curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 3 );
-    if ( $headers ) curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-    if ( $post_data ) {
-      curl_setopt( $ch, CURLOPT_POST, 1 );
-      curl_setopt( $ch, CURLOPT_POSTFIELDS, $post_data );
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, $disp_headers);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_CAINFO, SERVER_PATH . 'equipment/cacert.pem');//cacert.pemを用意しておく
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+    if ($headers) { curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); }
+    if ($post_data) {
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
     }
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-    curl_setopt( $ch, CURLOPT_BINARYTRANSFER, true );
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
 
     $data = array ();
-    $data['content'] = curl_exec( $ch );
-    $data['info'] = curl_getinfo( $ch );
-    curl_close( $ch );
+    $data['content'] = curl_exec($ch);
+    $data['info'] = curl_getinfo($ch);
+    curl_close($ch);
 
-    if ( $data['content'] ) {
-      if ( $type == 1 ) {
-        $data['content'] = simplexml_load_string( $data['content'] );
-      } else if ( $type == 2 ) {
-        $data['content'] = json_decode( $data['content'] );
+    if ($data['content']) {
+      if ($type == 1) {
+        $data['content'] = simplexml_load_string($data['content']);
+      } else if ($type == 2) {
+        $data['content'] = json_decode($data['content']);
       }
     }
-
     return $data;
   }
 }
