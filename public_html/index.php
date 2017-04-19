@@ -9,7 +9,6 @@
 
 header("P3P: CP='UNI CUR OUR'");//コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block');//XSS対策
-header('Content-Security-Policy: reflected-xss block');//XSS対策
 header('Content-Type: text/html;charset=UTF-8');
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;
@@ -24,7 +23,6 @@ require_once('../equipment/session.php');
 new castle();
 
 class castle {
-  private $_obj;
   private $_mainte;//メンテナンスモード
   private $_debug;//デバッグモード
   private $_error_flag = false;//初回エラーかどうか（循環防止のため）
