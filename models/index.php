@@ -14,4 +14,3 @@ class index {
     citadel::set('sample');
   }
 }
-

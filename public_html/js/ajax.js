@@ -54,8 +54,8 @@ function moreContent(tagId, content, nodeId, classId, addType, tagType) {
   var parentBox = document.getElementById(tagId);
   if (parentBox) {
     var node = document.createElement(tagTypes);
-    node.id = nodeIdNames + nodeId;
-    node.className = classId;
+    node.id = nodeId;
+    if (classId) { node.className = classId; }
     node.innerHTML = content;
     node.style['opacity'] = '0.1';
     if (addType == 2) {

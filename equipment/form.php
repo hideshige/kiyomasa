@@ -7,9 +7,9 @@
  * @package  equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
- * $params = array (
- *   'example1' => array ('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
- *   'example2' => array ('select' => array ('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
+ * $params = array(
+ *   'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
+ *   'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
  *);
  *
  * ルールの意味
@@ -63,14 +63,14 @@
  *
  *
 モデルは以下のようにする
-$params = array (
-  'example1' => array ('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
-  'example2' => array ('select' => array ('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
+$params = array(
+  'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
+  'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
 );
  
 $box = S::$post;
 
-$form = array ();
+$form = array();
 form::form_arr($params, $form, self::$_box);
 
 $form_list = &S::$disp[1]['FORM_AREA'][0]['LIST'];
@@ -79,11 +79,13 @@ $i = 0;
 foreach ($form as $k => $v) {
   $form_list[$i]['id'] = $k;
   $form_list[$i]['question'] = $params[$k]['name'];
-  if (@$params[$k]['must']) $form_list[$i]['MUST_MARK'][0] = '';
+  if (isset($params[$k]['must'])) {
+    $form_list[$i]['MUST_MARK'][0] = '';
+  }
   $form_list[$i]['answer'] = $v;
   $i ++;
 }
-if (isset (S::$post['post_flag'])) {
+if (isset(S::$post['post_flag'])) {
   $vali = form::validation($params, self::$_box);
   if ($vali) {
     S::$disp[1]['MESSAGE'][0]['message'] = '入力に不備があります。';
@@ -118,7 +120,7 @@ class form {
       'select_error' => '一致する選択肢が存在しません。<br />',
       'not_match1' => '登録されていません。<br />',
       'not_match2' => '登録情報と一致しません。<br />',
-      'email' => 'メールアドレスを正しく入力してください。<br />',
+      'email' => '正しいメールアドレスを入力してください。<br />',
       'email2' => 'メールアドレスは既に登録されています。<br />',
       'email3' => '確認用のメールアドレスと異なります。<br />',
       'password_error' => '確認用のパスワードと異なります。<br />',//model側から判定する

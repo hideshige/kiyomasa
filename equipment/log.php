@@ -47,9 +47,9 @@ class log {
     if (is_array($log)) {
       ob_start();
       var_dump($log);
-      $res_log = ob_get_clean();
+      $log = ob_get_clean();
     }
-    $res = sprintf("%s [%s] %s\n", date('H:i:s'), IP_ADDRESS, $res_log);
+    $res = sprintf("%s [%s] %s\n", date('H:i:s'), IP_ADDRESS, $log);
     error_log($res, 3, $file);
   }
 }
