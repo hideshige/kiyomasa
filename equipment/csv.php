@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.10.1
+ * @version  1.0.12.0
  * @package  equipment
  */
 
@@ -13,10 +13,10 @@ class csv {
    * CSVファイルから配列として取得
    * @param string $file CSVのファイルパス
    * @param string $encode エンコード
-   * @param string $default_mojicode CSVファイルの文字コード
+   * @param string $mojicode CSVファイルの文字コード
    * @return array 取得した配列
    */
-  public static function csv_file_to_array($file, $encode = 'utf8', $default_mojicode = 'SJIS-win') {
+  public static function csv_file_to_array($file, $encode = 'utf8', $mojicode = 'SJIS-win') {
     setlocale(LC_ALL, 'ja_JP');
     $data = array();
     if (file_exists($file)) {
@@ -26,8 +26,7 @@ class csv {
         while ($array = self::_fgetcsv_reg($f, null, ',', '"')) {
           $num = count($array);
           for ($c = 0; $c < $num; $c ++) {
-            $mojicode = $default_mojicode ? $default_mojicode : mb_detect_encoding($array[$c], mb_detect_order(), true);
-            $data[$i][$c] = mb_convert_encoding($array[$c], $encode, $mojicode);
+            $data[$i][$c] = htmlspecialchars(mb_convert_encoding($array[$c], $encode, $mojicode), ENT_QUOTES);
           }
         $i ++;
         }

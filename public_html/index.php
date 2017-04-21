@@ -202,7 +202,7 @@ class castle {
       //エラーページの表示
       //テスト環境の場合、デバッグ用のエラーを表示する
       if (!S::$jflag) {
-        if ($this->_debug and isset($error)) {
+        if ($this->_debug and isset($error) and !isset($_SESSION['error_message'])) {
           $_SESSION['error_message'] = $error;
         }
         if (!$this->_error_flag) {
