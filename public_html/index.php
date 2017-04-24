@@ -113,12 +113,16 @@ class castle {
    */
   private function _get_equipment(&$model) {
     if (count($model->equipment)) {
-      $mods = array();
       foreach ($model->equipment as $v) {
         if (!include_once(sprintf('../equipment/%s.php', $v))) { return false; }
-        $mods[$v] = new $v;
+        new $v;
       }
-      $model->obj['mods'] = $mods;
+    }
+    if (isset($model->common) and count($model->common)) {
+      foreach ($model->common as $v2) {
+        if (!include_once(sprintf('../common/%s.php', $v2))) { return false; }
+        new $v2;
+      }
     }
     return true;
   }
