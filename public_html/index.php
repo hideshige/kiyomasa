@@ -3,7 +3,7 @@
  * モデルを実行しビューに表示させるコントローラクラス
  *
  * @author   Hideshige Sawada
- * @version  1.3.0.0
+ * @version  1.3.1.0
  * @package  controller
  */
 
@@ -298,7 +298,7 @@ class castle {
       $peak_memory = memory_get_peak_usage() / 1024;
       $last_time = microtime(true);
       echo sprintf(
-        '<p style="background:#ff0000;">メンテナンスモード<br />
+        '<p style="background:#ff0000;">デバッグモード<br />
           OS: %s PHP ver: %s<br />
           メモリ使用量: %s KB (固定分) + %s KB (追加分) = %s KB<br />
           実行時間: %s 秒<br />
