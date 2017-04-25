@@ -3,7 +3,7 @@
  * モデルを実行しビューに表示させるコントローラクラス
  *
  * @author   Hideshige Sawada
- * @version  1.3.1.0
+ * @version  1.3.2.0
  * @package  controller
  */
 
@@ -47,11 +47,6 @@ class castle {
       S::$mem = new memcached_module();
       
       $this->_debug = false;
-//      global $g_ip_address;
-//      foreach ($g_ip_address as $k => $v) {
-//        $res_ip = preg_match(sprintf('/%s$/', $v), IP_ADDRESS);
-//        if ($res_ip and ENV <= 2) $this->_debug = true;
-//      }
       if (ENV == 0) { $this->_debug = true; }
       S::$dbm->debug = $this->_debug;
       S::$dbs->debug = $this->_debug;
@@ -112,7 +107,7 @@ class castle {
    * return bool
    */
   private function _get_equipment(&$model) {
-    if (count($model->equipment)) {
+    if (isset($model->equipment) and count($model->equipment)) {
       foreach ($model->equipment as $v) {
         if (!include_once(sprintf('../equipment/%s.php', $v))) { return false; }
         new $v;
@@ -154,18 +149,9 @@ class castle {
       session_write_close();
         
       if (!S::$jflag) {
-        $tpl = array();
-        for ($i = 0; $i < count($model->tpl); $i ++) {
-          if (isset(S::$disp[$i])) {
-            $tpl[$model->tpl[$i]] = S::$disp[$i];
-          } else {
-            $tpl[$model->tpl[$i]] = array();
-          }
-        }
-
-        if ($tpl) {
-          foreach ($tpl as $k => $v) {
-            echo view::template($k, $v, $folder);
+        if (isset($model->tpl) and count($model->tpl)) {
+          foreach ($model->tpl as $tk => $tv) {
+            echo view::template($tv, S::$disp[$tk], $folder);
           }
         }
 
@@ -353,9 +339,6 @@ class castle {
       foreach ($g_change_chara as $ck => $cv) {
         $data = str_replace($cv, $ck, $data);
       }
-      //if (MOBILE_FLAG) {
-      //  $data = mb_convert_encoding($data, DEFAULT_CHARSET, 'Shift_JIS');
-      //}
     }
     return $data;
   }

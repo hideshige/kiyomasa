@@ -9,6 +9,7 @@
 class hello_world {//クラス名はモデル名と必ず同一にする
   public $tpl = array( 'header', 'hello_world', 'footer' );//使用するテンプレートのファイル名を指定する。.htmlは省略可
   public $equipment = array();//equipmentディレクトリから必要な機能を指定する
+  public $common = array();//commonディレクトリから必要な機能を指定する
 
   public function logic() {
     S::$disp[0]['REPLACE']['title'] = 'ハローワールド';

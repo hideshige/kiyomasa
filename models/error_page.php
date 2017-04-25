@@ -7,8 +7,7 @@
  */
 
 class error_page {
-  public $tpl = array();
-  public $equipment = array();
+  public $tpl = array('header', 'error', 'footer');
 
   public function logic() {
     $title = 'エラー';
