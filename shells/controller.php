@@ -3,7 +3,7 @@
  * シェルを実行するコントローラークラス
  *
  * @author   Hideshige Sawada
- * @version  1.1.0.0
+ * @version  1.1.1.0
  * @package  controller
  *
  * ターミナルから以下のように実行する
@@ -25,8 +25,8 @@ if (intval($argv[1]) == 1) {
   exit;
 }
 
-require_once('../common/env.php');
-require_once('../common/define.php');
+require_once('../conf/env.php');
+require_once('../conf/define.php');
 require_once('../equipment/log.php');
 require_once('../equipment/db.php');
 require_once('../common/citadel.php');

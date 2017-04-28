@@ -1,4 +1,6 @@
 *.log
 *~
 env.php
+.DS_Store
+*.csv
 \#*#

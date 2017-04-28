@@ -1,15 +1,15 @@
 <?php
 /**
- * admin用のページかどうかチェックするモジュール
+ * admin用のページかどうかチェックする共通モデル
  *
  * @author   Hideshige Sawada
- * @version  1.0.1.1
- * @package  equipment
+ * @version  1.0.2.0
+ * @package  common
  *
  */
 class admin_check {
 
-  public function __construct() {
+  public function logic() {
     global $g_admin_flag;
     $g_admin_flag = true;
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * シタデルモジュール
+ * シタデル　共通モデル
  * 
  * @author   Hideshige Sawada
  * @version  1.0.0.0

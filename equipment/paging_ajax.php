@@ -3,7 +3,7 @@
  * ページングモジュール(Ajax用)
  *
  * @author   Hideshige Sawada
- * @version  1.0.2.1
+ * @version  1.0.3.0
  * @package  equipment
  * 
  */
@@ -19,6 +19,9 @@ class paging_ajax {
    * @return array page:現在のページ num:ページ数 left:左矢印ボタン right:右矢印ボタン tag:ページングタグ
    */
   public static function set($counts, $url, $page, $get, $disp_num = 20) {
+    if (!$disp_num) {
+      $disp_num = 20;
+    }
 
     $page_arr = array();
     $page_arr['num'] = ceil($counts / $disp_num);

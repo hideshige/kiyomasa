@@ -3,7 +3,7 @@
  * モデルを実行しビューに表示させるコントローラクラス
  *
  * @author   Hideshige Sawada
- * @version  1.3.2.0
+ * @version  1.3.3.0
  * @package  controller
  */
 
@@ -12,8 +12,8 @@ header('X-XSS-Protection: 1; mode=block');//XSS対策
 header('Content-Type: text/html;charset=UTF-8');
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;
-require_once('../common/env.php');
-require_once('../common/define.php');
+require_once('../conf/env.php');
+require_once('../conf/define.php');
 require_once('../equipment/log.php');
 require_once('../equipment/view.php');
 require_once('../common/citadel.php');
