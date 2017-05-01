@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.12.0
+ * @version  1.1.0.0
  * @package  equipment
  */
 
@@ -16,17 +16,17 @@ class csv {
    * @param string $mojicode CSVファイルの文字コード
    * @return array 取得した配列
    */
-  public static function csv_file_to_array($file, $encode = 'utf8', $mojicode = 'SJIS-win') {
+  public static function csv_file_to_array($file, $encode = DEFAULT_CHARSET, $mojicode = 'SJIS-win') {
     setlocale(LC_ALL, 'ja_JP');
     $data = array();
     if (file_exists($file)) {
       $f = fopen($file, 'r');
       if ($f) {
         $i = 0;
-        while ($array = self::_fgetcsv_reg($f, null, ',', '"')) {
+        while ($array = self::_fgetcsv_reg($f, null, ',', '"', $encode, $mojicode)) {
           $num = count($array);
           for ($c = 0; $c < $num; $c ++) {
-            $data[$i][$c] = htmlspecialchars(mb_convert_encoding($array[$c], $encode, $mojicode), ENT_QUOTES);
+            $data[$i][$c] = htmlspecialchars($array[$c], ENT_QUOTES);
           }
         $i ++;
         }
@@ -40,33 +40,40 @@ class csv {
    * fgetcsv()の文字化けの問題を解消
    * @param object $handle ファイルポインタ
    * @param integer $length 最大桁数
-   * @param string $d 区切り文字
-   * @param string $e 囲み文字
+   * @param string $dc 区切り文字
+   * @param string $ec 囲み文字
+   * @param string $encode エンコード
+   * @param string $mojicode CSVファイルの文字コード
    * @return false or array 結果
    */
-  private static function _fgetcsv_reg(&$handle, $length = null, $d = ',', $e = '"') {
-    $d = preg_quote($d, '/');
-    $e = preg_quote($e, '/');
-    $_line = "";
+  private static function _fgetcsv_reg(&$handle, $length = null, $dc = ',', $ec = '"', $encode = 'utf8', $mojicode = 'SJIS-win') {
+    $d = preg_quote($dc, '/');
+    $e = preg_quote($ec, '/');
+    $line = '';
+    $dummy = array();
+    $csv_matches = array();
     $eof = false;
     $itemcnt = 0;
     while (!$eof) {
-      $this_line = empty ($length) ? fgets($handle) : fgets($handle, $length);
-      $itemcnt += preg_match_all('/' . $e . '/', preg_replace('/' . $e . $d . '(.*?)' . $e . '/', '', $this_line), $dummy);
+      $this_line = empty($length) ? fgets($handle) : fgets($handle, $length);
+      if ($mojicode != $encode) {
+        $this_line = mb_convert_encoding($this_line, $encode, $mojicode);
+      }
+      $itemcnt += preg_match_all('/'.$e.'/', preg_replace('/'.$e.$d.'(.*?)'.$e.'/', '', $this_line), $dummy);
       if ($itemcnt % 2 == 0) {
         $eof = true;
       }
-      $_line .= $this_line;
+      $line .= $this_line;
     }
-    $_csv_line = preg_replace('/(?:\\r\\n|[\\r\\n])?$/', $d, trim($_line));
-    $_csv_pattern = '/(' . $e . '[^' . $e . ']*(?:' . $e . $e . '[^' . $e . ']*)*' . $e . '|[^' . $d . ']*)' . $d . '/';
-    preg_match_all($_csv_pattern, $_csv_line, $_csv_matches);
-    $_csv_data = $_csv_matches[1];
-    for ($_csv_i = 0; $_csv_i < count($_csv_data); $_csv_i ++) {
-      $_csv_data[$_csv_i] = preg_replace('/^' . $e . '(.*)' . $e . '$/s', '$1', $_csv_data[$_csv_i]);
-      $_csv_data[$_csv_i] = preg_replace('/' . $e . $e . '/', $e, $_csv_data[$_csv_i]);
+    $csv_line = preg_replace('/(?:\\r\\n|[\\r\\n])?$/', $d, trim($line));
+    $csv_pattern = '/('.$e.'[^'.$e.']*(?:'.$e.$e.'[^'.$e.']*)*'.$e.'|[^'.$d.']*)'.$d.'/';
+    preg_match_all($csv_pattern, $csv_line, $csv_matches);
+    $csv_data = $csv_matches[1];
+    for ($csv_i = 0; $csv_i < count($csv_data); $csv_i ++) {
+      $csv_data[$csv_i] = preg_replace('/^'.$e.'(.*)'.$e.'$/s', '$1', $csv_data[$csv_i]);
+      $csv_data[$csv_i] = preg_replace('/'.$e.$e.'/', $e, $csv_data[$csv_i]);
     }
-    $res = empty ($_line) ? false : $_csv_data;
+    $res = empty($line) ? false : $csv_data;
     return $res;
   }
   
@@ -74,25 +81,29 @@ class csv {
    * 配列をCSVに変換
    * @param array $get_data 配列データ
    * @param boolean $header 1行目を書き出すか否か
+   * @param string $mojicode CSVファイルの文字コード
    * @param string $encode エンコード
    * @return string CSVデータ
    */
-  public static function array_to_csv($get_data, $header = true, $encode = 'SJIS-win') {
-    if (!$get_data) return null;
-    if (sizeof($get_data) > CSV_MAX) return null;
+  public static function array_to_csv($get_data, $header = true, $mojicode = 'SJIS-win', $encode = DEFAULT_CHARSET) {
+    if (!$get_data) { return null; }
+    if (sizeof($get_data) > CSV_MAX) { return null; }
     
     $csv_arr = array ();
     
     foreach ($get_data as $k => $v) {
       if (!$k and $header) {
         $tmp = array_keys($v);
-        $csv_arr[] = '"' . implode('","', $tmp) . '"';
+        $csv_arr[] = '"'.implode('","', $tmp).'"';
       }
-      $csv_arr[] = '"' . implode('","', $v) . '"';
+      $csv_arr[] = '"'.implode('","', $v).'"';
     }
     $csv = implode("\n", $csv_arr);
     $csv = str_replace('&quot;', '""', $csv);//区切り文字がずれないように"をエスケープする
-    $csv = mb_convert_encoding(citadel::h_decode($csv), $encode, DEFAULT_CHARSET);
+    $csv = citadel::h_decode($csv);
+    if ($mojicode != $encode) {
+      $csv = mb_convert_encoding($csv, $mojicode, $encode);
+    }
     return $csv;
   }
 
@@ -100,12 +111,13 @@ class csv {
    * 配列をTSVに変換
    * @param array $get_data 配列データ
    * @param boolean $header 1行目を書き出すか否か
+   * @param string $mojicode CSVファイルの文字コード
    * @param string $encode エンコード
    * @return string TSVデータ
    */
-  public static function array_to_tsv($get_data, $header = false, $encode = DEFAULT_CHARSET) {
-    if (!$get_data) return null;
-    if (sizeof($get_data) > CSV_MAX) return null;
+  public static function array_to_tsv($get_data, $header = true, $mojicode = DEFAULT_CHARSET, $encode = DEFAULT_CHARSET) {
+    if (!$get_data) { return null; }
+    if (sizeof($get_data) > CSV_MAX) { return null; }
     
     $tsv_arr = array ();
     
@@ -117,7 +129,10 @@ class csv {
       $tsv_arr[] = implode("\t", $v);
     }
     $tsv = implode("\n", $tsv_arr);
-    $tsv = mb_convert_encoding(citadel::h_decode($tsv), $encode, DEFAULT_CHARSET);
+    $tsv = citadel::h_decode($tsv);
+    if ($mojicode != $encode) {
+      $tsv = mb_convert_encoding($tsv, $mojicode, $encode);
+    }
     return $tsv;
   }
 

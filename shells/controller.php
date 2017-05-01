@@ -3,7 +3,7 @@
  * シェルを実行するコントローラークラス
  *
  * @author   Hideshige Sawada
- * @version  1.1.1.0
+ * @version  1.1.1.1
  * @package  controller
  *
  * ターミナルから以下のように実行する
@@ -119,8 +119,6 @@ class controller {
         //テーブル排他ロック中に例外処理が起きた場合、テーブル排他ロックを解除する
         S::$dbm->unlock();
       }
-      
-      S::$err = $e->getMessage();
       
       $error = sprintf('%s(%s) %s', str_replace(SERVER_PATH, '', $e->getFile()), $e->getLine(), $e->getMessage());
       log::error($error);
