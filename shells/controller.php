@@ -31,7 +31,7 @@ require_once('../equipment/log.php');
 require_once('../equipment/db.php');
 require_once('../common/citadel.php');
 
-$controller = new controller;
+new controller;
 
 class controller {
   private $_debug = false;//デバッグモード
@@ -81,7 +81,7 @@ class controller {
    * return bool
    */
   private function _get_equipment(&$model) {
-    if (count($model->equipment)) {
+    if (isset($model->equipment) and count($model->equipment)) {
       foreach ($model->equipment as $v) {
         if (!include_once(sprintf('../equipment/%s.php', $v))) { return false; }
         $mods[$v] = new $v;

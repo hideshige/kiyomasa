@@ -8,7 +8,6 @@
  */
 
 class sample {
-  public $equipment = array ();
 
   public function logic() {
     log::$batch = 'batch/';
