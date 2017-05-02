@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.1.1.0
+ * @version  1.2.0.0
  * @package  equipment
  */
 
@@ -20,18 +20,29 @@ class csv {
     setlocale(LC_ALL, 'ja_JP');
     $data = array();
     if (file_exists($file)) {
-      $f = fopen($file, 'r');
-      if ($f) {
-        $i = 0;
-        while ($array = self::_fgetcsv_reg($f, null, ',', '"', $encode, $mojicode)) {
-          $num = count($array);
-          for ($c = 0; $c < $num; $c ++) {
-            $data[$i][$c] = htmlspecialchars($array[$c], ENT_QUOTES);
-          }
-        $i ++;
-        }
-        fclose($f);
+      //ファイルの取得
+      $contents = file_get_contents($file);
+      if ($encode != $mojicode) {
+        //文字コードの変換
+        $contents = mb_convert_encoding($contents, $encode, $mojicode);
       }
+      //ダブルクォートを一旦退避させて無害化
+      $contents = preg_replace('/"/', ':::QU:::', $contents);
+      $contents = htmlspecialchars($contents, ENT_QUOTES);
+      $contents = preg_replace('/:::QU:::/', '"', $contents);
+      //一時ファイルに保存する
+      $f = tmpfile();
+      fwrite($f, $contents);
+      rewind($f);
+      $i = 0;
+      while ($array = self::_fgetcsv_reg($f)) {
+        $num = count($array);
+        for ($c = 0; $c < $num; $c ++) {
+          $data[$i][$c] = $array[$c];
+        }
+      $i ++;
+      }
+      fclose($f);
     }
     return $data;
   }
@@ -39,23 +50,18 @@ class csv {
   /**
    * fgetcsv()の文字化けの問題を解消
    * @param object $handle ファイルポインタ
-   * @param integer $length 最大桁数
-   * @param string $dc 区切り文字
-   * @param string $ec 囲み文字
-   * @param string $encode エンコード
-   * @param string $mojicode CSVファイルの文字コード
    * @return false or array 結果
    */
-  private static function _fgetcsv_reg(&$handle, $length = null, $dc = ',', $ec = '"', $encode = 'utf8', $mojicode = 'SJIS-win') {
-    $d = preg_quote($dc, '/');
-    $e = preg_quote($ec, '/');
+  private static function _fgetcsv_reg(&$handle) {
+    $d = ',';
+    $e = '"';
     $line = '';
     $dummy = array();
     $csv_matches = array();
     $eof = false;
     $itemcnt = 0;
     while (!$eof) {
-      $this_line = empty($length) ? fgets($handle) : fgets($handle, $length);
+      $this_line = fgets($handle);
       $itemcnt += preg_match_all('/'.$e.'/', preg_replace('/'.$e.$d.'(.*?)'.$e.'/', '', $this_line), $dummy);
       if ($itemcnt % 2 == 0) {
         $eof = true;
@@ -64,9 +70,6 @@ class csv {
     }
     $csv_line = preg_replace('/(?:\\r\\n|[\\r\\n])?$/', $d, trim($line));
     $csv_pattern = '/('.$e.'[^'.$e.']*(?:'.$e.$e.'[^'.$e.']*)*'.$e.'|[^'.$d.']*)'.$d.'/';
-    if ($mojicode != $encode) {
-      $csv_line = mb_convert_encoding($csv_line, $encode, $mojicode);
-    }
     preg_match_all($csv_pattern, $csv_line, $csv_matches);
     $csv_data = $csv_matches[1];
     for ($csv_i = 0; $csv_i < count($csv_data); $csv_i ++) {
