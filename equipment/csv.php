@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.1.0.0
+ * @version  1.1.1.0
  * @package  equipment
  */
 
@@ -56,9 +56,6 @@ class csv {
     $itemcnt = 0;
     while (!$eof) {
       $this_line = empty($length) ? fgets($handle) : fgets($handle, $length);
-      if ($mojicode != $encode) {
-        $this_line = mb_convert_encoding($this_line, $encode, $mojicode);
-      }
       $itemcnt += preg_match_all('/'.$e.'/', preg_replace('/'.$e.$d.'(.*?)'.$e.'/', '', $this_line), $dummy);
       if ($itemcnt % 2 == 0) {
         $eof = true;
@@ -67,6 +64,9 @@ class csv {
     }
     $csv_line = preg_replace('/(?:\\r\\n|[\\r\\n])?$/', $d, trim($line));
     $csv_pattern = '/('.$e.'[^'.$e.']*(?:'.$e.$e.'[^'.$e.']*)*'.$e.'|[^'.$d.']*)'.$d.'/';
+    if ($mojicode != $encode) {
+      $csv_line = mb_convert_encoding($csv_line, $encode, $mojicode);
+    }
     preg_match_all($csv_pattern, $csv_line, $csv_matches);
     $csv_data = $csv_matches[1];
     for ($csv_i = 0; $csv_i < count($csv_data); $csv_i ++) {
