@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.4.0
+ * @version  1.0.5.0
  * @package  module
  * 
  * バックアップ用テーブルを準備しておく
@@ -65,7 +65,7 @@ class memcached_module {
       $params['memcached_key'] = $key;
       $params['memcached_value'] = serialize($var);
       $params['temp_flag'] = $temp_flag;
-      $params['expire'] = TIMESTAMP;
+      $params['expire'] = $expire ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
       $params['created_at'] = TIMESTAMP;
       S::$dbm->insert('memcached', $params, true);
       $res = S::$dbm->bind($params);
@@ -85,10 +85,12 @@ class memcached_module {
       $where = 'WHERE memcached_key = ?';
       S::$dbs->select('memcached', '*', $where);
       $res = S::$dbs->bind_select($param);
-      if (!$res) return false;
+      if (!$res or ($res[0]['temp_flag'] and strtotime($res[0]['expire']) < time())) {
+        return false;
+      }
 
       $var = unserialize($res[0]['memcached_value']);
-      $expire = $res[0]['temp_flag'] ? MEMCACHED_LIMIT_TIME : 0;
+      $expire = $res[0]['temp_flag'] ? time() + COOKIE_LIFETIME : 0;
 
       if ($this->_active) {
         //データベースの値をmemcachedに保存
@@ -118,7 +120,7 @@ class memcached_module {
     if ($this->debug and $this->_active) {
       $bt = debug_backtrace();
       $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
-      $this->disp_mem .= sprintf("■DELETE %s\n[K]%s", $dump, $key);
+      $this->disp_mem .= sprintf("■DELETE %s\n[K]%s\n", $dump, $key);
     }
     return $res;
   }

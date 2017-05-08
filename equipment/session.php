@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Hideshige Sawada
- * @version  1.1.2.5
+ * @version  1.1.3.0
  * @package  equipment
  * 
  * セッションの保存方法は3種類から選べる
@@ -21,7 +21,7 @@
  * を実行させること
  * 
  * セッションの消し方
- * setcookie('login_session_id', '', - time() - 60*60*24*365, '/');//COOKIEを消す
+ * setcookie(PROJECT_PREFIX.'login', '', - time() - COOKIE_LIFETIME, '/');//COOKIEを消す
  * session_destroy();//DBのレコードを消す
  * 
  */
@@ -38,11 +38,12 @@ class session {
       array ($handler, 'write'),
       array ($handler, 'destroy'),
       array ($handler, 'gc')
-   );
+    );
     ini_set('session.gc_maxlifetime', COOKIE_LIFETIME);
+    ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
     ini_set('session.cookie_httponly', 1);
     session_save_path(SERVER_PATH . 'session');
-    session_name('login');
+    session_name(PROJECT_PREFIX . 'login');
     session_set_cookie_params(COOKIE_LIFETIME, '/', '', false, true);
     session_start();
   }
@@ -84,7 +85,7 @@ class session_handler {
     $params = array ($ses_id, time());
     S::$dbm->select('t_session', 'value', 'WHERE session_id = ? AND expires > ?');
     $res = S::$dbm->bind_select($params);
-    if (!$res) return '';
+    if (!$res) { return ''; }
     return $res[0]['value'];
   }
   
@@ -128,12 +129,12 @@ class session_handler_mem {
   
   function read($ses_id) {
     $res = S::$mem->get($ses_id);
-    if (!$res) return '';
+    if (!$res) { return ''; }
     return $res;
   }
   
   function write($ses_id, $data) {
-    S::$mem->set($ses_id, $data, false, MEMCACHED_LIMIT_TIME);
+    S::$mem->set($ses_id, $data, false, time() + COOKIE_LIFETIME);
     return true;
   }
   

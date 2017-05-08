@@ -81,9 +81,7 @@ if (ENV == 0) {
 
 define('OPEN_SSL_PASSPHRASE', '');
 
-define('COOKIE_LIFETIME', 60 * 60 * 24 * 365);
-define('MEMCACHED_LIMIT_TIME', time() + 60 * 60 * 24 * 180);
-define('LOGIN_LIFETIME', time() + 60 * 60 * 24 * 3);//ログイン有効期間
+define('COOKIE_LIFETIME', 60 * 60 * 24 * 30);
 define('TIMESTAMP', date('Y-m-d H:i:s'));
 $http_client_ip = filter_input(INPUT_SERVER, 'HTTP_CLIENT_IP');
 $http_x_forwarded_for = filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR');
@@ -100,6 +98,7 @@ define('MOBILE_FLAG', preg_match('/(iPhone|iPod|Android|BlackBerry|Windows Phone
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
 define('USLEEP_TIME', 1);
 define('AUTO_UPDATE_TIME', 1);//DBに作成・更新日時を自動保存する場合1
+define('PROJECT_PREFIX', '');//プロジェクトを示す接頭辞
 
 /*-------------- 以下は global で呼び出す共通パラメータ ----------------*/
 
