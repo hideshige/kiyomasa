@@ -20,9 +20,9 @@ require_once('../common/citadel.php');
 require_once('../equipment/db.php');
 require_once('../equipment/memcached.php');
 require_once('../equipment/session.php');
-new castle();
+new Castle();
 
-class castle {
+class Castle {
   private $_mainte;//メンテナンスモード
   private $_debug;//デバッグモード
   private $_error_flag = false;//初回エラーかどうか（循環防止のため）
