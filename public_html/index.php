@@ -11,9 +11,7 @@
  * 
  */
 
-//namespace kiyomasa\php\framework;
-
-//use kiyomasa\php\framework as fw;
+use kiyomasa\php\equipment;
 
 header("P3P: CP='UNI CUR OUR'"); // コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block'); // XSS対策
@@ -45,7 +43,7 @@ class Castle
     {
         try {
             S::$jflag = false;
-            S::$dbm = new DbModule();
+            S::$dbm = new equipment\DbModule();
             $res_dbm = S::$dbm->connect(
                 DB_MASTER_SERVER,
                 DB_MASTER_USER,
@@ -55,7 +53,7 @@ class Castle
             if (!$res_dbm) {
                 throw new Exception('DB_MASTER Connect Error');
             }
-            S::$dbs = new DbModule();
+            S::$dbs = new equipment\DbModule();
             $res_dbs = S::$dbs->connect(
                 DB_SLAVE_SERVER,
                 DB_SLAVE_USER,

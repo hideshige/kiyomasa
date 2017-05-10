@@ -21,16 +21,17 @@
  * call        ルーチンの呼び出し
  *
  * @author   Hideshige Sawada
- * @version  1.3.7.0
+ * @version  1.3.7.1
  * @package  equipment
  *
  */
 
-namespace kiyomasa\php\framework;
+namespace kiyomasa\php\equipment;
 
-use kiyomasa\php\framework as fw;
+use PDO;
 
-class DbModule {
+class DbModule
+{
     private $connect; // データベースオブジェクト
     private $stmt = []; // ステートメント
     private $do = []; // ステートメントで実行中の動作メモを格納
@@ -61,10 +62,10 @@ class DbModule {
     ) {
         try {
             $dsn = sprintf(
-                '%s:host=%s;dbname=%s'
-                , $db_soft 
-                , $db_server 
-                , $db_name
+                '%s:host=%s;dbname=%s',
+                $db_soft,
+                $db_server,
+                $db_name
             );
             $this->connect = new PDO (
                 $dsn, 
@@ -177,7 +178,7 @@ class DbModule {
         $this->do[$statement_id] = 'update';
 
         if (is_array ($params)) {
-            if (AUTO_UPDATE_TIME and !isset ($params['updated_at'])) {
+            if (AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
                 $this->column_count[$statement_id] = count($params);
                 $params['updated_at'] = '';
             }
@@ -306,7 +307,7 @@ class DbModule {
 
         if ($this->debug) {
             $this->disp_sql .= sprintf(
-                "%d■PREPARE %s FROM '%s'; \n",
+                "%d■PREPARE %s FROM '%s';\n",
                 $g_counter,
                 $statement_id,
                 $this->sql
@@ -337,18 +338,18 @@ class DbModule {
                 $this->disp_sql .= $g_counter . '■';
                 $g_counter ++;
             }
-            if (AUTO_UPDATE_TIME and !isset ($params['created_at'])) {
+            if (AUTO_UPDATE_TIME and !isset($params['created_at'])) {
                 if ($this->do[$statement_id] === 'insert') {
                     $params['created_at'] = TIMESTAMP;
                 }
             }
-            if (AUTO_UPDATE_TIME and !isset ($params['updated_at'])) {
+            if (AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
                 if ($this->do[$statement_id] === 'insert' or $this->do[$statement_id] === 'update') {
                     array_splice(
                         $params,
                         $this->column_count[$statement_id],
                         0,
-                        array('updated_at' => TIMESTAMP)
+                        ['updated_at' => TIMESTAMP]
                     );
                 }
             }
@@ -357,11 +358,11 @@ class DbModule {
 
                 if ($this->debug) {
                     if ($d_v === null) {
-                        $this->disp_sql .= sprintf("SET @%d = NULL; ", $i);
+                        $this->disp_sql .= sprintf("SET @%d = NULL;\n", $i);
                     } else if (is_numeric($d_v)) {
-                        $this->disp_sql .= sprintf("SET @%d = %d; ", $i, $d_v);
+                        $this->disp_sql .= sprintf("SET @%d = %d;\n", $i, $d_v);
                     } else {
-                        $this->disp_sql .= sprintf("SET @%d = '%s'; ", $i, $d_v);
+                        $this->disp_sql .= sprintf("SET @%d = '%s';\n", $i, $d_v);
                     }
                 }
                 $bind_params[] = $v;
@@ -398,11 +399,11 @@ class DbModule {
             $e = $this->stmt[$statement_id]->errorInfo();
             if ($this->debug) {
                 $error_mes = sprintf(
-                    "%s %s\n%s\n%s"
-                    , $e[0]
-                    , $e[2]
-                    , $this->sql
-                    , implode(',', $bind_params)
+                    "%s %s\n%s\n%s",
+                    $e[0],
+                    $e[2],
+                    $this->sql,
+                    implode(',', $bind_params)
                 );
             } else {
                 $error_mes = 'DBエラー';

@@ -14,12 +14,13 @@ mb_language('Japanese');
 mb_internal_encoding(DEFAULT_CHARSET);
 
 if (ENV == 0) {
+    // ビルトインサーバ
     ini_set('display_errors', 1);
-    define('SERVER_PATH', '/var/www/html/yoursite/');
+    define('SERVER_PATH', '/Users/yourname/yoursite');
 
     define('DOMAIN_NAME', '/');
-    define('LINK_DOMAIN_NAME', 'http:// dev.yoursite/');
-    define('SSL_LINK_DOMAIN_NAME', 'https:// dev.yoursite/');
+    define('LINK_DOMAIN_NAME', 'http://localhost:8000/');
+    define('SSL_LINK_DOMAIN_NAME', 'https://localhost:8000/');
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_MASTER_SERVER', 'localhost');
@@ -36,11 +37,12 @@ if (ENV == 0) {
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
 } else if (ENV == 1) {
+    // テスト環境
     define('SERVER_PATH', '/var/www/html/yoursite/');
 
     define('DOMAIN_NAME', '/');
-    define('LINK_DOMAIN_NAME', 'http:// yoursite/');
-    define('SSL_LINK_DOMAIN_NAME', 'https:// yoursite/');
+    define('LINK_DOMAIN_NAME', 'http://yoursite/');
+    define('SSL_LINK_DOMAIN_NAME', 'https://yoursite/');
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_MASTER_SERVER', 'localhost');
@@ -57,11 +59,12 @@ if (ENV == 0) {
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
 } else {
+    // 本番環境
     define('SERVER_PATH', '/var/www/html/yoursite/');
 
     define('DOMAIN_NAME', '/');
-    define('LINK_DOMAIN_NAME', 'http:// yoursite/');
-    define('SSL_LINK_DOMAIN_NAME', 'https:// yoursite/');
+    define('LINK_DOMAIN_NAME', 'http://yoursite/');
+    define('SSL_LINK_DOMAIN_NAME', 'https://yoursite/');
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_MASTER_SERVER', 'localhost');
