@@ -14,7 +14,7 @@ mb_language('Japanese');
 mb_internal_encoding(DEFAULT_CHARSET);
 
 if (ENV == 0) {
-    // ビルトインサーバ
+    // ビルトインウェブサーバ
     ini_set('display_errors', 1);
     define('SERVER_PATH', '/Users/yourname/yoursite');
 

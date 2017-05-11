@@ -3,7 +3,7 @@
  * KIYOMASAフレームワーク
  *
  * @author   Hideshige Sawada
- * @version  1.3.4.0
+ * @version  1.3.4.1
  * @package  controller
  * 
  * PHPフレームワーク展示会グループによるコーディング規約に準拠する

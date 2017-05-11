@@ -3,7 +3,7 @@
  * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.2.1
+ * @version  1.1.2.2
  * @package  controller
  *
  * ターミナルから以下のように実行する

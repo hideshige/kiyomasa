@@ -21,7 +21,7 @@
  * call        ルーチンの呼び出し
  *
  * @author   Hideshige Sawada
- * @version  1.3.7.1
+ * @version  1.3.7.2
  * @package  equipment
  *
  */
