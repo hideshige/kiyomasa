@@ -70,7 +70,7 @@ $params = array(
  
 $box = S::$post;
 
-$form = array();
+$form = [];
 form::formArr($params, $form, self::$box);
 
 $form_list = &S::$disp[1]['FORM_AREA'][0]['LIST'];
@@ -97,6 +97,8 @@ if (isset(S::$post['post_flag'])) {
  *
  *
  */
+
+namespace kiyomasa;
 
 class Form
 {
@@ -143,7 +145,7 @@ class Form
         $data
     ) {
         self::$params = $params;
-        $res = array ();
+        $res = [];
 
         foreach ($params as $key => $val) {
             $str = @htmlspecialchars_decode($data[$key], ENT_QUOTES);
@@ -478,7 +480,7 @@ class Form
                 }
             } else if ($v['answer_type'] === 4) {
                 //チェックボックス
-                $box = array ();
+                $box = [];
                 if (count($answer[$v['question_id']])) {
                     foreach ($answer[$v['question_id']] as $ck => $cv) {
                         $select = unserialize($v['answer_select']);

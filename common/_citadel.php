@@ -8,21 +8,26 @@
  * 
  */
 
-class Citadel {
+namespace kiyomasa;
+
+class Citadel
+{
     public static $db; // MASTER,SLAVE可変オブジェクト
 
     /**
      * デフォルト値のセット
      * @param string $title
      */
-    public static function set($title = '') {
+    public static function set($title = '')
+    {
         S::$disp[0]['REPLACE']['title'] = $title;
     }
 
     /**
      * MASTER,SLAVE接続先可変DBの選択
      */
-    public static function _db_select() {
+    public static function _db_select()
+    {
         // トランザクションを実行中には参照の場合でもMASTERに接続する
         if (S::$dbm->transaction_flag) {
             self::$db = &S::$dbm;
@@ -36,7 +41,8 @@ class Citadel {
      * @param string $word 戻したい文字
      * @return string 戻した文字
      */
-    public static function hDecode($word) {
+    public static function hDecode($word)
+    {
         $word2 = htmlspecialchars_decode($word, ENT_QUOTES);
         $res = $word2;
         global $g_change_chara;

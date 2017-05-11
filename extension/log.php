@@ -4,9 +4,11 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.3.0
- * @package  equipment
+ * @package  extension
  *
  */
+
+namespace kiyomasa;
 
 class Log
 {

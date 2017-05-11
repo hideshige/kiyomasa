@@ -11,6 +11,8 @@
  * @package  equipment
  */
 
+namespace kiyomasa;
+
 class Crypt
 {
     /**

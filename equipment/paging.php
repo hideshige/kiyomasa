@@ -8,6 +8,8 @@
  *
  */
 
+namespace kiyomasa;
+
 class Paging
 {
     /**
@@ -25,7 +27,7 @@ class Paging
             $disp_num = 20;
         }
 
-        $page_arr = array();
+        $page_arr = [];
         $page_arr['num'] = ceil($counts / $disp_num);
 
         //指定のページがない場合

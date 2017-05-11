@@ -1,161 +1,33 @@
 <?php
 /**
- * KIYOMASAフレームワーク
+ * タレット　追加コントローラ
  *
  * @author   Hideshige Sawada
- * @version  1.4.0.0
- * @package  public_html
- * 
- * PHPフレームワーク展示会グループによるコーディング規約に準拠する
- * http:// www.php-fig.org/
+ * @version  1.0.0.0
+ * @package  extension
  * 
  */
 
-namespace kiyomasa;
+namespace bts;
 
-header("P3P: CP='UNI CUR OUR'"); // コンパクトプライバシーポリシー
-header('X-XSS-Protection: 1; mode=block'); // XSS対策
-header('Content-Type: text/html;charset=UTF-8');
-$first_time = microtime(true);
-$first_memory = memory_get_usage() / 1024;
-
-require_once(__DIR__ . '/../conf/env.php');
-require_once(__DIR__ . '/../conf/define.php');
-require_once(__DIR__ . '/../equipment/log.php');
-require_once(__DIR__ . '/../equipment/view.php');
-require_once(__DIR__ . '/../common/_citadel.php');
-require_once(__DIR__ . '/../equipment/db.php');
-require_once(__DIR__ . '/../equipment/memcached.php');
-require_once(__DIR__ . '/../equipment/session.php');
-
-new Castle();
-
-class Castle 
+class Turrets
 {
-    private $mainte; // メンテナンスモード
-    private $debug; // デバッグモード
+    public $debug; // デバッグモード
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
-
-    /*
-     * オブジェクトの作成
-     */
-    public function __construct()
-    {
-        try {
-            S::$jflag = false;
-            S::$dbm = new DbModule();
-            $res_dbm = S::$dbm->connect(
-                DB_MASTER_SERVER,
-                DB_MASTER_USER,
-                DB_MASTER_PASSWORD,
-                DB_MASTER_NAME
-            );
-            if (!$res_dbm) {
-                throw new Exception('DB_MASTER Connect Error');
-            }
-            S::$dbs = new DbModule();
-            $res_dbs = S::$dbs->connect(
-                DB_SLAVE_SERVER,
-                DB_SLAVE_USER,
-                DB_SLAVE_PASSWORD,
-                DB_SLAVE_NAME
-            );
-            if (!$res_dbs) {
-                Log::error(
-                    'DB_SLAVE Connect Error ---> DB_MASTER Connect Change'
-                );
-                $res_dbs2 = S::$dbs->connect(
-                    DB_MASTER_SERVER,
-                    DB_MASTER_USER,
-                    DB_MASTER_PASSWORD,
-                    DB_MASTER_NAME
-                );
-                if (!$res_dbs2) {
-                    throw new Exception('DB_MASTER Connect Error');
-                }
-            }
-
-            S::$mem = new MemcachedModule();
-
-            $this->debug = false;
-            if (ENV == 0) {
-                $this->debug = true;
-            }
-            S::$dbm->debug = $this->debug;
-            S::$dbs->debug = $this->debug;
-            S::$mem->debug = $this->debug;
-
-            S::$post = $this->h($_POST);
-            S::$get = $this->h($_GET);
-            if (isset(S::$get['url'])) {
-                S::$url = explode('/', preg_replace('<^/>', '', S::$get['url']));
-                unset(S::$get['url']);
-            }
-
-            // セッションのセット
-            new Session();
-
-            // URLの指定がなければトップページを指定
-            $folder = '';
-            $url_num = 0;
-            global $g_folder;
-            if ($g_folder) {
-              foreach ($g_folder as $v) {
-                if (S::$url[0] == $v) {
-                    $folder = $v . '/';
-                    $url_num = 1;
-                    break;
-                }
-              }
-            }
-            if (isset(S::$url[$url_num]) and S::$url[$url_num]) {
-                $pagename = S::$url[$url_num];
-            } else {
-                $pagename = 'index';
-            }
-
-            // メンテナンスモードの判定
-            $this->mainte = 0;
-
-            if ($this->mainte and !$this->debug) {
-                $pagename = 'mainte';
-                $folder = '';
-            }
-
-            $this->disp($pagename, $folder);
-        } catch (Exception $e) {
-            $error = sprintf(
-                '%s(%s) %s',
-                str_replace(SERVER_PATH, '', $e->getFile()),
-                $e->getLine(),
-                $e->getMessage()
-            );
-            Log::error($error);
-            // テスト環境の場合、デバッグ用のエラーを表示する
-            if ($this->debug) {
-                echo $error;
-            } else {
-                echo 'エラーになりました。 '.TIMESTAMP;
-            }
-            exit;
-        } finally {
-        }
-    }
-
-
+    
     /**
      * モジュールの組み込み
      * @params $model モデルのオブジェクト（参照渡し）
      * @return boolean
      */
-    private function getEquipment(&$model)
+    public function getEquipment(&$model)
     {
         try {
             $res = true;
             if (isset($model->equipment) and count($model->equipment)) {
                 foreach ($model->equipment as $v) {
                     if (!include_once(sprintf('../equipment/%s.php', $v))) {
-                        throw new Exception('No Equipment');
+                        throw new FwException('No Equipment');
                     }
                     $class_name = __NAMESPACE__ . '\\' . className($v);
                     new $class_name();
@@ -164,7 +36,7 @@ class Castle
             if (isset($model->common) and count($model->common)) {
                 foreach ($model->common as $v2) {
                     if (!include_once(sprintf('../common/%s.php', $v2))) {
-                        throw new Exception('No Common Module');
+                        throw new FwException('No Common Module');
                     }
                     $class_name = __NAMESPACE__ . '\\' . className($v2);
                     new $class_name();
@@ -184,24 +56,24 @@ class Castle
      * @param string $pagename 実行するモデルの名前
      * @param string $folder モデルのフォルダ名
      */
-    private function disp($pagename, $folder = '')
+    public function disp($pagename, $folder = '')
     {
         try {
             $file = sprintf('../models/%s%s.php', $folder, $pagename);
             if (!file_exists($file) or !include_once($file)) {
                 header('HTTP/1.0 404 Not Found');
-                throw new Exception(sprintf('%s read notice', $pagename));
+                throw new FwException(sprintf('%s read notice', $pagename));
             }
 
             $class_name = __NAMESPACE__ . '\\' . className($pagename);
             $model = new $class_name();
             $res_equ = $this->getEquipment($model);
             if (!$res_equ) {
-                throw new Exception($pagename . ' equipment read notice');
+                throw new FwException($pagename . ' equipment read notice');
             }
             $res = $model->logic();
             if ($res === false) {
-                throw new Exception($pagename . ' logic notice');
+                throw new FwException($pagename . ' logic notice');
             }
 
             session_write_close();
@@ -241,7 +113,7 @@ class Castle
                 S::$dbm->unlock();
             }
 
-            if (ENV == 0 or !preg_match('/notice/', $e->getMessage())) {
+            if (ENV <= 1 or !preg_match('/notice/', $e->getMessage())) {
                 $error = sprintf(
                     '%s(%s) %s',
                     str_replace(SERVER_PATH, '', $e->getFile()),
@@ -284,7 +156,7 @@ class Castle
     /**
      * デバッグ情報の表示
      */
-    private function dispDebug()
+    public function dispDebug()
     {
         if ($this->debug) {
             ob_start();
@@ -367,7 +239,7 @@ class Castle
     /*
      * サニタイズ
      */
-    private function h($data)
+    public function h($data)
     {
         if (is_array($data)) {
             foreach ($data as $k => $v) {
@@ -406,51 +278,4 @@ class Castle
         }
         return $data;
     }
-}
-
-/**
- * パラメータのショートカット用スタティックオブジェクト
- *
- */
-class S 
-{
-    static $post; //  整形後のPOSTパラメータ
-    static $get; //  整形後のGETパラメータ
-    static $url; //  URLパラメータ
-    static $dbm; //  DBマスターモジュール
-    static $dbs; //  DBスレーブモジュール
-    static $mem; //  memcachedモジュール
-    static $disp; //  テンプレートデータ
-    static $user; //  セッション上のユーザーデータ
-    static $ouser; //  ページに表示するユーザーデータ
-    static $jflag; //  そのモデルがJSON形式かHTML形式か
-}
-
-/**
- * ダンプをバッファに保存
- * @global string $dump ダンプ用バッファ
- * @param mixed ダンプするデータをカンマ区切りで記入する
- */
-$dump = '';
-function dump() 
-{
-    global $dump;
-    $bt = debug_backtrace();
-    $dump .= sprintf("%s %s\n", $bt[0]['file'], $bt[0]['line']);
-    ob_start();
-    foreach ($bt[0]['args'] as $v) {
-        var_dump($v);
-    }
-    $dump .= ob_get_clean();
-    return $dump;
-}
-
-/**
- * アンダースコア記法をスタッドリーキャップス記法に変換
- * @param string $string
- * @return string
- */
-function className($string)
-{
-    return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
 }

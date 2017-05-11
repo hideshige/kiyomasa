@@ -7,6 +7,8 @@
  * @package  equipment
  */
 
+namespace kiyomasa;
+
 class Chara
 {
     /**

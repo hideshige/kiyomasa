@@ -4,7 +4,10 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
+ * @package  models
  */
+
+namespace kiyomasa;
 
 class HelloWorld
 { // クラス名はモデル名と必ず同一にする

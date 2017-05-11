@@ -8,12 +8,12 @@
  */
 
 // php.iniで設定されていない場合ここで設定する
+const DEFAULT_CHARSET = 'utf8';
 date_default_timezone_set('Asia/Tokyo');
-define('DEFAULT_CHARSET', 'utf8');
 mb_language('Japanese');
 mb_internal_encoding(DEFAULT_CHARSET);
 
-if (ENV == 0) {
+if (ENV === 0) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 1);
     define('SERVER_PATH', '/Users/yourname/yoursite');
@@ -36,7 +36,7 @@ if (ENV == 0) {
     define('FROM_EMAIL', '');
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
-} else if (ENV == 1) {
+} else if (ENV === 1) {
     // テスト環境
     define('SERVER_PATH', '/var/www/html/yoursite/');
 
@@ -82,9 +82,6 @@ if (ENV == 0) {
     define('FROM_NAME', '');
 }
 
-define('OPEN_SSL_PASSPHRASE', '');
-
-define('COOKIE_LIFETIME', 60 * 60 * 24 * 30);
 define('TIMESTAMP', date('Y-m-d H:i:s'));
 $http_client_ip = filter_input(INPUT_SERVER, 'HTTP_CLIENT_IP');
 $http_x_forwarded_for = filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR');
@@ -99,9 +96,12 @@ define('IP_ADDRESS', $ip);
 define('USER_AGENT', filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'));
 define('MOBILE_FLAG', preg_match('/(iPhone|iPod|Android|BlackBerry|Windows Phone)/', USER_AGENT) ? true : false);
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
-define('USLEEP_TIME', 1);
-define('AUTO_UPDATE_TIME', 1);// DBに作成・更新日時を自動保存する場合1
-define('PROJECT_PREFIX', '');// プロジェクトを示す接頭辞
+
+const USLEEP_TIME = 1;
+const AUTO_UPDATE_TIME = 1;// DBに作成・更新日時を自動保存する場合1
+const PROJECT_PREFIX = '';// プロジェクトを示す接頭辞
+const COOKIE_LIFETIME = 60 * 60 * 24 * 30;
+const OPEN_SSL_PASSPHRASE = '';
 
 /*-------------- 以下は global で呼び出す共通パラメータ ----------------*/
 

@@ -3,33 +3,25 @@
  * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.2.2
- * @package  controller
+ * @version  1.1.3.0
+ * @package  shells
  *
  * ターミナルから以下のように実行する
- * php shells/controller.php サーバー識別 モデル名 パラメーター
+ * php shells/controller.php モデル名 パラメーター
  * cron 設定例
- * 00 5 * * * php /var/www/html/yoursite/shells/camp.php 1 sample test 1>> /var/www/html/yoursite/logs/batch/test_$(date +\%y\%m\%d).log 2>&1
+ * 00 5 * * * php /var/www/html/yoursite/shells/camp.php sample test 1>> /var/www/html/yoursite/logs/batch/test_$(date +\%y\%m\%d).log 2>&1
  * cronを実行できるように環境にあわせてchdir()の値を変えること
  *
  */
 
-if (intval($argv[1]) == 0) {
-    // 開発環境
-    chdir(__DIR__ . '/shells');
-} else if (intval($argv[1]) > 1) {
-    // 本番環境
-    chdir(__DIR__ . '/shells');
-} else {
-    echo "argv error\n";
-    exit;
-}
+namespace kiyomasa;
 
-require_once('../conf/env.php');
-require_once('../conf/define.php');
-require_once('../equipment/log.php');
-require_once('../equipment/db.php');
-require_once('../common/citadel.php');
+require_once(__DIR__ . '/../conf/env.php');
+require_once(__DIR__ . '/../conf/define.php');
+require_once(__DIR__ . '/../extension/log.php');
+require_once(__DIR__ . '/../extension/db.php');
+require_once(__DIR__ . '/../extension/stone_walls.php');
+require_once(__DIR__ . '/../common/citadel.php');
 
 new Camp;
 
@@ -38,14 +30,11 @@ class Camp
     private $debug = false; // デバッグモード
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
 
-    /**
-     * オブジェクトの作成
-     */
     public function __construct()
     {
         try {
             global $argv;
-            if (!isset($argv[2])) {
+            if (!isset($argv[1])) {
                 exit;
             }
             Log::$batch = 'batch/';
@@ -82,7 +71,7 @@ class Camp
             S::$dbm->debug = $this->debug;
             S::$dbs->debug = $this->debug;
 
-            $this->exec($argv[2]);
+            $this->exec($argv[1]);
 
             if ($this->debug) {
                 echo "DBS\n";
@@ -113,7 +102,7 @@ class Camp
         if (count($model->equipment)) {
             foreach ($model->equipment as $v) {
                 if (include_once(sprintf('../equipment/%s.php', $v))) {
-                    $class_name = 'equipment\\' . studlyCaps($v);
+                    $class_name = __NAMESPACE__ . '\\' . className($v);
                     new $class_name;
                     $res = true;
                 }
@@ -171,22 +160,4 @@ class Camp
         } finally {
         }
     }
-}
-
-/**
- * パラメータのショートカット用スタティックオブジェクト
- */
-class S {
-    static $dbm;//DBマスターモジュール
-    static $dbs;//DBスレーブモジュール
-}
-
-/**
- * アンダースコア記法をスタッドリーキャップス記法に変換
- * @param string $string
- * @return string
- */
-function studlyCaps($string)
-{
-    return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
 }

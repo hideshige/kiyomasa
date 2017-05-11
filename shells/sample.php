@@ -7,6 +7,8 @@
  * @package  shells
  */
 
+namespace kiyomasa;
+
 class Sample
 {
     public function logic()

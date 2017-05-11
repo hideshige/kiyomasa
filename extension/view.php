@@ -15,10 +15,13 @@
  * <!-- ELEMENT *** -->にはelementフォルダの部分テンプレートが挿入される。
  * 
  * @author   Hideshige Sawada
- * @version  1.0.11.0
- * @package  view
+ * @version  1.0.11.2
+ * @package  extension
  * 
  */
+
+namespace kiyomasa;
+
 class View
 {
     /**
@@ -151,10 +154,10 @@ class View
         $add = preg_match('<\.>', $tpl) ? '' : '.html';
         $element = $elm ? 'element/' : '';
         $tpl_folder = (MOBILE_FLAG and !isset ($_SESSION['mobile_pc_flag']))
-            ? 'tpl_mobile/' : 'tpl/';
+            ? 'templates_mobile/' : 'templates/';
         $fname = SERVER_PATH . $tpl_folder . $folder . $element . $tpl . $add;
-        if ($tpl_folder == 'tpl_mobile/' and !file_exists($fname)) {
-              $fname = SERVER_PATH . 'tpl/' . $folder . $element . $tpl . $add;
+        if ($tpl_folder == 'templates_mobile/' and !file_exists($fname)) {
+              $fname = SERVER_PATH . 'templates/' . $folder . $element . $tpl . $add;
         }
         $fh = @fopen($fname, 'r');
         if (!$fh) {

@@ -7,6 +7,9 @@
  * @package  common
  *
  */
+
+namespace kiyomasa;
+
 class AdminCheck
 {
     public function logic()

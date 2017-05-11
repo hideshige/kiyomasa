@@ -3,8 +3,8 @@
  * memcached モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.5.2
- * @package  module
+ * @version  1.0.5.3
+ * @package  extension
  * 
  * バックアップ用テーブルを準備しておく
  CREATE TABLE `memcached` (
@@ -19,22 +19,27 @@
  *
  */
 
+namespace kiyomasa;
+
+use Memcached;
+
 class MemcachedModule
 {
-    private $_memcached1;//memcachedオブジェクト
-    private $_active;//memcachedが起動しているかどうかのフラグ
+    private $memcached1;//memcachedオブジェクト
+    private $active;//memcachedが起動しているかどうかのフラグ
     public $disp_mem = '';//debug情報
     public $debug;//debugかどうかのフラグ
 
     /**
      * 接続
      */
-    public function __construct() {
-        $this->_memcached1 = new Memcached();
+    public function __construct()
+    {
+        $this->memcached1 = new Memcached();
 
         //主がNGの場合は副を使用
-        $this->_active = @$this->_memcached1->addServer(MEMCACHED_SERVER, 11211);
-        if (!$this->_active) {
+        $this->active = @$this->memcached1->addServer(MEMCACHED_SERVER, 11211);
+        if (!$this->active) {
             Log::error('memcached down');
         }
     }
@@ -48,7 +53,7 @@ class MemcachedModule
      */
     public function set($key, $var, $comp = false, $expire = 0)
     {
-        if ($this->debug and $this->_active) {
+        if ($this->debug and $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s(%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf(
@@ -58,14 +63,14 @@ class MemcachedModule
                 print_r($var, true)
             );
         }
-        if ($this->_active) {
-            $res = $this->_memcached1->set($key, $var, $expire);
+        if ($this->active) {
+            $res = $this->memcached1->set($key, $var, $expire);
         }
 
         // memcachedが有効でない場合か有効期限の指定がない場合DBに値を保存
-        if (!$this->_active or !$expire) {
+        if (!$this->active or !$expire) {
             $temp_flag = $expire ? 1 : 0;
-            $params = array ();
+            $params = [];
             $params['memcached_key'] = $key;
             $params['memcached_value'] = serialize($var);
             $params['temp_flag'] = $temp_flag;
@@ -84,7 +89,7 @@ class MemcachedModule
      */
     public function get($key)
     {
-        $var = @$this->_memcached1->get($key);
+        $var = @$this->memcached1->get($key);
         if ($var === false) {
             //データベースから値を取得
             $param = array ($key);
@@ -98,12 +103,12 @@ class MemcachedModule
             $var = unserialize($res[0]['memcached_value']);
             $expire = $res[0]['temp_flag'] ? time() + COOKIE_LIFETIME : 0;
 
-            if ($this->_active) {
+            if ($this->active) {
                 //データベースの値をmemcachedに保存
-                @$this->_memcached1->set($key, $var, false, $expire);
+                @$this->memcached1->set($key, $var, false, $expire);
             }
         }
-        if ($this->debug and $this->_active) {
+        if ($this->debug and $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf("■GET %s\n[K]%s [V]%s\n", $dump, $key, print_r($var, true));
@@ -117,14 +122,14 @@ class MemcachedModule
      */
     public function delete($key)
     {
-        $res = $this->_memcached1->delete($key);
+        $res = $this->memcached1->delete($key);
 
         $param = array ($key);
         $where = 'WHERE memcached_key = ?';
         S::$dbm->delete('memcached', $where);
         S::$dbm->bind($param);
 
-        if ($this->debug and $this->_active) {
+        if ($this->debug and $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf("■DELETE %s\n[K]%s\n", $dump, $key);

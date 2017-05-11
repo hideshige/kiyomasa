@@ -8,6 +8,8 @@
  *
  */
 
+namespace kiyomasa;
+
 class Mail
 {
     /**

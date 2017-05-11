@@ -3,9 +3,11 @@
  * CSV モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.2.1.0
+ * @version  1.2.2.0
  * @package  equipment
  */
+
+namespace kiyomasa;
 
 class Csv
 {
@@ -31,7 +33,9 @@ class Csv
                 $contents = mb_convert_encoding($contents, $encode, $mojicode);
             }
             //ダブルクォートを一旦退避させて無害化
+            $contents = preg_replace('/""/', ':::QUQU:::', $contents);
             $contents = preg_replace('/"/', ':::QU:::', $contents);
+            $contents = preg_replace('/:::QUQU:::/', '"', $contents);
             $contents = htmlspecialchars($contents, ENT_QUOTES);
             $contents = preg_replace('/:::QU:::/', '"', $contents);
             //一時ファイルに保存する
@@ -61,8 +65,8 @@ class Csv
         $d = ',';
         $e = '"';
         $line = '';
-        $dummy = array();
-        $csv_matches = array();
+        $dummy = [];
+        $csv_matches = [];
         $eof = false;
         $itemcnt = 0;
         while (!$eof) {
@@ -70,7 +74,7 @@ class Csv
             $itemcnt += preg_match_all(
                 '/' . $e . '/',
                 preg_replace(
-                    '/' . $e . $d . '( . *?)' . $e . '/',
+                    '/' . $e . $d . '(.*?)' . $e . '/',
                     '',
                     $this_line
                 ),
@@ -87,11 +91,13 @@ class Csv
         preg_match_all($csv_pattern, $csv_line, $csv_matches);
         $csv_data = $csv_matches[1];
         for ($csv_i = 0; $csv_i < count($csv_data); $csv_i ++) {
+            // 囲み文字を消す
             $csv_data[$csv_i] = preg_replace(
-                '/^' . $e . '( . *)' . $e . '$/s',
+                '/^' . $e . '(.*)' . $e . '$/s',
                 '$1',
                 $csv_data[$csv_i]
             );
+            // エスケープを解除
             $csv_data[$csv_i] = preg_replace(
                 '/' . $e . $e . '/',
                 $e,
@@ -119,7 +125,7 @@ class Csv
         if (!$get_data) { return null; }
         if (sizeof($get_data) > CSV_MAX) { return null; }
 
-        $csv_arr = array ();
+        $csv_arr = [];
 
         foreach ($get_data as $k => $v) {
             if (!$k and $header) {
@@ -155,7 +161,7 @@ class Csv
         if (!$get_data) { return null; }
         if (sizeof($get_data) > CSV_MAX) { return null; }
 
-        $tsv_arr = array ();
+        $tsv_arr = [];
 
         foreach ($get_data as $k => $v) {
             if (!$k and $header) {

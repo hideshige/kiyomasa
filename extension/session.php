@@ -4,7 +4,7 @@
  *
  * @author   Hideshige Sawada
  * @version  1.1.4.0
- * @package  equipment
+ * @package  extension
  * 
  * セッションの保存方法は3種類から選べる
  * (1)memcachedに保存する → sessionHandlerMemを使用すること
@@ -26,6 +26,8 @@
  * 
  */
 
+namespace kiyomasa;
+
 class Session
 {
     public function __construct()
@@ -33,12 +35,12 @@ class Session
         $handler = new sessionHandlerMem();
         //$handler = new sessionHandlerDb();
         session_set_save_handler(
-            array($handler, 'open'),
-            array($handler, 'close'),
-            array($handler, 'read'),
-            array($handler, 'write'),
-            array($handler, 'destroy'),
-            array($handler, 'gc')
+            [$handler, 'open'],
+            [$handler, 'close'],
+            [$handler, 'read'],
+            [$handler, 'write'],
+            [$handler, 'destroy'],
+            [$handler, 'gc']
         );
         ini_set('session.gc_maxlifetime', COOKIE_LIFETIME);
         ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
@@ -97,7 +99,7 @@ class sessionHandlerDb
 
     function write($ses_id, $data)
     {
-        $params = array ();
+        $params = [];
         $params['session_id'] = $ses_id;
         $params['value'] = $data;
         $params['expires'] = time() + COOKIE_LIFETIME;
