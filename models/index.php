@@ -6,10 +6,16 @@
  * @version  1.0.0.0
  */
  
-class index {
-  public $tpl = array('header', 'index', 'footer');
+class Index
+{
+    public $tpl = ['header', 'index', 'footer'];
 
-  public function logic() {
-    citadel::set('sample');
-  }
+    public function logic()
+    {
+        try {
+            Citadel::set('sample');
+        } catch (Exception $e) {
+        } finally {
+        }
+    }
 }

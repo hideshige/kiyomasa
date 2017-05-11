@@ -7,12 +7,13 @@
  * @package  shells
  */
 
-class sample {
+class Sample
+{
+    public function logic()
+    {
+        Log::$batch = 'batch/';
+        global $argv;
 
-  public function logic() {
-    log::$batch = 'batch/';
-    global $argv;
-    
-    echo 'TEST';
-  }
+        echo 'TEST';
+    }
 }
