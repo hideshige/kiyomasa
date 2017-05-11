@@ -1,25 +1,25 @@
 <?php
 /**
- * シェルを実行するコントローラークラス
+ * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.2.0
+ * @version  1.1.2.1
  * @package  controller
  *
  * ターミナルから以下のように実行する
  * php shells/controller.php サーバー識別 モデル名 パラメーター
  * cron 設定例
- * 00 5 * * * php /var/www/html/yoursite/shells/controller.php 1 sample test 1>> /var/www/html/yoursite/logs/batch/test_$(date +\%y\%m\%d).log 2>&1
+ * 00 5 * * * php /var/www/html/yoursite/shells/camp.php 1 sample test 1>> /var/www/html/yoursite/logs/batch/test_$(date +\%y\%m\%d).log 2>&1
  * cronを実行できるように環境にあわせてchdir()の値を変えること
  *
  */
 
 if (intval($argv[1]) == 0) {
-    //開発環境
-    chdir('/var/www/html/your_site/shells');
+    // 開発環境
+    chdir(__DIR__ . '/shells');
 } else if (intval($argv[1]) > 1) {
-    //本番環境
-    chdir('/var/www/html/your_site/shells');
+    // 本番環境
+    chdir(__DIR__ . '/shells');
 } else {
     echo "argv error\n";
     exit;
@@ -31,14 +31,14 @@ require_once('../equipment/log.php');
 require_once('../equipment/db.php');
 require_once('../common/citadel.php');
 
-$controller = new Controller;
+new Camp;
 
-class Controller
+class Camp
 {
-    private $debug = false;//デバッグモード
-    private $error_flag = false;//初回エラーかどうか（循環防止のため）
+    private $debug = false; // デバッグモード
+    private $error_flag = false; // 初回エラーかどうか（循環防止のため）
 
-    /*
+    /**
      * オブジェクトの作成
      */
     public function __construct()
@@ -91,35 +91,41 @@ class Controller
                 echo S::$dbm->disp_sql;
             }
         } catch (Exception $e) {
-            $error = sprintf('%s(%s) %s', str_replace(SERVER_PATH, '', $e->getFile()), $e->getLine(), $e->getMessage());
+            $error = sprintf(
+                '%s(%s) %s',
+                str_replace(SERVER_PATH, '', $e->getFile()),
+                $e->getLine(),
+                $e->getMessage()
+            );
             Log::error($error);
         } finally {
         }
     }
 
-    /*
+    /**
      * モジュールの組み込み
-     * $model モデルのオブジェクト（参照渡し）
-     * return bool
+     * @param object $model モデルのオブジェクト（参照渡し）
+     * @return bool
      */
     private function getEquipment(&$model)
     {
+        $res = false;
         if (count($model->equipment)) {
             foreach ($model->equipment as $v) {
-                if (!include_once(sprintf('../equipment/%s.php', $v))) {
-                    return false;
+                if (include_once(sprintf('../equipment/%s.php', $v))) {
+                    $class_name = 'equipment\\' . studlyCaps($v);
+                    new $class_name;
+                    $res = true;
                 }
-                $class_name = studlyCaps($v);
-                $mods[$v] = new $class_name;
             }
         }
-        return true;
+        return $res;
     }
 
 
-    /*
+    /**
      * モデルを実行する
-     * $pagename 実行するモデルの名前
+     * @param string $pagename 実行するモデルの名前
      */
     private function exec($pagename)
     {
@@ -169,7 +175,6 @@ class Controller
 
 /**
  * パラメータのショートカット用スタティックオブジェクト
- *
  */
 class S {
     static $dbm;//DBマスターモジュール
