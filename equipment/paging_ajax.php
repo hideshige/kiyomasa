@@ -3,7 +3,7 @@
  * ページングモジュール(Ajax用)
  *
  * @author   Hideshige Sawada
- * @version  1.0.4.0
+ * @version  1.0.4.1
  * @package  equipment
  * 
  */
@@ -32,7 +32,7 @@ class PagingAjax
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
-            throw new Exception('page error');
+            throw new FwException('page error');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page 
@@ -92,7 +92,7 @@ class PagingAjax
             //左矢印
             if ($page_arr['maxleft_flag']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\',1,false);">&lt;&lt;</li>',
+                    '<li class="hover_on" onclick="loadList(\'%s\', 1, false);">&lt;&lt;</li>',
                     $url
                 );
             } else {
@@ -100,7 +100,7 @@ class PagingAjax
             }
             if ($page_arr['left']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\',%d,false);">&lt;</li>',
+                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&lt;</li>',
                     $url,
                     $page_arr['left']
                 );
@@ -130,7 +130,7 @@ class PagingAjax
             for ($i = 1; $i <= $link_count; $i ++) {
                 $aclass = ($p == $page_arr['page']) ? ' page_on' : '';
                 $paging_tag .= sprintf(
-                    '<li class="hover_on%s" onclick="loadList(\'%s\',%d,false);">%s</li>',
+                    '<li class="hover_on%s" onclick="loadList(\'%s\', %d, false);">%s</li>',
                     $aclass,
                     $url,
                     $p,
@@ -142,7 +142,7 @@ class PagingAjax
             //右矢印
             if ($page_arr['right']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\',%d,false);">&gt;</li>',
+                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&gt;</li>',
                     $url,
                     $page_arr['right']
                 );
@@ -151,7 +151,7 @@ class PagingAjax
             }
             if ($page_arr['maxright_flag']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\',%d,false);">&gt;&gt;</li>',
+                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&gt;&gt;</li>',
                     $url,
                     $page_arr['num']
                 );
