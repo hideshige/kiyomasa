@@ -1,6 +1,6 @@
 <?php
 /**
- * ストーンウォール　追加関数など
+ * ストーンウォール　追加関数など土台強化部
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
@@ -14,7 +14,7 @@ namespace bts;
  * パラメータのショートカット用スタティックオブジェクト
  *
  */
-class S 
+class S
 {
     static $post; // 整形後のPOSTパラメータ
     static $get; // 整形後のGETパラメータ

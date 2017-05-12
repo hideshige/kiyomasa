@@ -3,8 +3,8 @@
  * admin用のページかどうかチェックする共通モデル
  *
  * @author   Hideshige Sawada
- * @version  1.0.2.0
- * @package  common
+ * @version  1.0.3.0
+ * @package  extension
  *
  */
 
@@ -12,7 +12,7 @@ namespace kiyomasa;
 
 class AdminCheck
 {
-    public function logic()
+    public function __construct()
     {
         global $g_admin_flag;
         $g_admin_flag = true;

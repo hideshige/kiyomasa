@@ -16,19 +16,21 @@
 
 namespace kiyomasa;
 
+use Exception;
+
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
-require_once(__DIR__ . '/../extension/log.php');
-require_once(__DIR__ . '/../extension/db.php');
-require_once(__DIR__ . '/../extension/stone_walls.php');
-require_once(__DIR__ . '/../common/citadel.php');
+require_once(__DIR__ . '/../device/log.php');
+require_once(__DIR__ . '/../device/db.php');
+require_once(__DIR__ . '/../device/turrets.php');
+require_once(__DIR__ . '/../device/stone_walls.php');
+require_once(__DIR__ . '/../extension/citadel.php');
 
 new Camp;
 
 class Camp
 {
     private $debug = false; // デバッグモード
-    private $error_flag = false; // 初回エラーかどうか（循環防止のため）
 
     public function __construct()
     {
@@ -46,7 +48,7 @@ class Camp
                 DB_MASTER_NAME
             );
             if (!$res_dbm) {
-                throw new Exception('DB_MASTER Connect Error');
+                throw new FwException('DB_MASTER Connect Error');
             }
             S::$dbs = new DbModule();
             $res_dbs = S::$dbs->connect(
@@ -64,13 +66,13 @@ class Camp
                     DB_MASTER_NAME
                 );
                 if (!$res_dbs2) {
-                    throw new Exception('DB_MASTER Connect Error');
+                    throw new FwException('DB_MASTER Connect Error');
                 }
             }
 
             S::$dbm->debug = $this->debug;
             S::$dbs->debug = $this->debug;
-
+            
             $this->exec($argv[1]);
 
             if ($this->debug) {
@@ -79,38 +81,13 @@ class Camp
                 echo "DBM\n";
                 echo S::$dbm->disp_sql;
             }
-        } catch (Exception $e) {
-            $error = sprintf(
-                '%s(%s) %s',
-                str_replace(SERVER_PATH, '', $e->getFile()),
-                $e->getLine(),
-                $e->getMessage()
-            );
-            Log::error($error);
+        } catch (FwException $e) {
+            Log::error($e->getMessage());
+            echo "KIYOMASA ERROR\n";
+            exit;
         } finally {
         }
     }
-
-    /**
-     * モジュールの組み込み
-     * @param object $model モデルのオブジェクト（参照渡し）
-     * @return bool
-     */
-    private function getEquipment(&$model)
-    {
-        $res = false;
-        if (count($model->equipment)) {
-            foreach ($model->equipment as $v) {
-                if (include_once(sprintf('../equipment/%s.php', $v))) {
-                    $class_name = __NAMESPACE__ . '\\' . className($v);
-                    new $class_name;
-                    $res = true;
-                }
-            }
-        }
-        return $res;
-    }
-
 
     /**
      * モデルを実行する
@@ -119,21 +96,25 @@ class Camp
     private function exec($pagename)
     {
         try {
-            $file = sprintf('%s.php', $pagename);
-            if (!file_exists($file) or !include_once($file)) {
-                throw new Exception(sprintf('%s read notice', $pagename));
+            $file = __DIR__ . sprintf('/%s.php', $pagename);
+            if (!file_exists($file) or !require_once($file)) {
+                throw new FwException(sprintf('%s read notice', $pagename));
             }
 
-            $model = new $pagename;
-            $res_equ = $this->getEquipment($model);
+            $turrets = new Turrets();
+            $turrets->debug = $this->debug;
+            
+            $class_name = __NAMESPACE__ . '\\' . className($pagename);
+            $model = new $class_name();
+            $res_equ = $turrets->getEquipment($model);
             if (!$res_equ) {
-                throw new Exception($pagename . ' equipment read notice');
+                throw new FwException($pagename . ' equipment read notice');
             }
             $res = $model->logic();
             if ($res === false) {
-                throw new Exception($pagename . ' logic notice');
+                throw new FwException($pagename . ' logic notice');
             }
-        } catch (Exception $e) {
+        } catch (FwException $e) {
             if (S::$dbm->transaction_flag) {
                 //トランザクションを実行中に例外処理が起きた場合、ロールバックする
                 S::$dbm->rollback();
@@ -141,23 +122,18 @@ class Camp
                 //テーブル排他ロック中に例外処理が起きた場合、テーブル排他ロックを解除する
                 S::$dbm->unlock();
             }
-
             $error = sprintf(
                 '%s(%s) %s',
                 str_replace(SERVER_PATH, '', $e->getFile()),
                 $e->getLine(),
                 $e->getMessage()
             );
-            Log::error($error);
-
-            if (!$this->error_flag) {
-                $this->error_flag = true;//循環防止のフラグ
-                $this->exec('error');//エラー画面モデルの読み込み
-            } else {
-                echo 'KIYOMASA ERROR';
-                exit;
-            }
+            throw new FwException($error);
         } finally {
         }
     }
+}
+
+class FwException extends Exception
+{
 }

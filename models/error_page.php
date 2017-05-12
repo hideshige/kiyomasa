@@ -24,7 +24,7 @@ class ErrorPage
                 unset($_SESSION['error_message']);
             }
             S::$disp[1]['MESSAGE'][0]['message'] = $message;
-        } catch (Exception $e) {
+        } catch (FwException $e) {
         } finally {
         }
     }

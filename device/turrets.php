@@ -1,14 +1,14 @@
 <?php
 /**
- * タレット　追加コントローラ
+ * タレット　強化コントローラ部
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  extension
+ * @package  device
  * 
  */
 
-namespace bts;
+namespace kiyomasa;
 
 class Turrets
 {
@@ -16,7 +16,7 @@ class Turrets
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
     
     /**
-     * モジュールの組み込み
+     * モジュールの装備
      * @params $model モデルのオブジェクト（参照渡し）
      * @return boolean
      */
@@ -33,16 +33,7 @@ class Turrets
                     new $class_name();
                 }
             }
-            if (isset($model->common) and count($model->common)) {
-                foreach ($model->common as $v2) {
-                    if (!include_once(sprintf('../common/%s.php', $v2))) {
-                        throw new FwException('No Common Module');
-                    }
-                    $class_name = __NAMESPACE__ . '\\' . className($v2);
-                    new $class_name();
-                }
-            }
-        } catch (Exception $e) {
+        } catch (FwException $e) {
             Log::error($e->getMessage());
             $res = false;
         } finally {
@@ -104,7 +95,7 @@ class Turrets
                     exit;
                 }
             }
-        } catch (Exception $e) {
+        } catch (FwException $e) {
             if (S::$dbm->transaction_flag) {
                 // トランザクションを実行中に例外処理が起きた場合、ロールバックする
                 S::$dbm->rollback();

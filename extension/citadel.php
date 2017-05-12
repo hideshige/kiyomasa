@@ -4,7 +4,7 @@
  * 
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  common
+ * @package  extension
  * 
  */
 

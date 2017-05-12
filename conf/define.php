@@ -4,7 +4,7 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  common
+ * @package  device
  */
 
 // php.iniで設定されていない場合ここで設定する

@@ -9,11 +9,10 @@
 
 namespace kiyomasa;
 
-class HelloWorld
-{ // クラス名はモデル名と必ず同一にする
+class HelloWorld // クラス名はモデル名に合わせる
+{
     public $tpl = ['header', 'hello_world', 'footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
     public $equipment = []; // equipmentディレクトリから必要な機能を指定する
-    public $common = []; // commonディレクトリから必要な機能を指定する
 
     public function logic()
     {
@@ -29,7 +28,7 @@ class HelloWorld
             S::$disp[1]['MESSAGE_AREA'][1]とは、$this->tpl[1] のテンプレート内で<!-- BEGIN MESSAGE_AREA -->～<!-- END MESSAGE_AREA -->を2回繰り返し、その2回目の方を意味する
             S::$disp[1]['MESSAGE_AREA'][0]['word']とは、$this->tpl[1] のテンプレート内で<!-- BEGIN MESSAGE_AREA -->～<!-- END MESSAGE_AREA -->の中の{word}を意味する
             */
-        } catch (Exception $e) {
+        } catch (FwException $e) {
         } finally {
         }
     }

@@ -11,7 +11,8 @@
  * prepare     ステートメントの準備
  * bind        ステートメントの実行
  * bindSelect  ステートメントの実行と抽出
- * stmt_close  ステートメントの解放
+ * stmtClose   ステートメントの解放
+ * nameFlag    プレースホルダの種別
  * getId       IDの取得
  * lock        テーブル排他ロック
  * unlock      テーブル排他ロック解除
@@ -26,23 +27,24 @@
  *
  */
 
-namespace bts;
+namespace kiyomasa;
 
 use PDO;
 use PDOException;
 
 class DbModule
 {
-    private $connect; // データベースオブジェクト
-    private $stmt = []; // ステートメント
-    private $do = []; // ステートメントで実行中の動作メモを格納
-    private $name = []; // ステートメントで実行中のプレースホルダが名前の場合TRUE
-    private $column_count = []; // 更新するカラムの数
+    protected $connect; // データベースオブジェクト
+    protected $stmt = []; // ステートメント
+    protected $do = []; // ステートメントで実行中の動作メモを格納
+    protected $name = []; // ステートメントで実行中のプレースホルダが名前の場合TRUE
+    protected $column_count = []; // 更新するカラムの数
     public $debug; // デバッグフラグ
     public $disp_sql = ''; // 整形後の画面表示用SQL
     public $transaction_flag = false; // トランザクション実行中の場合TRUE
     public $lock_flag = false; // テーブル排他ロック中の場合TRUE
-    private $sql = ''; // 実行するSQL
+    protected $sql = ''; // 実行するSQL
+    private $bind_params = []; // バインドする値
     private $time; // ステートメント開始時間
     public $qt_sum = 0; // 実行時間合計
 
@@ -84,7 +86,7 @@ class DbModule
                 "SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'"
             );
             if (!$query) {
-                throw new Exception('SQL MODE ERROR');
+                throw new FwException('SQL MODE ERROR');
             }
         } catch (PDOException $e) {
             Log::error($e->getMessage());
@@ -122,9 +124,8 @@ class DbModule
                 $params['updated_at'] = '';
             }
             $params_keys = array_keys($params);
-            foreach ($params_keys as $k => $v) {
-                $params[$k] = ':' . $k;
-                $params_keys[$k] = sprintf('%s', $v);
+            foreach ($params_keys as $v) {
+                $params[$v] = ':' . $v;
             }
             $fields = implode(', ', $params_keys);
             $values = implode(', ', $params);
@@ -195,9 +196,10 @@ class DbModule
             $values = [];
             $i = 0;
 
-            foreach ($params as $k => $v) {
-                $var = $this->name[$statement_id] ? ':' . $k : '?';
-                $values[$i] = sprintf('%s = %s', $k, $var);
+            $params_keys = array_keys($params);
+            foreach ($params_keys as $key) {
+                $var = $this->name[$statement_id] ? ':' . $key : '?';
+                $values[$i] = sprintf('%s = %s', $key, $var);
                 $i ++;
             }
             if (isset($values[1])) {
@@ -249,42 +251,36 @@ class DbModule
         $dev_sql = null,
         $statement_id = 'stmt'
     ) {
-        global $g_counter;
-        if ($sql) {
-            $this->sql = $sql;
-        }
-
-        $this->before();
-        $this->stmt[$statement_id] = $this->connect->query($this->sql);
-        $qt = $this->after();
-
-        if (!$this->stmt[$statement_id]) {
-            $e = $this->connect->errorInfo();
-            if ($this->debug) {
-                $error_mes = sprintf("%d %s\n%s", $e[0], $e[2], $this->sql);
-            } else {
-                $error_mes = 'DBエラー';
+        try {
+            global $g_counter;
+            if ($sql) {
+                $this->sql = $sql;
             }
-            throw new Exception($error_mes);
-        }
 
-        // バイナリなど表示用・ログ用SQL文がある場合には書き換え
-        if ($dev_sql) {
-            $this->sql = $dev_sql;
-        }
+            $this->before();
+            $this->stmt[$statement_id] = $this->connect->query($this->sql);
+            $qt = $this->after();
 
-        if ($this->debug) {
-            // 実行したSQL文と実行時間、変更行数
-            $this->disp_sql .= sprintf(
-                "%d>%s; (%s) [%d]\n",
-                $g_counter,
-                $this->sql,
-                $qt,
-                $this->stmt[$statement_id]->rowCount()
-            );
-            $g_counter ++;
+            // バイナリなど表示用・ログ用SQL文がある場合には書き換え
+            if ($dev_sql) {
+                $this->sql = $dev_sql;
+            }
+
+            if ($this->debug) {
+                // 実行したSQL文と実行時間、変更行数
+                $this->disp_sql .= sprintf(
+                    "%d>%s; (%s) [%d]\n",
+                    $g_counter,
+                    $this->sql,
+                    $qt,
+                    $this->stmt[$statement_id]->rowCount()
+                );
+                $g_counter ++;
+            }
+            return $this->stmt[$statement_id];
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        return $this->stmt[$statement_id];
     }
 
 
@@ -292,32 +288,48 @@ class DbModule
      * ステートメントの準備
      * @param string $statement_id プリペアドステートメントID
      * @param string $sql クエリ
-     * @return 成功した場合はステートメントのtrue、失敗した場合はfalse
+     * @return boolean 成功した場合はステートメントのtrue、失敗した場合はfalse
      */
     public function prepare(
         $statement_id = 'stmt',
         $sql = null
     ) {
-        global $g_counter;
-        if ($sql) {
-            $this->sql = $sql;
-        }
+        try {
+            global $g_counter;
+            if ($sql) {
+                $this->sql = $sql;
+            }
 
-        $this->stmt[$statement_id] = $this->connect->prepare($this->sql);
+            $this->stmt[$statement_id] = $this->connect->prepare($this->sql);
 
-        if ($this->debug) {
-            $this->disp_sql .= sprintf(
-                "%d>PREPARE %s FROM '%s';\n",
-                $g_counter,
-                $statement_id,
-                $this->sql
-            );
-            $g_counter ++;
+            if ($this->debug) {
+                $this->disp_sql .= sprintf(
+                    "%d>PREPARE %s FROM '%s';\n",
+                    $g_counter,
+                    $statement_id,
+                    $this->sql
+                );
+                $g_counter ++;
+            }
+
+            return $this->stmt[$statement_id];
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        
-        return $this->stmt[$statement_id];
     }
-
+    
+    /**
+     * 明示的にプレースホルダを変える
+     * (通常は使用しなくても問題がないが必要な時があれば利用する)
+     * @param boolean $name_flag プレースホルダが:nameならTRUE,?ならFALSE
+     * @param string $statement_id プリペアドステートメントID
+     */
+    public function nameFlag(
+        $name_flag,
+        $statement_id = 'stmt'
+    ) {
+        $this->name[$statement_id] = $name_flag;
+    }
 
     /**
      * ステートメントの実行
@@ -329,104 +341,97 @@ class DbModule
         $params = [],
         $statement_id = 'stmt'
     ) {
-        global $g_counter;
-        $this->before();
-
-        $i = 1;
-        $u = $bind_params = [];
-        if (is_array ($params)) {
-            if (AUTO_UPDATE_TIME and !isset($params['created_at'])) {
-                if ($this->do[$statement_id] === 'insert') {
-                    $params['created_at'] = TIMESTAMP;
-                }
-            }
-            if (AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
-                if ($this->do[$statement_id] === 'insert' or $this->do[$statement_id] === 'update') {
-                    array_splice(
-                        $params,
-                        $this->column_count[$statement_id],
-                        0,
-                        [TIMESTAMP]
-                    );
-                }
-            }
+        try {
+            global $g_counter;
             
-            foreach ($params as $k => $v) {
-                if ($k === 0) {
-                    // array_spliceで入れたupdated_atはキーが0になるためキー名を変える
-                    $k = 'updated_at';
-                }
-                $d_v = (strlen($v) > 5000) ? '[longtext or binary]' : $v;
+            $this->before();
 
-                if ($this->debug) {
-                    if ($d_v === null) {
-                        $this->disp_sql .= sprintf(
-                            "%d>SET @%s = NULL;\n",
-                            $g_counter,
-                            $this->name[$statement_id] ? $k : $i
-                        );
-                    } else if (is_numeric($d_v)) {
-                        $this->disp_sql .= sprintf(
-                            "%d>SET @%s = %d;\n",
-                            $g_counter,
-                            $this->name[$statement_id] ? $k : $i,
-                            $d_v
-                        );
-                    } else {
-                        $this->disp_sql .= sprintf(
-                            "%d>SET @%s = '%s';\n",
-                            $g_counter,
-                            $this->name[$statement_id] ? $k : $i,
-                            $d_v
+            if (!isset($this->name[$statement_id])) {
+                $this->name[$statement_id] = true;
+            }
+
+            $i = 1;
+            $u = $this->bind_params = [];
+            if (is_array ($params)) {
+                if (AUTO_UPDATE_TIME and !isset($params['created_at'])) {
+                    if ($this->do[$statement_id] === 'insert') {
+                        $params['created_at'] = TIMESTAMP;
+                    }
+                }
+                if (AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
+                    if ($this->do[$statement_id] === 'insert' or $this->do[$statement_id] === 'update') {
+                        array_splice(
+                            $params,
+                            $this->column_count[$statement_id],
+                            0,
+                            [TIMESTAMP]
                         );
                     }
-                    $g_counter ++;
                 }
-                $bind_params[] = $v;
 
-                $this->stmt[$statement_id]->bindValue(
-                    $this->name[$statement_id] ? ':' . $k : $i,
-                    $v,
-                    is_int($v) ? PDO::PARAM_INT : PDO::PARAM_STR
-                );
-                $u[] = sprintf('@%s', $this->name[$statement_id] ? $k : $i);
-                $i ++;
+                foreach ($params as $k => $v) {
+                    if ($k === 0) {
+                        // array_spliceで入れたupdated_atはキーが0になるためキー名を変える
+                        $k = 'updated_at';
+                    }
+                    $d_v = (strlen($v) > 5000) ? '[longtext or binary]' : $v;
+
+                    if ($this->debug) {
+                        if ($d_v === null) {
+                            $this->disp_sql .= sprintf(
+                                "%d>SET @%s = NULL;\n",
+                                $g_counter,
+                                $this->name[$statement_id] ? $k : $i
+                            );
+                        } else if (is_numeric($d_v)) {
+                            $this->disp_sql .= sprintf(
+                                "%d>SET @%s = %d;\n",
+                                $g_counter,
+                                $this->name[$statement_id] ? $k : $i,
+                                $d_v
+                            );
+                        } else {
+                            $this->disp_sql .= sprintf(
+                                "%d>SET @%s = '%s';\n",
+                                $g_counter,
+                                $this->name[$statement_id] ? $k : $i,
+                                $d_v
+                            );
+                        }
+                        $g_counter ++;
+                    }
+                    $this->bind_params[] = $v;
+
+                    $this->stmt[$statement_id]->bindValue(
+                        $this->name[$statement_id] ? ':' . $k : $i,
+                        $v,
+                        is_int($v) ? PDO::PARAM_INT : PDO::PARAM_STR
+                    );
+                    $u[] = sprintf('@%s', $this->name[$statement_id] ? $k : $i);
+                    $i ++;
+                }
             }
-        }
+            $this->stmt[$statement_id]->execute();
+            $qt = $this->after($this->bind_params);
+            $this->bind_params = [];
 
-        $res = $this->stmt[$statement_id]->execute();
-        $qt = $this->after($bind_params);
-
-        if ($this->debug) {
-            $using = count($u) ? sprintf('USING %s', implode(', ', $u)) : '';
-            $this->disp_sql .= sprintf(
-                "%d>EXECUTE %s %s; (%s) [%d]\n",
-                $g_counter,
-                $statement_id,
-                $using,
-                $qt,
-                $this->stmt[$statement_id]->rowCount()
-            );
-            $g_counter ++;
-        }
-
-        if (!$res) {
-            $e = $this->stmt[$statement_id]->errorInfo();
             if ($this->debug) {
-                $error_mes = sprintf(
-                    "%s %s\n%s\n%s",
-                    $e[0],
-                    $e[2],
-                    $this->sql,
-                    implode(',', $bind_params)
+                //デバッグ表示
+                $using = count($u) ? sprintf('USING %s', implode(', ', $u)) : '';
+                $this->disp_sql .= sprintf(
+                    "%d>EXECUTE %s %s; (%s) [%d]\n",
+                    $g_counter,
+                    $statement_id,
+                    $using,
+                    $qt,
+                    $this->stmt[$statement_id]->rowCount()
                 );
-            } else {
-                $error_mes = 'DBエラー';
+                $g_counter ++;
             }
-            throw new Exception($error_mes);
+            return $this->stmt[$statement_id]->rowCount();
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-
-        return $this->stmt[$statement_id]->rowCount();
     }
 
 
@@ -442,23 +447,25 @@ class DbModule
         $statement_id = 'stmt',
         $class_flag = false
     ) {
-        $this->bind($param, $statement_id);
-        $count = $this->stmt[$statement_id]->rowCount();
-        $rows = false;
-        if ($count) {
-            if ($class_flag) {
+        try {
+            $this->bind($param, $statement_id);
+            $count = $this->stmt[$statement_id]->rowCount();
+            $rows = false;
+            if ($count and $class_flag) {
                 $this->stmt[$statement_id]->setFetchMode(
                     PDO::FETCH_CLASS,
                     'stdClass'
                 );
-            } else {
+            } else if ($count) {
                 $this->stmt[$statement_id]->setFetchMode(
                     PDO::FETCH_ASSOC
                 );
+                $rows = $this->stmt[$statement_id]->fetchAll();
             }
-            $rows = $this->stmt[$statement_id]->fetchAll();
+            return $rows;
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        return $rows;
     }
 
 
@@ -466,11 +473,16 @@ class DbModule
      * プリペアドステートメントの解放
      * @param string $statement_id プリペアドステートメントID
      */
-    public function stmt_close($statement_id = 'stmt') {
-        global $g_counter;
-        if ($this->stmt[$statement_id]) {
+    public function stmtClose($statement_id = 'stmt') {
+        try {
+            if (!$this->stmt[$statement_id]) {
+                throw new FwException('No Statement');
+            }
+            
             $this->stmt[$statement_id]->closeCursor();
+            
             if ($this->debug) {
+                global $g_counter;
                 $this->disp_sql .= sprintf(
                     "%d>DEALLOCATE PREPARE %s;\n",
                     $g_counter,
@@ -478,9 +490,12 @@ class DbModule
                 );
                 $g_counter ++;
             }
+            
+            unset($this->do[$statement_id]);
+            unset($this->name[$statement_id]);
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        unset($this->do[$statement_id]);
-        unset($this->name[$statement_id]);
     }
 
 
@@ -489,11 +504,15 @@ class DbModule
      * @return integer
      */
     public function getId() {
-        $res = $this->connect->lastInsertId();
-        if (!$res) {
-            throw new Exception('get id error');
+        try {
+            $res = $this->connect->lastInsertId();
+            if (!$res) {
+                throw new FwException('get id error');
+            }
+            return $res;
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        return $res;
     }
 
 
@@ -506,7 +525,7 @@ class DbModule
     public function lock($tables) {
         // トランザクション使用中は実行できない。
         if ($this->transaction_flag) {
-            throw new Exception('LOCK ERROR');
+            throw new FwException('LOCK ERROR');
         }
 
         $this->lock_flag = true;
@@ -536,17 +555,21 @@ class DbModule
      * @return boolean
      */
     public function transaction() {
-        global $g_counter;
-        $res = false;
-        if (!$this->transaction_flag) {
-            $this->transaction_flag = true;
-            $res = $this->connect->beginTransaction();
-            if ($this->debug) {
+        try {
+            $res = false;
+            if ($this->debug and !$this->transaction_flag) {
+                global $g_counter;
                 $this->disp_sql .= $g_counter . ">START TRANSACTION;\n";
                 $g_counter ++;
             }
+            if (!$this->transaction_flag) {
+                $this->transaction_flag = true;
+                $res = $this->connect->beginTransaction();
+            }
+            return $res;
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        return $res;
     }
 
 
@@ -555,17 +578,21 @@ class DbModule
      * @return boolean
      */
     public function commit() {
-        global $g_counter;
-        $res = false;
-        if ($this->transaction_flag) {
-            $this->transaction_flag = false;
-            $res = $this->connect->commit();
-            if ($this->debug) {
+        try {
+            $res = false;
+            if ($this->debug and $this->transaction_flag) {
+                global $g_counter;
                 $this->disp_sql .= $g_counter . ">COMMIT;\n";
                 $g_counter ++;
             }
+            if ($this->transaction_flag) {
+                $this->transaction_flag = false;
+                $res = $this->connect->commit();
+            }
+            return $res;
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        return $res;
     }
 
     /**
@@ -573,17 +600,21 @@ class DbModule
      * @return boolean
      */
     public function rollback() {
-        global $g_counter;
-        $res = false;
-        if ($this->transaction_flag) {
-            $this->transaction_flag = false;
-            $res = $this->connect->rollBack();
-            if ($this->debug) {
+        try {
+            $res = false;
+            if ($this->debug and $this->transaction_flag) {
+                global $g_counter;
                 $this->disp_sql .= $g_counter . ">ROLLBACK;\n";
                 $g_counter ++;
             }
+            if ($this->transaction_flag) {
+                $this->transaction_flag = false;
+                $res = $this->connect->rollBack();
+            }
+            return $res;
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
-        return $res;
     }
 
     /**
@@ -598,13 +629,17 @@ class DbModule
         $param,
         $statement_id = 'stmt'
     ) {
-        $params = implode(', ', $param);
-        $res = $this->query(
-            sprintf('CALL %s(%s)', $name, $params),
-            null,
-            $statement_id
-        );
-        return $res;
+        try {
+            $params = implode(', ', $param);
+            $res = $this->query(
+                sprintf('CALL %s(%s)', $name, $params),
+                null,
+                $statement_id
+            );
+            return $res;
+        } catch (PDOException $e) {
+            $this->dbLog($e->getMessage());
+        }
     }
 
     /**
@@ -617,12 +652,10 @@ class DbModule
 
     /**
      * 実行時間の取得
-     * @param array $param プリペアドステートメントに渡す値の配列
      * @return float 実行時間
      */
-    private function after(
-        $param = []
-    ) {
+    private function after()
+    {
         $t = microtime(true);
         $qt = round($t - $this->time, 4);
         $this->qt_sum += $qt;
@@ -631,11 +664,29 @@ class DbModule
                 sprintf(
                     '[SLOW QUERY] %s [PARAM] %s (%s)',
                     $this->sql,
-                    implode($param, ','),
+                    implode(',', $this->bind_params),
                     $qt
                 )
             );
         }
         return $qt;
+    }
+    
+    /**
+     * エラーメッセージの成型
+     * @param string $error
+     */
+    private function dbLog($error) {
+        $error_mes = sprintf(
+            "%s\n%s\n%s",
+            $error,
+            $this->sql,
+            implode(',', $this->bind_params)
+        );
+        if ($this->debug) {
+            //デバッグ表示
+            dump($error_mes);
+        }
+        throw new FwException($error_mes);
     }
 }
