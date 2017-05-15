@@ -16,7 +16,7 @@ mb_internal_encoding(DEFAULT_CHARSET);
 if (ENV === 0) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 1);
-    define('SERVER_PATH', '/Users/yourname/yoursite');
+    define('SERVER_PATH', '/Users/yourname/yoursite/');
 
     define('DOMAIN_NAME', '/');
     define('LINK_DOMAIN_NAME', 'http://localhost:8000/');
