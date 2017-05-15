@@ -22,9 +22,8 @@ require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
 require_once(__DIR__ . '/../device/log.php');
 require_once(__DIR__ . '/../device/db.php');
-require_once(__DIR__ . '/../device/turrets.php');
-require_once(__DIR__ . '/../device/stone_walls.php');
-require_once(__DIR__ . '/../extension/citadel.php');
+require_once(__DIR__ . '/../device/turret.php');
+require_once(__DIR__ . '/../device/wall.php');
 
 new Camp;
 
@@ -101,12 +100,12 @@ class Camp
                 throw new FwException(sprintf('%s read notice', $pagename));
             }
 
-            $turrets = new Turrets();
-            $turrets->debug = $this->debug;
+            $turret = new Turrets();
+            $turret->debug = $this->debug;
             
             $class_name = __NAMESPACE__ . '\\' . className($pagename);
             $model = new $class_name();
-            $res_equ = $turrets->getEquipment($model);
+            $res_equ = $turret->getEquipment($model);
             if (!$res_equ) {
                 throw new FwException($pagename . ' equipment read notice');
             }

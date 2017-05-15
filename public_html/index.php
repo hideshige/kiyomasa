@@ -28,9 +28,8 @@ require_once(__DIR__ . '/../device/view.php');
 require_once(__DIR__ . '/../device/db.php');
 require_once(__DIR__ . '/../device/memcached.php');
 require_once(__DIR__ . '/../device/session.php');
-require_once(__DIR__ . '/../device/turrets.php');
-require_once(__DIR__ . '/../device/stone_walls.php');
-require_once(__DIR__ . '/../extension/citadel.php');
+require_once(__DIR__ . '/../device/turret.php');
+require_once(__DIR__ . '/../device/wall.php');
 
 new Castle();
 
@@ -86,11 +85,11 @@ class Castle
             S::$dbs->debug = $this->debug;
             S::$mem->debug = $this->debug;
 
-            $turrets = new Turrets();
-            $turrets->debug = $this->debug;
+            $turret = new Turret();
+            $turret->debug = $this->debug;
             
-            S::$post = $turrets->h($_POST);
-            S::$get = $turrets->h($_GET);
+            S::$post = $turret->h($_POST);
+            S::$get = $turret->h($_GET);
             if (isset(S::$get['url'])) {
                 S::$url = explode('/', preg_replace('<^/>', '', S::$get['url']));
                 unset(S::$get['url']);
@@ -126,7 +125,7 @@ class Castle
                 $folder = '';
             }
             
-            $turrets->disp($pagename, $folder);
+            $turret->disp($pagename, $folder);
         } catch (FwException $e) {
             $error = sprintf(
                 '%s(%s) %s',

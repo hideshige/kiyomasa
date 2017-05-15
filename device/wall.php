@@ -1,14 +1,14 @@
 <?php
 /**
- * ストーンウォール　追加関数など土台強化部
+ * ウォール　追加関数など土台強化部
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  extension
+ * @package  device
  * 
  */
 
-namespace bts;
+namespace kiyomasa;
 
 /**
  * パラメータのショートカット用スタティックオブジェクト
@@ -34,7 +34,7 @@ class S
  * @param mixed ダンプするデータをカンマ区切りで記入する
  */
 $dump = '';
-function dump() 
+function dump()
 {
     global $dump;
     $bt = debug_backtrace();
@@ -54,14 +54,22 @@ function dump()
  */
 function className($string)
 {
-    return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+    return trim(str_replace(' ', '', ucwords(str_replace('_', ' ', $string))));
 }
 
-// libraryのオートロード
+// extensionのオートロード
 spl_autoload_register(
-    function ($className)
+    function ($class_name)
     {
-        $fileName = SERVER_PATH . 'library/' . ltrim($className, '\\') . '.php';
-        require $fileName;
+        //スタッドリーキャップス記法をアンダースコア記法に変換
+        $under = preg_replace(
+            // 名前空間部を取り除く
+            '/^.*\\\\_|^.*\\\\/',
+            '',
+            // スタッドリーキャップス記法をアンダースコア記法に変換
+            strtolower(preg_replace('/([A-Z])/', '_$1', $class_name))
+        );
+        $file_name = SERVER_PATH . 'extension/' . $under . '.php';
+        require $file_name;
     }
 );

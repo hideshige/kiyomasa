@@ -10,7 +10,7 @@
 
 namespace kiyomasa;
 
-class Turrets
+class Turret
 {
     public $debug; // デバッグモード
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
