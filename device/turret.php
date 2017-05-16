@@ -8,7 +8,7 @@
  * 
  */
 
-namespace bunroku\kiyomasa\device;
+namespace Bunroku\Kiyomasa\Device;
 
 class Turret
 {
@@ -56,7 +56,7 @@ class Turret
                         $json['debug'] .= "----------------------------------------------------------------------\n";
                         $json['debug'] .= "【DB MASTER】\n" . S::$dbm->disp_sql;
                         $json['debug'] .= "----------------------------------------------------------------------\n";
-                        $json['debug'] .= "【MEMCACHED】\n" . S::$mem->disp_mem;
+                        $json['debug'] .= "【MEMCACHED】\n" . (ENV > 0 ? S::$mem->disp_mem : '');
                         $json['debug'] .= "----------------------------------------------------------------------\n";
                         $json['debug'] .= "【DUMP】\n" . $dump;
                         $json['debug'] .= "----------------------------------------------------------------------\n";
@@ -145,48 +145,36 @@ class Turret
             global $first_memory;
             global $first_time;
             global $dump;
-            echo sprintf(
-                '<p style="background:#ffcc00;clear:both;">【DB SLAVE】<br />%s</p>'
-                , nl2br(htmlspecialchars(S::$dbs->disp_sql))
-            );
-            echo sprintf(
-                '<p style="background:#ff8800;">【DB MASTER】<br />%s</p>'
-                , nl2br(htmlspecialchars(S::$dbm->disp_sql))
-            );
-            echo sprintf(
-                '<p style="background:#99aaff;">【MEMCACHED】<br />%s</p>'
-                , nl2br(htmlspecialchars(S::$mem->disp_mem))
-            );
-            echo sprintf(
-                '<pre><p style="background:#ffcc66;">【POST】<br />%s</p></pre>'
-                , htmlspecialchars($post)
-            );
-            echo sprintf(
-                '<pre><p style="background:#ffcc33;">【GET】<br />%s</p></pre>'
-                , htmlspecialchars($get)
-            );
-            echo sprintf(
-                '<pre><p style="background:#ffdd99;">【URL】<br />%s</p></pre>'
-                , htmlspecialchars($url)
-            );
-            echo sprintf(
-                '<pre><p style="background:#eecc00;">【FILES】<br />%s</p></pre>'
-                , htmlspecialchars($files)
-            );
-            echo sprintf(
-                '<pre><p style="background:#ffff00;">【DUMP】<br />%s</p></pre>'
-                , htmlspecialchars($dump)
-            );
+
+            $debug_log = '<div style="clear:both;"></div>'
+                . '<p style="background:#ffcc00;">【DB SLAVE】<br />%s</p>'
+                . '<p style="background:#ff8800;">【DB MASTER】<br />%s</p>'
+                . '<p style="background:#99aaff;">【MEMCACHED】<br />%s</p>'
+                . '<pre><p style="background:#ffcc66;">【POST】<br />%s</p>'
+                . '<p style="background:#ffcc33;">【GET】<br />%s</p>'
+                . '<p style="background:#ffdd99;">【URL】<br />%s</p>'
+                . '<p style="background:#eecc00;">【FILES】<br />%s</p>'
+                . '<p style="background:#ffff00;">【DUMP】<br />%s</p></pre>'
+                . '<p style="background:#ff0000;">デバッグモード<br />'
+                . ' OS: %s PHP ver: %s<br />'
+                . ' メモリ使用量: %s KB (固定分) + %s KB (追加分) = %s KB<br />'
+                . ' 実行時間: %s 秒<br />'
+                . ' IP: %s<br />'
+                . ' タイムスタンプ: %s (%d)</p>';
 
             $peak_memory = memory_get_peak_usage() / 1024;
             $last_time = microtime(true);
+            
             echo sprintf(
-                '<p style="background:#ff0000;">デバッグモード<br />
-                  OS: %s PHP ver: %s<br />
-                  メモリ使用量: %s KB (固定分) + %s KB (追加分) = %s KB<br />
-                  実行時間: %s 秒<br />
-                  IP: %s<br />
-                  タイムスタンプ: %s (%d)</p>',
+                $debug_log,
+                nl2br(htmlspecialchars(S::$dbs->disp_sql)),
+                nl2br(htmlspecialchars(S::$dbm->disp_sql)),
+                ENV > 0 ? nl2br(htmlspecialchars(S::$mem->disp_mem)) : '',
+                htmlspecialchars($post),
+                htmlspecialchars($get),
+                htmlspecialchars($url),
+                htmlspecialchars($files),
+                htmlspecialchars($dump),
                 PHP_OS, phpversion(),
                 number_format($first_memory),
                 number_format($peak_memory - $first_memory),

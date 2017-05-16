@@ -8,7 +8,7 @@
  *
  */
 
-namespace bunroku\kiyomasa\equipment;
+namespace Bunroku\Kiyomasa\Equipment;
 
 class NgWord
 {

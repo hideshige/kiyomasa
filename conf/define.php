@@ -7,32 +7,32 @@
  * @package  device
  */
 
-const NAME_SPACE = 'bunroku\kiyomasa';
+const NAME_SPACE = 'Bunroku\Kiyomasa';
 
 // php.iniで設定されていない場合ここで設定する
 const DEFAULT_CHARSET = 'utf8';
 date_default_timezone_set('Asia/Tokyo');
-mb_language('Japanese');
-mb_internal_encoding(DEFAULT_CHARSET);
+//mb_language('Japanese');
+//mb_internal_encoding(DEFAULT_CHARSET);
 
 if (ENV === 0) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 1);
-    define('SERVER_PATH', '/Users/yourname/yoursite/');
+    define('SERVER_PATH', 'D:\kiyomasa\\');
 
     define('DOMAIN_NAME', '/');
     define('LINK_DOMAIN_NAME', 'http://localhost:8000/');
     define('SSL_LINK_DOMAIN_NAME', 'https://localhost:8000/');
 
-    define('MEMCACHED_SERVER', 'localhost');
-    define('DB_MASTER_SERVER', 'localhost');
-    define('DB_MASTER_USER', '');
-    define('DB_MASTER_PASSWORD', '');
-    define('DB_MASTER_NAME', '');
+    define('MEMCACHED_SERVER', 'localhost:3306');
+    define('DB_MASTER_SERVER', 'localhost:3306');
+    define('DB_MASTER_USER', 'kiyomasa');
+    define('DB_MASTER_PASSWORD', 'password');
+    define('DB_MASTER_NAME', 'kiyomasa');
     define('DB_SLAVE_SERVER', 'localhost');
-    define('DB_SLAVE_USER', '');
-    define('DB_SLAVE_PASSWORD', '');
-    define('DB_SLAVE_NAME', '');
+    define('DB_SLAVE_USER', 'kiyomasa');
+    define('DB_SLAVE_PASSWORD', 'password');
+    define('DB_SLAVE_NAME', 'kiyomasa');
 
     define('TO_EMAIL', '');
     define('FROM_EMAIL', '');

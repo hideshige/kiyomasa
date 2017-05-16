@@ -8,7 +8,7 @@
  *
  */
 
-namespace bunroku\kiyomasa\extension;
+namespace Bunroku\Kiyomasa\Extension;
 
 class AdminCheck
 {

@@ -98,7 +98,7 @@ if (isset(S::$post['post_flag'])) {
  *
  */
 
-namespace bunroku\kiyomasa\equipment;
+namespace Bunroku\Kiyomasa\Equipment;
 
 class Form
 {

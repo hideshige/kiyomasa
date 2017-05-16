@@ -7,10 +7,10 @@
  * @package  models
  */
 
-namespace bunroku\kiyomasa\models;
+namespace Bunroku\Kiyomasa\Models;
 
-use bunroku\kiyomasa\device\FwException;
-use bunroku\kiyomasa\device\S;
+use Bunroku\Kiyomasa\Device\FwException;
+use Bunroku\Kiyomasa\Device\S;
 
 class HelloWorld // クラス名はモデル名に合わせる
 {

@@ -7,7 +7,7 @@
  * @package  equipment
  */
 
-namespace bunroku\kiyomasa\equipment;
+namespace Bunroku\Kiyomasa\Equipment;
 
 class Chara
 {

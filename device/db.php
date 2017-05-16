@@ -27,7 +27,7 @@
  *
  */
 
-namespace bunroku\kiyomasa\device;
+namespace Bunroku\Kiyomasa\Device;
 
 use PDO;
 use PDOException;
@@ -112,7 +112,6 @@ class Db
         $statement_id = 'stmt'
     ) {
         $this->do[$statement_id] = 'insert';
-        
         $res = false;
 
         if ($params) {
@@ -342,6 +341,7 @@ class Db
         $statement_id = 'stmt'
     ) {
         try {
+            var_dump($params);
             global $g_counter;
             
             $this->before();
@@ -411,6 +411,7 @@ class Db
                     $i ++;
                 }
             }
+            
             $this->stmt[$statement_id]->execute();
             $qt = $this->after($this->bind_params);
             $this->bind_params = [];

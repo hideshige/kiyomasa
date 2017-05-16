@@ -8,9 +8,9 @@
  * 
  */
 
-namespace bunroku\kiyomasa\extension;
+namespace Bunroku\Kiyomasa\Extension;
 
-use bunroku\kiyomasa\device\S;
+use Bunroku\Kiyomasa\Device\S;
 
 class JsonCommon
 {

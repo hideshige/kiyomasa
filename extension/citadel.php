@@ -10,9 +10,9 @@
  * 
  */
 
-namespace bunroku\kiyomasa\extension;
+namespace Bunroku\Kiyomasa\Extension;
 
-use bunroku\kiyomasa\device\S;
+use Bunroku\Kiyomasa\Device\S;
 
 class Citadel
 {
@@ -32,13 +32,7 @@ class Citadel
             S::$disp[$i]['REPLACE']['domain'] = DOMAIN_NAME;
             S::$disp[$i]['REPLACE']['link_domain'] = LINK_DOMAIN_NAME;
         }
-        if (!S::$jflag and $token_update_flag) {
-            $token = hash('sha256', microtime() . 'eijm4902');
-            $_SESSION['token'] = $token;
-            S::$disp[2]['REPLACE']['token'] = $token;
-        }
-        require_once(__DIR__ . '/../extension/login_check.php');
-        LoginCheck::logic($login_flag);
+        //セッションまわりの処理をここに記入する
     }
 
     /**

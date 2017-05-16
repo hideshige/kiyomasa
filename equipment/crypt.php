@@ -11,9 +11,9 @@
  * @package  equipment
  */
 
-namespace bunroku\kiyomasa\equipment;
+namespace Bunroku\Kiyomasa\Equipment;
 
-use bunroku\kiyomasa\device\FwException;
+use Bunroku\Kiyomasa\Device\FwException;
 
 class Crypt
 {

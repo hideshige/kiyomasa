@@ -14,16 +14,16 @@
  *
  */
 
-namespace bunroku\kiyomasa\shells;
+namespace Bunroku\Kiyomasa\Shells;
 
-use bunroku\kiyomasa\device\Db;
-use bunroku\kiyomasa\device\S;
-use bunroku\kiyomasa\device\FwException;
-use bunroku\kiyomasa\device\Log;
+use Bunroku\Kiyomasa\Device\Db;
+use Bunroku\Kiyomasa\Device\S;
+use Bunroku\Kiyomasa\Device\FwException;
+use Bunroku\Kiyomasa\Device\Log;
 
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
-require_once(__DIR__ . '/../device/wall.php');
+require_once(__DIR__ . '/../device/tower.php');
 
 new Camp;
 

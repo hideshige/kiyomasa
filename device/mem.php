@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.5.4
+ * @version  1.0.6.0
  * @package  device
  * 
  * バックアップ用テーブルを準備しておく
@@ -19,7 +19,7 @@
  *
  */
 
-namespace bunroku\kiyomasa\device;
+namespace Bunroku\Kiyomasa\Device;
 
 use Memcached;
 
@@ -96,7 +96,8 @@ class Mem
             $where = 'WHERE memcached_key = ?';
             S::$dbs->select('memcached', '*', $where);
             $res = S::$dbs->bindSelect($param);
-            if (!$res or ($res[0]['temp_flag'] and strtotime($res[0]['expire']) < time())) {
+            if (!$res or ($res[0]['temp_flag'] and 
+                strtotime($res[0]['expire']) < time())) {
                 return false;
             }
 
@@ -111,7 +112,12 @@ class Mem
         if ($this->debug and $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
-            $this->disp_mem .= sprintf("■GET %s\n[K]%s [V]%s\n", $dump, $key, print_r($var, true));
+            $this->disp_mem .= sprintf(
+                "■GET %s\n[K]%s [V]%s\n",
+                $dump,
+                $key,
+                print_r($var, true)
+            );
         }
         return $var;
     }

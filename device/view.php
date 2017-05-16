@@ -20,7 +20,7 @@
  * 
  */
 
-namespace bunroku\kiyomasa\device;
+namespace Bunroku\Kiyomasa\Device;
 
 class View
 {

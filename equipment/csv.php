@@ -7,9 +7,9 @@
  * @package  equipment
  */
 
-namespace bunroku\kiyomasa\equipment;
+namespace Bunroku\Kiyomasa\Equipment;
 
-use bunroku\kiyomasa\extension\Citadel;
+use Bunroku\Kiyomasa\Extension\Citadel;
 
 class Csv
 {

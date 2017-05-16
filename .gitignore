@@ -1,5 +1,6 @@
 *.log
 *~
+session
 env.php
 .DS_Store
 *.csv

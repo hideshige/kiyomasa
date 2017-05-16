@@ -7,10 +7,10 @@
  * @package  models
  */
 
-namespace bunroku\kiyomasa\models;
+namespace Bunroku\Kiyomasa\Models;
 
-use bunroku\kiyomasa\device\FwException;
-use bunroku\kiyomasa\extension\Citadel;
+use Bunroku\Kiyomasa\Device\FwException;
+use Bunroku\Kiyomasa\Extension\Citadel;
 
 class ErrorPage
 {
