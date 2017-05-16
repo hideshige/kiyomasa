@@ -23,7 +23,7 @@ namespace bunroku\kiyomasa\device;
 
 use Memcached;
 
-class MemcachedModule
+class Mem
 {
     private $memcached1;//memcachedオブジェクト
     private $active;//memcachedが起動しているかどうかのフラグ

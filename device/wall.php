@@ -8,7 +8,7 @@
  * 
  */
 
-namespace dh\bts\device;
+namespace bunroku\kiyomasa\device;
 
 use Exception;
 
