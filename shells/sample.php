@@ -7,7 +7,9 @@
  * @package  shells
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\shells;
+
+use bunroku\kiyomasa\device\Log;
 
 class Sample
 {

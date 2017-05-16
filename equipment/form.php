@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.3.3.0
+ * @version  1.3.3.2
  * @package  equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -98,7 +98,7 @@ if (isset(S::$post['post_flag'])) {
  *
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
 
 class Form
 {
@@ -273,18 +273,18 @@ class Form
                     $name,
                     $key,
                     $val['select'],
-                    @$post[$name],
+                    isset($post[$name]) ? $post[$name] : '',
                     $form,
-                    @$val['tag_add']
+                    isset($val['tag_add']) ? $val['tag_add'] : ''
                 );
             } else if ($val['type'] === 2) {
                 self::radioForm(
                     $name,
                     $key,
                     $val['select'],
-                    @$post[$name],
+                    isset($post[$name]) ? $post[$name] : '',
                     $form,
-                    @$val['tag_add'],
+                    isset($val['tag_add']) ? $val['tag_add'] : '',
                     $br_flag
                 );
             } else if ($val['type'] === 4) {
@@ -292,64 +292,40 @@ class Form
                     $name,
                     $key,
                     $val['select'],
-                    @$post[$name],
+                    isset($post[$name]) ? $post[$name] : '',
                     $form,
-                    @$val['tag_add'],
+                    isset($val['tag_add']) ? $val['tag_add'] : '',
                     $br_flag
                 );
-            } else if ($val['type'] === 5) {
-                if (!isset ($val['size'])) {
-                    $val['size'] = 10;
+            } else if ($val['type'] === 5 or $val['type'] === 6 or $val['type'] === 7) {
+                switch ($val['type']) {
+                    case 6: $text_type = 'password'; break;
+                    case 7: $text_type = 'email'; break;
+                    default: $text_type = 'text';
                 }
-                $max = @$val['max'] ? sprintf(' maxlength="%d"', $val['max']) : '';
-                $t = '<input type="text" name="%s" value="%s" size="%d"%s%s />';
-                $form[$key] .= sprintf(
-                    $t,
-                    $name,
-                    @$post[$name],
-                    $val['size'],
-                    $max,
-                    @$val['tag_add']
-                );
-            } else if ($val['type'] === 6) {
-                if (!isset ($val['size'])) {
-                    $val['size'] = 10;
-                }
-                $max = @$val['max']
+                $max = isset($val['max'])
                     ? sprintf(' maxlength="%d"', $val['max']) : '';
-                $t = '<input type="password" name="%s" value="%s" size="%d"%s%s />';
+                $t = '<input type="%s" name="%s" value="%s" size="%d"%s%s%s />';
                 $form[$key] .= sprintf(
                     $t,
+                    $text_type,
                     $name,
-                    @$post[$name],
-                    $val['size'],
+                    isset($post[$name]) ? $post[$name] : '',
+                    isset ($val['size']) ? isset ($val['size']) : 10,
                     $max,
-                    @$val['tag_add']
-                );
-            } else if ($val['type'] === 7) {
-                if (!isset ($val['size'])) {
-                    $val['size'] = 10;
-                }
-                $max = @$val['max']
-                    ? sprintf(' maxlength="%d"', $val['max']) : '';
-                $t = '<input type="email" name="%s" value="%s" size="%d"%s%s />';
-                $form[$key] .= sprintf(
-                    $t,
-                    $name,
-                    @$post[$name],
-                    $val['size'],
-                    $max,
-                    @$val['tag_add']
+                    isset($val['tag_add']) ? $val['tag_add'] : '',
+                    isset($val['must']) ? ' required' : ''
                 );
             } else {
-                $t = '<textarea name="%s" cols="%d" rows="%d"%s>%s</textarea>';
+                $t = '<textarea name="%s" cols="%d" rows="%d"%s%s>%s</textarea>';
                 $form[$key] .= sprintf(
                     $t,
                     $name,
-                    @$val['cols'] ? $val['cols'] : 50,
-                    @$val['rows'] ? $val['rows'] : 4,
-                    @$val['tag_add'],
-                    @$post[$name]
+                    isset($val['cols']) ? $val['cols'] : 50,
+                    isset($val['rows']) ? $val['rows'] : 4,
+                    isset($val['tag_add']) ? $val['tag_add'] : '',
+                    isset($val['must']) ? ' required' : '',
+                    isset($post[$name]) ? $post[$name] : ''
                 );
             }
             if (isset ($val['add'])) {

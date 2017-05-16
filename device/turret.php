@@ -8,40 +8,13 @@
  * 
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\device;
 
 class Turret
 {
     public $debug; // デバッグモード
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
     
-    /**
-     * モジュールの装備
-     * @params $model モデルのオブジェクト（参照渡し）
-     * @return boolean
-     */
-    public function getEquipment(&$model)
-    {
-        try {
-            $res = true;
-            if (isset($model->equipment) and count($model->equipment)) {
-                foreach ($model->equipment as $v) {
-                    if (!include_once(sprintf('../equipment/%s.php', $v))) {
-                        throw new FwException('No Equipment');
-                    }
-                    $class_name = __NAMESPACE__ . '\\' . className($v);
-                    new $class_name();
-                }
-            }
-        } catch (FwException $e) {
-            Log::error($e->getMessage());
-            $res = false;
-        } finally {
-            return $res;
-        }
-    }
-
-
     /**
      * モデルを実行し、ビューにデータを渡す
      * @param string $pagename 実行するモデルの名前
@@ -50,23 +23,21 @@ class Turret
     public function disp($pagename, $folder = '')
     {
         try {
-            $file = sprintf('../models/%s%s.php', $folder, $pagename);
-            if (!file_exists($file) or !include_once($file)) {
-                header('HTTP/1.0 404 Not Found');
-                throw new FwException(sprintf('%s read notice', $pagename));
+            // modelファイルの読み込み
+            $file = SERVER_PATH . 'models/' . $pagename . '.php';
+            if (!file_exists($file)) {
+                throw new FwException($file . ' not found');
             }
-
-            $class_name = __NAMESPACE__ . '\\' . className($pagename);
-            $model = new $class_name();
-            $res_equ = $this->getEquipment($model);
-            if (!$res_equ) {
-                throw new FwException($pagename . ' equipment read notice');
-            }
+            require_once($file);
+            $class_name = NAME_SPACE . '\models\\' . trim(
+                str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
+            );
+            $model = new $class_name;
             $res = $model->logic();
             if ($res === false) {
                 throw new FwException($pagename . ' logic notice');
             }
-
+            
             session_write_close();
 
             if (!S::$jflag) {

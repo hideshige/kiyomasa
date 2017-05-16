@@ -3,11 +3,11 @@
  * 文字列関連 モジュール
  * 
  * @author   Hideshige Sawada
- * @version  1.0.1.0
+ * @version  1.0.1.1
  * @package  equipment
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
 
 class Chara
 {

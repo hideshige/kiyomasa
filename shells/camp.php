@@ -3,7 +3,7 @@
  * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.3.0
+ * @version  1.1.4.0
  * @package  shells
  *
  * ターミナルから以下のように実行する
@@ -14,15 +14,15 @@
  *
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\shells;
 
-use Exception;
+use bunroku\kiyomasa\device\Db;
+use bunroku\kiyomasa\device\S;
+use bunroku\kiyomasa\device\FwException;
+use bunroku\kiyomasa\device\Log;
 
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
-require_once(__DIR__ . '/../device/log.php');
-require_once(__DIR__ . '/../device/db.php');
-require_once(__DIR__ . '/../device/turret.php');
 require_once(__DIR__ . '/../device/wall.php');
 
 new Camp;
@@ -39,7 +39,7 @@ class Camp
                 exit;
             }
             Log::$batch = 'batch/';
-            S::$dbm = new DbModule();
+            S::$dbm = new Db();
             $res_dbm = S::$dbm->connect(
                 DB_MASTER_SERVER,
                 DB_MASTER_USER,
@@ -49,7 +49,7 @@ class Camp
             if (!$res_dbm) {
                 throw new FwException('DB_MASTER Connect Error');
             }
-            S::$dbs = new DbModule();
+            S::$dbs = new Db();
             $res_dbs = S::$dbs->connect(
                 DB_SLAVE_SERVER,
                 DB_SLAVE_USER,
@@ -95,20 +95,11 @@ class Camp
     private function exec($pagename)
     {
         try {
-            $file = __DIR__ . sprintf('/%s.php', $pagename);
-            if (!file_exists($file) or !require_once($file)) {
-                throw new FwException(sprintf('%s read notice', $pagename));
-            }
+            $class_name = __NAMESPACE__ . '\\' . trim(
+                str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
+            );
 
-            $turret = new Turrets();
-            $turret->debug = $this->debug;
-            
-            $class_name = __NAMESPACE__ . '\\' . className($pagename);
             $model = new $class_name();
-            $res_equ = $turret->getEquipment($model);
-            if (!$res_equ) {
-                throw new FwException($pagename . ' equipment read notice');
-            }
             $res = $model->logic();
             if ($res === false) {
                 throw new FwException($pagename . ' logic notice');
@@ -131,8 +122,4 @@ class Camp
         } finally {
         }
     }
-}
-
-class FwException extends Exception
-{
 }

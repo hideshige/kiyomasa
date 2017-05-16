@@ -15,12 +15,12 @@
  * <!-- ELEMENT *** -->にはelementフォルダの部分テンプレートが挿入される。
  * 
  * @author   Hideshige Sawada
- * @version  1.0.11.2
- * @package  extension
+ * @version  1.1.1.1
+ * @package  device
  * 
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\device;
 
 class View
 {
@@ -32,26 +32,29 @@ class View
      */
     public static function template($tpl, $disp, $folder = '')
     {
-        $content = self::open($tpl, false, $folder);
-        if (!$content) {
-            return false;
-        }
+        try {
+            $content = self::open($tpl, false, $folder);
 
-        //エレメントの反映
-        $content = self::elementMatch($content);
-        $content = str_replace("\n", '=br=', $content);
+            //エレメントの反映
+            $content = self::elementMatch($content);
+            $content = str_replace("\n", '=br=', $content);
 
-        //コンテンツの下準備のため先に変換しておく
-        if (isset ($disp['REPLACE'])) {
-            foreach ($disp['REPLACE'] as $k => $v) {
-                $content = str_replace('{' . $k . '}', $v, $content);
+            //コンテンツの下準備のため先に変換しておく
+            if (isset ($disp['REPLACE'])) {
+                foreach ($disp['REPLACE'] as $k => $v) {
+                    $content = str_replace('{' . $k . '}', $v, $content);
+                }
+                unset($disp['REPLACE']);
             }
-            unset($disp['REPLACE']);
-        }
 
-        $content = self::match($disp, $content);
-        $content = str_replace('=br=', "\n", $content);
-        return $content;
+            $content = self::match($disp, $content);
+            $content = str_replace('=br=', "\n", $content);
+        } catch (device\FwException $e) {
+            Log::error($e->getMessage());
+            $content = null;
+        } finally {
+            return $content;
+        }
     }
 
     /**
@@ -151,6 +154,7 @@ class View
      */
     private static function open($tpl, $elm, $folder = '')
     {
+        $content = null;
         $add = preg_match('<\.>', $tpl) ? '' : '.html';
         $element = $elm ? 'element/' : '';
         $tpl_folder = (MOBILE_FLAG and !isset ($_SESSION['mobile_pc_flag']))
@@ -159,9 +163,12 @@ class View
         if ($tpl_folder == 'templates_mobile/' and !file_exists($fname)) {
               $fname = SERVER_PATH . 'templates/' . $folder . $element . $tpl . $add;
         }
-        $fh = @fopen($fname, 'r');
+        if (!file_exists($fname)) {
+            throw new device\FwException('No Template');
+        }
+        $fh = fopen($fname, 'r');
         if (!$fh) {
-            return null;
+            throw new device\FwException('Template Open Error');
         }
         $content = fread($fh, max(1, filesize($fname)));
         fclose($fh);

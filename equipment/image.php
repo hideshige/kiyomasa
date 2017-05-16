@@ -3,12 +3,14 @@
  * 画像 モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.1.4.0
+ * @version  1.1.4.1
  * @package  equipment
  * 
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
+
+use bunroku\kiyomasa\device\FwException;
 
 class Image
 {
@@ -93,7 +95,7 @@ class Image
         }
 
         if (!$img_res) {
-            throw new Exception('thumbnail resample error');
+            throw new FwException('thumbnail resample error');
         }
 
         $name = $set_name ? ($file_type ? $set_name . '.' . $itype : $set_name)
@@ -107,7 +109,7 @@ class Image
         }
 
         if (!$save) {
-            throw new Exception('thumbnail save error');
+            throw new FwException('thumbnail save error');
         }
 
         imagedestroy($img);
@@ -141,7 +143,7 @@ class Image
         }
         $res = move_uploaded_file($file, $save_folder_file);
         if (!$res) {
-            throw new Exception('file move error');
+            throw new FwException('file move error');
         }
     }
 
@@ -167,7 +169,7 @@ class Image
 
         //ファイルが削除されている場合false
         if (!file_exists($file)) {
-            throw new Exception('virus file deleted');
+            throw new FwException('virus file deleted');
         }
     }
 
@@ -194,7 +196,7 @@ class Image
         } else if (preg_match('/(png|PNG)/', $file_type)) {
             $itype = 'png';
         } else {
-            throw new Exception('not image type ' . $file . ' ' . $file_type);
+            throw new FwException('not image type ' . $file . ' ' . $file_type);
         }
         return $itype;
     }
@@ -208,7 +210,7 @@ class Image
     {
         $file_byte = filesize($file);
         if ($file_byte > $limit) {
-            throw new Exception('file size over');
+            throw new FwException('file size over');
         }
     }
 }

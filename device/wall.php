@@ -8,7 +8,16 @@
  * 
  */
 
-namespace kiyomasa;
+namespace dh\bts\device;
+
+use Exception;
+
+/**
+ * 例外処理クラス
+ */
+class FwException extends Exception
+{
+}
 
 /**
  * パラメータのショートカット用スタティックオブジェクト
@@ -48,28 +57,26 @@ function dump()
 }
 
 /**
- * アンダースコア記法をスタッドリーキャップス記法に変換
- * @param string $string
- * @return string
+ *  オートロード
  */
-function className($string)
-{
-    return trim(str_replace(' ', '', ucwords(str_replace('_', ' ', $string))));
-}
-
-// extensionのオートロード
 spl_autoload_register(
     function ($class_name)
     {
-        //スタッドリーキャップス記法をアンダースコア記法に変換
+        $arr = explode('\\', $class_name);
+        if (!isset($arr[1])) {
+            throw new FwException('Class Name Error: ' . $class_name);
+        }
+        $count = count($arr);
         $under = preg_replace(
-            // 名前空間部を取り除く
-            '/^.*\\\\_|^.*\\\\/',
+            '/^_/',
             '',
             // スタッドリーキャップス記法をアンダースコア記法に変換
-            strtolower(preg_replace('/([A-Z])/', '_$1', $class_name))
+            strtolower(preg_replace('/([A-Z])/', '_$1', $arr[$count - 1]))
         );
-        $file_name = SERVER_PATH . 'extension/' . $under . '.php';
+        $file_name = SERVER_PATH . $arr[$count - 2] . '/' . $under . '.php';
+        if (!file_exists($file_name)) {
+            throw new FwException('Class File Not Found: ' . $file_name);
+        }
         require $file_name;
     }
 );

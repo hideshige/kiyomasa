@@ -6,34 +6,39 @@
  * @version  1.0.0.0
  * @package  extension
  * 
+ * 自由に読み出せるスタティックな便利機能をここに記述する
+ * 
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\extension;
+
+use bunroku\kiyomasa\device\S;
 
 class Citadel
 {
-    public static $db; // MASTER,SLAVE可変オブジェクト
-
     /**
-     * デフォルト値のセット
+     * デフォルト値のセットとセッションまわりの確認
      * @param string $title
+     * @param boolean $login_flag ログインしていないユーザーをログイン画面に飛ばす場合TRUE
+     * @param boolean $token_update_flag トークンを強制的にアップデートしない場合FALSE
      */
-    public static function set($title = '')
-    {
-        S::$disp[0]['REPLACE']['title'] = $title;
-    }
-
-    /**
-     * MASTER,SLAVE接続先可変DBの選択
-     */
-    public static function _db_select()
-    {
-        // トランザクションを実行中には参照の場合でもMASTERに接続する
-        if (S::$dbm->transaction_flag) {
-            self::$db = &S::$dbm;
-        } else {
-            self::$db = &S::$dbs;
+    public static function set(
+        $title = '',
+        $login_flag = true,
+        $token_update_flag = true
+    ) {
+        for ($i = 0; $i < 3; $i ++) {
+            S::$disp[$i]['REPLACE']['title'] = $title;
+            S::$disp[$i]['REPLACE']['domain'] = DOMAIN_NAME;
+            S::$disp[$i]['REPLACE']['link_domain'] = LINK_DOMAIN_NAME;
         }
+        if (!S::$jflag and $token_update_flag) {
+            $token = hash('sha256', microtime() . 'eijm4902');
+            $_SESSION['token'] = $token;
+            S::$disp[2]['REPLACE']['token'] = $token;
+        }
+        require_once(__DIR__ . '/../extension/login_check.php');
+        LoginCheck::logic($login_flag);
     }
 
     /**
@@ -52,6 +57,17 @@ class Citadel
             }
         }
         return $res;
+    }
+
+    /**
+     * フォームのトークンの確認
+     */
+    public static function checkFormToken()
+    {
+        if (!isset(S::$post['token']) or !isset($_SESSION['token'])
+            or S::$post['token'] != $_SESSION['token']) {
+            throw new FwException('Token Error');
+        }
     }
 }
 

@@ -3,8 +3,8 @@
  * memcached モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.5.3
- * @package  extension
+ * @version  1.0.5.4
+ * @package  device
  * 
  * バックアップ用テーブルを準備しておく
  CREATE TABLE `memcached` (
@@ -19,7 +19,7 @@
  *
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\device;
 
 use Memcached;
 
@@ -38,7 +38,7 @@ class MemcachedModule
         $this->memcached1 = new Memcached();
 
         //主がNGの場合は副を使用
-        $this->active = @$this->memcached1->addServer(MEMCACHED_SERVER, 11211);
+        $this->active = $this->memcached1->addServer(MEMCACHED_SERVER, 11211);
         if (!$this->active) {
             Log::error('memcached down');
         }

@@ -3,11 +3,13 @@
  * CSV モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.2.2.0
+ * @version  1.2.2.1
  * @package  equipment
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
+
+use bunroku\kiyomasa\extension\Citadel;
 
 class Csv
 {

@@ -3,11 +3,11 @@
  * クライアントURLモジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.5.0
+ * @version  1.0.5.1
  * @package  equipment
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
 
 class Curl
 {

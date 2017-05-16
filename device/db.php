@@ -22,17 +22,17 @@
  * call        ルーチンの呼び出し
  *
  * @author   Hideshige Sawada
- * @version  1.4.0.0
- * @package  extension
+ * @version  1.4.1.0
+ * @package  device
  *
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\device;
 
 use PDO;
 use PDOException;
 
-class DbModule
+class Db
 {
     protected $connect; // データベースオブジェクト
     protected $stmt = []; // ステートメント
@@ -685,7 +685,7 @@ class DbModule
         );
         if ($this->debug) {
             //デバッグ表示
-            dump($error_mes);
+            \dump($error_mes);
         }
         throw new FwException($error_mes);
     }

@@ -7,11 +7,13 @@
  * VARCHAR(255)に収めるためには暗号化する文字を62文字以内にする必要がある。
  *
  * @author   Hideshige Sawada
- * @version  1.0.2.0
+ * @version  1.0.2.1
  * @package  equipment
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
+
+use bunroku\kiyomasa\device\FwException;
 
 class Crypt
 {
@@ -35,7 +37,7 @@ class Crypt
             );
             if ($res < 0) {
                 mcrypt_module_close($td);
-                throw new Exception('暗号化エラー');
+                throw new FwException('暗号化エラー');
             } else {
                 // dataを暗号化または復号
                 if (!$encode_flag) {

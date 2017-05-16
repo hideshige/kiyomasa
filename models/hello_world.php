@@ -7,12 +7,14 @@
  * @package  models
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\models;
+
+use bunroku\kiyomasa\device\FwException;
+use bunroku\kiyomasa\device\S;
 
 class HelloWorld // クラス名はモデル名に合わせる
 {
     public $tpl = ['header', 'hello_world', 'footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
-    public $equipment = []; // equipmentディレクトリから必要な機能を指定する
 
     public function logic()
     {

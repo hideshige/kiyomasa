@@ -7,6 +7,8 @@
  * @package  device
  */
 
+const NAME_SPACE = 'bunroku\kiyomasa';
+
 // php.iniで設定されていない場合ここで設定する
 const DEFAULT_CHARSET = 'utf8';
 date_default_timezone_set('Asia/Tokyo');

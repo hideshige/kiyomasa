@@ -3,12 +3,14 @@
  * メール モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.6.0
+ * @version  1.0.6.1
  * @package  equipment
  *
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
+
+use bunroku\kiyomasa\device\FwException;
 
 class Mail
 {
@@ -55,7 +57,7 @@ class Mail
 
         $res = mail($to2, $subject4, $body3, $headers, $f);
         if ($res === false) {
-            throw new Exception('send mail error');
+            throw new FwException('send mail error');
         }
         return true;
     }

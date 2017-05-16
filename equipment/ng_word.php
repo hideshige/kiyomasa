@@ -3,12 +3,12 @@
  * 禁止ワードチェック モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.3.0
+ * @version  1.0.3.1
  * @package  equipment
  *
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
 
 class NgWord
 {

@@ -4,11 +4,11 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.3.0
- * @package  extension
+ * @package  device
  *
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\device;
 
 class Log
 {

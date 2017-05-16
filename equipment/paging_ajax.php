@@ -8,7 +8,9 @@
  * 
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\equipment;
+
+use bunroku\kiyomasa\device\FwException;
 
 class PagingAjax
 {

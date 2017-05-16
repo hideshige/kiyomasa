@@ -3,8 +3,8 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Hideshige Sawada
- * @version  1.1.4.0
- * @package  extension
+ * @version  1.1.4.1
+ * @package  device
  * 
  * セッションの保存方法は3種類から選べる
  * (1)memcachedに保存する → sessionHandlerMemを使用すること
@@ -26,7 +26,7 @@
  * 
  */
 
-namespace kiyomasa;
+namespace bunroku\kiyomasa\device;
 
 class Session
 {
@@ -78,17 +78,17 @@ class Session
 class sessionHandlerDb
 {
 
-    function open($save_path, $session_name)
+    public function open($save_path, $session_name)
     {
         return true;
     }
 
-    function close()
+    public function close()
     {
         return true;
     }
 
-    function read($ses_id)
+    public function read($ses_id)
     {
         $params = array ($ses_id, time());
         S::$dbm->select('t_session', 'value', 'WHERE session_id = ? AND expires > ?');
@@ -97,7 +97,7 @@ class sessionHandlerDb
         return $res[0]['value'];
     }
 
-    function write($ses_id, $data)
+    public function write($ses_id, $data)
     {
         $params = [];
         $params['session_id'] = $ses_id;
@@ -108,7 +108,7 @@ class sessionHandlerDb
         return true;
     }
 
-    function destroy($ses_id)
+    public function destroy($ses_id)
     {
         $params = array ($ses_id);
         S::$dbm->delete('t_session', 'WHERE session_id = ?');
@@ -116,7 +116,7 @@ class sessionHandlerDb
         return true;
     }
 
-    function gc($ses_time)
+    public function gc($ses_time)
     {
         $params = array (time());
         S::$dbm->delete('t_session', 'WHERE expires < ?');
@@ -130,17 +130,17 @@ class sessionHandlerDb
  */
 class sessionHandlerMem
 {
-    function open($save_path, $session_name)
+    public function open($save_path, $session_name)
     {
         return true;
     }
 
-    function close()
+    public function close()
     {
         return true;
     }
 
-    function read($ses_id)
+    public function read($ses_id)
     {
         $res = S::$mem->get($ses_id);
         if (!$res) {
@@ -149,19 +149,19 @@ class sessionHandlerMem
         return $res;
     }
 
-    function write($ses_id, $data)
+    public function write($ses_id, $data)
     {
         S::$mem->set($ses_id, $data, false, time() + COOKIE_LIFETIME);
         return true;
     }
 
-    function destroy($ses_id)
+    public function destroy($ses_id)
     {
         S::$mem->delete($ses_id);
         return true;
     }
 
-    function gc($ses_time)
+    public function gc($ses_time)
     {
         return true;
     }
