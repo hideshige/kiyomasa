@@ -4,10 +4,10 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.5.1
- * @package  equipment
+ * @package  device
  */
 
-namespace Bunroku\Kiyomasa\Equipment;
+namespace Bunroku\Kiyomasa\Device;
 
 class Curl
 {
@@ -35,7 +35,7 @@ class Curl
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         // cacert.pemを用意しておく
-        curl_setopt($ch, CURLOPT_CAINFO, SERVER_PATH . 'equipment/cacert.pem');
+        curl_setopt($ch, CURLOPT_CAINFO, SERVER_PATH . 'device/cacert.pem');
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
         if ($headers) {

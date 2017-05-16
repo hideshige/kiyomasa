@@ -4,7 +4,7 @@
  *
  * @author   Hideshige Sawada
  * @version  1.3.3.2
- * @package  equipment
+ * @package  device
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
  * $params = array(
@@ -98,7 +98,7 @@ if (isset(S::$post['post_flag'])) {
  *
  */
 
-namespace Bunroku\Kiyomasa\Equipment;
+namespace Bunroku\Kiyomasa\Device;
 
 class Form
 {

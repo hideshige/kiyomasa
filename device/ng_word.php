@@ -4,11 +4,11 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.3.1
- * @package  equipment
+ * @package  device
  *
  */
 
-namespace Bunroku\Kiyomasa\Equipment;
+namespace Bunroku\Kiyomasa\Device;
 
 class NgWord
 {

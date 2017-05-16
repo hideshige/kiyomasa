@@ -8,10 +8,10 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.2.1
- * @package  equipment
+ * @package  device
  */
 
-namespace Bunroku\Kiyomasa\Equipment;
+namespace Bunroku\Kiyomasa\Device;
 
 use Bunroku\Kiyomasa\Device\FwException;
 

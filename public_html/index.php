@@ -3,7 +3,7 @@
  * KIYOMASAフレームワーク
  *
  * @author   Hideshige Sawada
- * @version  1.4.2.0
+ * @version  1.4.2.1
  * @package  public_html
  * 
  * PHPフレームワーク展示会グループによるコーディング規約に準拠する
@@ -27,7 +27,7 @@ $first_memory = memory_get_usage() / 1024;
 
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
-require_once(__DIR__ . '/../device/tower.php');
+require_once(__DIR__ . '/../device/_tower.php');
 
 new Castle();
 

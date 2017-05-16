@@ -4,10 +4,10 @@
  *
  * @author   Hideshige Sawada
  * @version  1.2.2.1
- * @package  equipment
+ * @package  device
  */
 
-namespace Bunroku\Kiyomasa\Equipment;
+namespace Bunroku\Kiyomasa\Device;
 
 use Bunroku\Kiyomasa\Extension\Citadel;
 
