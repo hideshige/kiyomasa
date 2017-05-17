@@ -1,32 +1,38 @@
 --------------------------------------------------------------------------------
 KIYOMASAフレームワーク V1.0
 2017/05/17
-@AUTHUR SAWADA HIDESHIGE
+AUTHUR: SAWADA HIDESHIGE
 --------------------------------------------------------------------------------
-PHPによる開発を円滑に進めるために設計されたオープンソース・フレームワーク
-GitHub　https://github.com/hideshige/kiyomasa
+PHPの開発を円滑に進めるために設計されたオープンソース・フレームワーク
 
-PHPがインストールされているLinux(CentOS,Ubuntuなど)、Windows、MacOSX上で動作可能
-WEBサーバはApache、nginxに対応
-DBはMySQL、PostgreSQLに対応
+PHP(バージョン7.0以上)がインストールされているLinux(CentOS,Ubuntuなど)、Windows、
+MacOSX上で動作可能。WEBサーバはApache、nginxに対応。DBはMySQL、PostgreSQLに対応。
 
-コーディングルールについてはPHPフレームワーク展示会グループによる規約に準拠する
+コーディングについてはPHPフレームワーク展示会グループによる標準規約に準ずる
 http://www.php-fig.org/
 --------------------------------------------------------------------------------
 ◆ディレクトリ構造
 
-()で囲っているディレクトリおよびファイルは必要に応じて作成する
-*のついているディレクトリおよびファイルは変更してはならない
+root/
+├ conf/ 
+├ device/
+├ extension/
+├ logs/
+├ models/
+├ public_html/
+├ shells/
+└ templates/
+
+◆各ディレクトおよびファイルの説明
 
 root/                  ルートディレクトリはプロジェクト名に変更する
 ├ conf/               設定ファイルなどを格納
 │ ├ define.php    　 プロジェクトの定義設定ファイル
 │ └ env.php          プロジェクトの環境設定ファイル（Gitでは更新されない）
 ├ (data/)             プロジェクトの書き出しファイルを格納
-├ *device/            様々な機能が格納されている（利用のみで編集はしない）
+├ *device/            様々の便利機能を格納（変更不可）
 │ ├ (*_router.php)   PHPビルトインサーバを利用する場合に必要な設定ファイル
-│ ├ *_tower.php      オートロード、ショートカットに関するファイル
-│ └ *turret.php      コントローラの強化ファイル
+│ └ *_tower.php      オートロード、ショートカットに関するファイル
 ├ extension/          プロジェクトの拡張機能、共通機能などを格納
 ├ (library/)          外部からダウンロードしてきたモジュールを格納
 ├ logs/               ログを格納（Gitでは更新されない）
@@ -37,12 +43,62 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ js/              プロジェクトのJavaScriptを格納
 │ │ └ (ajax.js)     Ajax実行ファイル
 │ ├ (.htaccess)      サーバ設定ファイル（WEBサーバがApacheの場合に限る）
-│ └ *index.php       コントローラ（最初にアクセスするファイル）
+│ └ *index.php       コントローラ（最初にアクセスするファイル。変更不可）
 ├ (session/)          セッションファイルを格納（Gitでは更新されない）
 ├ shells/             プロジェクトのシェルプログラムを格納
-│ └ *camp.php        シェルプログラムを実行するためのコントローラ
+│ └ *camp.php        シェルプログラムを実行するためのコントローラ（変更不可）
 ├ templates/          プロジェクトのテンプレートを格納
-├ (templates_mobile/) 携帯用テンプレートを格納
-└ .gitignore          Git設定ファイル
+│ └ element/         プロジェクトの共通部分テンプレートを格納
+├ (templates_mobile/) プロジェクトの携帯用テンプレートを格納
+└ (.gitignore)        Gitを利用する場合に必要な設定ファイル
+
+  補足
+  ()で囲っているディレクトリおよびファイルはプロジェクトで必要に応じて作成する
+  * のついているディレクトリおよびファイルは原則として変更しない
+  クラスの機能と使い方については各ファイルにコメントで詳しく記述している
 
 --------------------------------------------------------------------------------
+◆インストール手順
+
+ここではプロジェクト名を「project_x」とし、/var/www/htmlの直下にKIYOMASAをインス
+トールする手順を記載する。
+
+ 1. 下記サイトよりKIYOMASAをダウンロードする
+    https://github.com/hideshige/kiyomasa
+ 
+ 2. /var/www/html直下にKIYOMASAのフォルダを一式を置き、project_xにリネームする
+
+ 3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する
+    <?php
+    //0:PHPビルトイン環境 1:開発環境 2:ステージング環境 3:本番環境
+    define('ENV', 1);
+
+ 4. /var/www/html/project_x/conf/define.phpをプロジェクト内容に合わせて変更する
+
+ 5. /var/www/html/project_x/直下にlogsとlogs/batchのディレクトリを作成する
+
+ 6. WEBサーバのWEBルートを/var/www/html/project_x/public_html/にする
+
+ 7. WEBサーバのリダイレクト設定を行う
+    <Apacheの場合>
+    # /var/www/html/project_x/public_html/.htaccess に記述するだけで良い
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+    
+    <nginxの場合>
+    # 設定ファイルのlocation部に以下を記載してからnginxを再起動する
+    location / {
+        try_files $uri /index.php?url=$uri&$args;
+    }
+
+ 8. ルートディレクトリ配下のオーナーをWEBサーバに一括変更する
+ 
+ 9. プロジェクトのURLにアクセスして「OK」と表示されれば完了
+
+--------------------------------------------------------------------------------
+◆KIYOMASAの大きな特長
+開発環境では詳細なデバッグ情報（実行時間や実行されたSQLなど）がHTMLの末尾に付与
+されて返される。\dump()コマンドを使うとデバッグ情報枠に成型したダンプデータを表
+示させることも可能。バグを発見するためのヒントとして大いに活用して欲しい。

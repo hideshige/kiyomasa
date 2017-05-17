@@ -7,7 +7,7 @@
  * @package  device
  */
 
-const NAME_SPACE = 'Bunroku\Kiyomasa';
+const NAME_SPACE = 'Yourname\Yourproject';
 
 // php.iniで設定されていない場合ここで設定する
 const DEFAULT_CHARSET = 'utf8';

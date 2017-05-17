@@ -10,9 +10,9 @@
  * 
  */
 
-namespace Bunroku\Kiyomasa\Extension;
+namespace Yourname\Yourproject\Extension;
 
-use Bunroku\Kiyomasa\Device\S;
+use Php\Framework\Kiyomasa\Device\S;
 
 class Citadel
 {

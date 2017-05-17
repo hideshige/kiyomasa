@@ -1,20 +1,23 @@
 <?php
 /**
- * コントローラ部
+ * PHPフレームワーク KIYOMASA
  *
  * @author   Hideshige Sawada
  * @version  1.4.2.2
  * @package  public_html
  * 
+ * 標準コーディング規約
+ * http://www.php-fig.org/
+ * 
  */
 
-use Bunroku\Kiyomasa\Device\Db;
-use Bunroku\Kiyomasa\Device\Mem;
-use Bunroku\Kiyomasa\Device\Session;
-use Bunroku\Kiyomasa\Device\Turret;
-use Bunroku\Kiyomasa\Device\FwException;
-use Bunroku\Kiyomasa\Device\S;
-use Bunroku\Kiyomasa\Device\Log;
+use Php\Framework\Kiyomasa\Device\Db;
+use Php\Framework\Kiyomasa\Device\Mem;
+use Php\Framework\Kiyomasa\Device\Session;
+use Php\Framework\Kiyomasa\Device\Turret;
+use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\S;
+use Php\Framework\Kiyomasa\Device\Log;
 
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;

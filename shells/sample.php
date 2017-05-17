@@ -7,9 +7,9 @@
  * @package  shells
  */
 
-namespace Bunroku\Kiyomasa\Shells;
+namespace Yourname\Yourproject\Shells;
 
-use Bunroku\Kiyomasa\Device\Log;
+use Php\Framework\Kiyomasa\Device\Log;
 
 class Sample
 {

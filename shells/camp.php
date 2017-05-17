@@ -3,7 +3,7 @@
  * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.4.0
+ * @version  1.1.4.1
  * @package  shells
  *
  * ターミナルから以下のように実行する
@@ -14,16 +14,16 @@
  *
  */
 
-namespace Bunroku\Kiyomasa\Shells;
+namespace Php\Framework\Kiyomasa\Shells;
 
-use Bunroku\Kiyomasa\Device\Db;
-use Bunroku\Kiyomasa\Device\S;
-use Bunroku\Kiyomasa\Device\FwException;
-use Bunroku\Kiyomasa\Device\Log;
+use Php\Framework\Kiyomasa\Device\Db;
+use Php\Framework\Kiyomasa\Device\S;
+use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\Log;
 
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
-require_once(__DIR__ . '/../device/tower.php');
+require_once(__DIR__ . '/../device/_tower.php');
 
 new Camp;
 
@@ -95,7 +95,7 @@ class Camp
     private function exec($pagename)
     {
         try {
-            $class_name = __NAMESPACE__ . '\\' . trim(
+            $class_name = NAME_SPACE . '\Models\\' . trim(
                 str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
             );
 

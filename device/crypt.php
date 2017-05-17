@@ -11,9 +11,9 @@
  * @package  device
  */
 
-namespace Bunroku\Kiyomasa\Device;
+namespace Php\Framework\Kiyomasa\Device;
 
-use Bunroku\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\FwException;
 
 class Crypt
 {

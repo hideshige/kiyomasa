@@ -26,7 +26,7 @@
  *
  */
 
-namespace Bunroku\Kiyomasa\Device;
+namespace Php\Framework\Kiyomasa\Device;
 
 use PDO;
 use PDOException;
@@ -48,6 +48,8 @@ class Db extends DbModule
         $statement_id = 'stmt'
     ) {
         $this->do[$statement_id] = 'insert';
+        $this->name[$statement_id] = true;
+
         $res = false;
 
         if ($params) {
@@ -97,7 +99,7 @@ class Db extends DbModule
         
         // プレースホルダが?か:nameかを判定
         $this->name[$statement_id] = preg_match('/\?/', $where) ? false : true;
-        
+
         $this->sql = sprintf('SELECT %s FROM %s %s', $params, $table, $where);
         $res = $this->prepare($statement_id);
         return $res;
@@ -280,7 +282,7 @@ class Db extends DbModule
             global $g_counter;
             
             $this->before();
-
+            
             if (!isset($this->name[$statement_id])) {
                 $this->name[$statement_id] = true;
             }
@@ -336,19 +338,21 @@ class Db extends DbModule
                     }
                     $this->bind_params[] = $v;
 
+                    $name = $this->name[$statement_id] ? $k : $i;
                     $this->stmt[$statement_id]->bindValue(
-                        $this->name[$statement_id] ? ':' . $k : $i,
+                        $name,
                         $v,
                         is_int($v) ? PDO::PARAM_INT : PDO::PARAM_STR
                     );
-                    $u[] = sprintf('@%s', $this->name[$statement_id] ? $k : $i);
+                    $u[] = sprintf('@%s', $name);
                     $i ++;
                 }
             }
-            
+
             $this->stmt[$statement_id]->execute();
             $qt = $this->after($this->bind_params);
             $this->bind_params = [];
+            $count = $this->stmt[$statement_id]->rowCount();
 
             if ($this->debug) {
                 //デバッグ表示
@@ -359,11 +363,11 @@ class Db extends DbModule
                     $statement_id,
                     $using,
                     $qt,
-                    $this->stmt[$statement_id]->rowCount()
+                    $count
                 );
                 $g_counter ++;
             }
-            return $this->stmt[$statement_id]->rowCount();
+            return $count;
         } catch (PDOException $e) {
             $this->dbLog($e->getMessage());
         }
@@ -383,8 +387,7 @@ class Db extends DbModule
         $class_flag = false
     ) {
         try {
-            $this->bind($param, $statement_id);
-            $count = $this->stmt[$statement_id]->rowCount();
+            $count = $this->bind($param, $statement_id);
             $rows = false;
             if ($count and $class_flag) {
                 $this->stmt[$statement_id]->setFetchMode(

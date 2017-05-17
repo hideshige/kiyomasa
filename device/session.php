@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Hideshige Sawada
- * @version  1.1.4.1
+ * @version  1.1.4.2
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -26,24 +26,25 @@
  * 
  */
 
-namespace Bunroku\Kiyomasa\Device;
+namespace Php\Framework\Kiyomasa\Device;
 
 class Session
 {
     public function __construct()
     {
-        //$handler = new sessionHandlerDb();
         if (ENV > 0) {
             $handler = new sessionHandlerMem();
-            session_set_save_handler(
-                [$handler, 'open'],
-                [$handler, 'close'],
-                [$handler, 'read'],
-                [$handler, 'write'],
-                [$handler, 'destroy'],
-                [$handler, 'gc']
-            );
+        } else {
+            $handler = new sessionHandlerDb();
         }
+        session_set_save_handler(
+            [$handler, 'open'],
+            [$handler, 'close'],
+            [$handler, 'read'],
+            [$handler, 'write'],
+            [$handler, 'destroy'],
+            [$handler, 'gc']
+        );
         
         ini_set('session.gc_maxlifetime', COOKIE_LIFETIME);
         ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
@@ -93,11 +94,22 @@ class sessionHandlerDb
 
     public function read($ses_id)
     {
-        $params = array ($ses_id, time());
-        S::$dbm->select('t_session', 'session_value', 'WHERE session_id = ? AND session_expires > ?');
-        $res = S::$dbm->bindSelect($params);
-        if (!$res) { return ''; }
-        return $res[0]['session_value'];
+        $read = '';
+        $params = [];
+        $params['session_id'] = $ses_id;
+        $params['session_expires'] = time();
+        S::$dbm->select(
+            't_session',
+            'session_value',
+            'WHERE session_id = :session_id AND '
+            . 'session_expires > :session_expires',
+            'session'
+        );
+        $res = S::$dbm->bindSelect($params, 'session');
+        if ($res) {
+            $read = $res[0]['session_value'];
+        }
+        return $read;
     }
 
     public function write($ses_id, $data)
@@ -106,24 +118,32 @@ class sessionHandlerDb
         $params['session_id'] = $ses_id;
         $params['session_value'] = $data;
         $params['session_expires'] = time() + COOKIE_LIFETIME;
-        S::$dbm->insert('t_session', $params, true);
-        S::$dbm->bind($params);
+        S::$dbm->insert('t_session', $params, true, 'session');
+        S::$dbm->bind($params, 'session');
         return true;
     }
 
     public function destroy($ses_id)
     {
         $params = array ($ses_id);
-        S::$dbm->delete('t_session', 'WHERE session_id = ?');
-        S::$dbm->bind($params);
+        S::$dbm->delete(
+            't_session',
+            'WHERE session_id = :session_id',
+            'session'
+        );
+        S::$dbm->bind($params, 'session');
         return true;
     }
 
     public function gc($ses_time)
     {
         $params = array (time());
-        S::$dbm->delete('t_session', 'WHERE session_expires < ?');
-        S::$dbm->bind($params);
+        S::$dbm->delete(
+            't_session',
+            'WHERE session_expires < :session_expires',
+            'session'
+        );
+        S::$dbm->bind($params, 'session');
         return true;
     }
 }

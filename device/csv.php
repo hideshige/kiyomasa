@@ -3,13 +3,11 @@
  * CSV モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.2.2.1
+ * @version  1.2.2.2
  * @package  device
  */
 
-namespace Bunroku\Kiyomasa\Device;
-
-use Bunroku\Kiyomasa\Extension\Citadel;
+namespace Php\Framework\Kiyomasa\Device;
 
 class Csv
 {
@@ -139,7 +137,7 @@ class Csv
         $csv = implode("\n", $csv_arr);
         // 区切り文字がずれないように"をエスケープする
         $csv = str_replace('&quot;', '""', $csv);
-        $csv = Citadel::hDecode($csv);
+        $csv = Turret::hDecode($csv);
         if ($mojicode != $encode) {
             $csv = mb_convert_encoding($csv, $mojicode, $encode);
         }
@@ -173,7 +171,7 @@ class Csv
             $tsv_arr[] = implode("\t", $v);
         }
         $tsv = implode("\n", $tsv_arr);
-        $tsv = Citadel::hDecode($tsv);
+        $tsv = Turret::hDecode($tsv);
         if ($mojicode != $encode) {
             $tsv = mb_convert_encoding($tsv, $mojicode, $encode);
         }

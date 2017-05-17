@@ -7,9 +7,9 @@
  * @package  models
  */
 
-namespace Bunroku\Kiyomasa\Models;
+namespace Yourname\Yourproject\Models;
 
-use Bunroku\Kiyomasa\Extension\Citadel;
+use Yourname\Yourproject\Extension\Citadel;
 
 class Index
 {

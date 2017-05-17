@@ -8,7 +8,7 @@
  *
  */
 
-namespace Bunroku\Kiyomasa\Device;
+namespace Php\Framework\Kiyomasa\Device;
 
 use PDO;
 use PDOException;

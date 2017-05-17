@@ -7,10 +7,10 @@
  * @package  models
  */
 
-namespace Bunroku\Kiyomasa\Models;
+namespace Yourname\Yourproject\Models;
 
-use Bunroku\Kiyomasa\Device\FwException;
-use Bunroku\Kiyomasa\Device\S;
+use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\S;
 
 class HelloWorld // クラス名はモデル名に合わせる
 {

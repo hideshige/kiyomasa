@@ -20,7 +20,7 @@
  * 
  */
 
-namespace Bunroku\Kiyomasa\Device;
+namespace Php\Framework\Kiyomasa\Device;
 
 class View
 {

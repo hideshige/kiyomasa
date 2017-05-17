@@ -19,4 +19,5 @@ if (file_exists($doc_root . $file)) {
 } else {
     $_GET['url'] = $file;
     require $doc_root . '/index.php';
+    return true;
 }
