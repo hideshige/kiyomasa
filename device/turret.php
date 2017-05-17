@@ -43,7 +43,11 @@ class Turret
             if (!S::$jflag) {
                 if (isset($model->tpl) and count($model->tpl)) {
                     foreach ($model->tpl as $tk => $tv) {
-                        echo View::template($tv, S::$disp[$tk], $folder);
+                        echo View::template(
+                            $tv,
+                            isset(S::$disp[$tk]) ? S::$disp[$tk] : [],
+                            $folder
+                        );
                     }
                 }
                 $this->dispDebug();

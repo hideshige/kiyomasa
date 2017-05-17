@@ -18,19 +18,19 @@ date_default_timezone_set('Asia/Tokyo');
 if (ENV === 0) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 1);
-//    define('SERVER_PATH', 'D:\kiyomasa\\');
-    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/');
+    define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
+//    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
 
     define('DOMAIN_NAME', '/');
     define('LINK_DOMAIN_NAME', 'http://localhost:8000/');
     define('SSL_LINK_DOMAIN_NAME', 'http://localhost:8000/');
 
     define('MEMCACHED_SERVER', 'localhost');
-    define('DB_MASTER_SERVER', 'localhost:3306');
+    define('DB_MASTER_SERVER', 'localhost');
     define('DB_MASTER_USER', 'kiyomasa');
     define('DB_MASTER_PASSWORD', 'password');
     define('DB_MASTER_NAME', 'kiyomasa');
-    define('DB_SLAVE_SERVER', 'localhost:3306');
+    define('DB_SLAVE_SERVER', 'localhost');
     define('DB_SLAVE_USER', 'kiyomasa');
     define('DB_SLAVE_PASSWORD', 'password');
     define('DB_SLAVE_NAME', 'kiyomasa');

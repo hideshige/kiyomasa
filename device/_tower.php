@@ -57,7 +57,7 @@ spl_autoload_register(
         );
         $file_name = strtolower($arr[$count - 2] . '/' . $under) . '.php';
         if (!file_exists(SERVER_PATH . $file_name)) {
-            throw new FwException('Class File Not Found: ' . $file_name);
+            throw new FwException('Class File Not Found: ' . SERVER_PATH . $file_name);
         }
         require SERVER_PATH . $file_name;
     }
