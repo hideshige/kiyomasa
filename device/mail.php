@@ -10,8 +10,6 @@
 
 namespace Bunroku\Kiyomasa\Device;
 
-use Bunroku\Kiyomasa\Device\FwException;
-
 class Mail
 {
     /**

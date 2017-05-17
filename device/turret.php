@@ -51,24 +51,11 @@ class Turret
                     }
                 }
                 $this->dispDebug();
-            } else {
-                if (is_array($res)) {
-                    $json = $res;
-                    if ($this->debug) {
-                        global $dump;
-                        $json['debug'] = "【DB SLAVE】\n" . S::$dbs->disp_sql;
-                        $json['debug'] .= "----------------------------------------------------------------------\n";
-                        $json['debug'] .= "【DB MASTER】\n" . S::$dbm->disp_sql;
-                        $json['debug'] .= "----------------------------------------------------------------------\n";
-                        $json['debug'] .= "【MEMCACHED】\n" . (ENV > 0 ? S::$mem->disp_mem : '');
-                        $json['debug'] .= "----------------------------------------------------------------------\n";
-                        $json['debug'] .= "【DUMP】\n" . $dump;
-                        $json['debug'] .= "----------------------------------------------------------------------\n";
-                        $json['debug'] .= "【MEMORY】\n" . number_format(memory_get_peak_usage() / 1024) . 'KB';
-                    }
-                    echo json_encode($json);
-                    exit;
-                }
+            } else if (is_array($res)) {
+                $json = $res;
+                $this->jsonDebug($json);
+                echo json_encode($json);
+                exit;
             }
         } catch (FwException $e) {
             if (S::$dbm->transaction_flag) {
@@ -79,7 +66,7 @@ class Turret
                 S::$dbm->unlock();
             }
 
-            if (ENV <= 1 or !preg_match('/notice/', $e->getMessage())) {
+            if (!preg_match('/notice/', $e->getMessage())) {
                 $error = sprintf(
                     '%s(%s) %s',
                     str_replace(SERVER_PATH, '', $e->getFile()),
@@ -92,22 +79,26 @@ class Turret
             // エラーページの表示
             // テスト環境の場合、デバッグ用のエラーを表示する
             if (!S::$jflag) {
-                if ($this->debug and isset($error) and !isset($_SESSION['error_message'])) {
+                if ($this->debug and isset($error)
+                    and !isset($_SESSION['error_message'])) {
                     $_SESSION['error_message'] = $error;
                 }
                 if (!$this->error_flag) {
-                    $this->error_flag = true; //  循環防止のフラグ
-                    $this->disp('error_page', $folder); //  エラー画面モデルの読み込み
+                    // 循環防止のフラグ
+                    $this->error_flag = true;
+                    // エラー画面モデルの読み込み
+                    $this->disp('error_page', $folder);
                 } else {
-                    echo '申し訳ございません。しばらく経ってからアクセスしてください。';
-                    if ($this->debug) {
-                        echo '（同階層のerror_page.phpに問題があった場合、この画面が出ます。）';
+                    echo 'エラー';
+                    if ($this->debug and isset($error)) {
+                        echo '<br />';
+                        echo $error;
                     }
                 }
             } else {
-                $array = [];
-                $array['alert'] = $this->debug ? $error : 'エラー';
-                echo json_encode($array);
+                $json = [];
+                $json['alert'] = $this->debug ? $error : 'エラー';
+                echo json_encode($json);
             }
 
             // DBセッションを明示的にリセット
@@ -120,9 +111,33 @@ class Turret
     }
 
     /**
+     * JSON用デバッグの表示
+     * @global string $dump DUMPデータ
+     * @param array $json JSON参照渡し
+     */
+    private function jsonDebug(&$json){
+        if ($this->debug) {
+            global $dump;
+            $json['debug'] = "【DB SLAVE】\n" . S::$dbs->disp_sql
+                . "----------------------------------------------------------\n"
+                . "【DB MASTER】\n" . S::$dbm->disp_sql
+                . "----------------------------------------------------------\n"
+                . "【MEMCACHED】\n" . (ENV > 0 ? S::$mem->disp_mem : '')
+                . "----------------------------------------------------------\n"
+                . "【URL】\n"
+                . urldecode(filter_input(INPUT_SERVER, 'REQUEST_URI')) . "\n"
+                . "----------------------------------------------------------\n"
+                . "【DUMP】\n" . $dump
+                . "----------------------------------------------------------\n"
+                . "【MEMORY】\n"
+                . number_format(memory_get_peak_usage() / 1024) . 'KB';
+        }
+    }
+    
+    /**
      * デバッグ情報の表示
      */
-    public function dispDebug()
+    private function dispDebug()
     {
         if ($this->debug) {
             ob_start();
@@ -200,7 +215,8 @@ class Turret
                 $data[$k] = $this->h($v);
             }
         } else {
-            $data = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data); //  改行コード以外のコントロールコードを排除
+            //  改行コード以外のコントロールコードを排除
+            $data = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data);
             // UNICODE不可視文字トリム
             $invisible_utf8_codes = array(
                 '&#x00AD;',

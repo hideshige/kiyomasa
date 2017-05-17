@@ -3,7 +3,7 @@
  * ページングモジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.4.0
+ * @version  1.0.4.1
  * @package  device
  *
  */
@@ -32,7 +32,7 @@ class Paging
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
-            throw new Exception('page error');
+            throw new FwException('page error');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page

@@ -26,6 +26,10 @@ class Crypt
      */
     private static function open($data, $encode_flag = true)
     {
+        if (!extension_loaded('mcrypt')) {
+            throw new FwException('mcryptがインストールされていません');
+        }
+        
         $res = null;
         if ($data) {
             // 暗号化モジュール開始

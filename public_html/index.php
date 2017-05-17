@@ -1,29 +1,36 @@
 <?php
 /**
- * KIYOMASAフレームワーク
+ * コントローラ部
  *
  * @author   Hideshige Sawada
- * @version  1.4.2.1
+ * @version  1.4.2.2
  * @package  public_html
- * 
- * PHPフレームワーク展示会グループによるコーディング規約に準拠する
- * http:// www.php-fig.org/
  * 
  */
 
 use Bunroku\Kiyomasa\Device\Db;
-use Bunroku\Kiyomasa\Device\Session;
 use Bunroku\Kiyomasa\Device\Mem;
+use Bunroku\Kiyomasa\Device\Session;
 use Bunroku\Kiyomasa\Device\Turret;
 use Bunroku\Kiyomasa\Device\FwException;
 use Bunroku\Kiyomasa\Device\S;
 use Bunroku\Kiyomasa\Device\Log;
 
+$first_time = microtime(true);
+$first_memory = memory_get_usage() / 1024;
+
+// PHP環境の確認
+if (!extension_loaded('mbstring')) {
+    echo 'mbstringがインストールされていません';
+    exit;
+} else if (!extension_loaded('PDO')) {
+    echo 'PDOがインストールされていません';
+    exit;
+}
+
 header("P3P: CP='UNI CUR OUR'"); // コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block'); // XSS対策
 header('Content-Type: text/html;charset=UTF-8');
-$first_time = microtime(true);
-$first_memory = memory_get_usage() / 1024;
 
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');

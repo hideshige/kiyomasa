@@ -55,10 +55,11 @@ spl_autoload_register(
             // スタッドリーキャップス記法をアンダースコア記法に変換
             preg_replace('/([A-Z])/', '_$1', $arr[$count - 1])
         );
-        $file_name = strtolower($arr[$count - 2] . '/' . $under) . '.php';
-        if (!file_exists(SERVER_PATH . $file_name)) {
-            throw new FwException('Class File Not Found: ' . SERVER_PATH . $file_name);
+        $file_name = SERVER_PATH
+            . strtolower($arr[$count - 2] . '/' . $under) . '.php';
+        if (!file_exists($file_name)) {
+            throw new FwException('Class File Not Found: ' . $file_name);
         }
-        require SERVER_PATH . $file_name;
+        require $file_name;
     }
 );

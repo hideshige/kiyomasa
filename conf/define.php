@@ -12,8 +12,8 @@ const NAME_SPACE = 'Bunroku\Kiyomasa';
 // php.iniで設定されていない場合ここで設定する
 const DEFAULT_CHARSET = 'utf8';
 date_default_timezone_set('Asia/Tokyo');
-//mb_language('Japanese');
-//mb_internal_encoding(DEFAULT_CHARSET);
+mb_language('Japanese');
+mb_internal_encoding(DEFAULT_CHARSET);
 
 if (ENV === 0) {
     // ビルトインウェブサーバ
