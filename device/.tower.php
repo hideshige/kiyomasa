@@ -1,6 +1,6 @@
 <?php
 /**
- * タワー　ショートカットなどコントローラの土台強化部
+ * タワー　例外処理やショートカットなど土台強化部
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
@@ -8,7 +8,7 @@
  * 
  */
 
-namespace Php\Framework\Kiyomasa\Core;
+namespace Php\Framework\Kiyomasa\Device;
 
 use Exception;
 

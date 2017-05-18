@@ -13,7 +13,7 @@
 
 namespace Php\Framework\Kiyomasa\Device;
 
-use Php\Framework\Kiyomasa\Core\FwException;
+use Php\Framework\Kiyomasa\Device\FwException;
 
 class Crypt
 {

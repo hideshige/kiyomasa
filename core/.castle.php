@@ -15,8 +15,8 @@ use Php\Framework\Kiyomasa\Device\Db;
 use Php\Framework\Kiyomasa\Device\Mem;
 use Php\Framework\Kiyomasa\Device\Session;
 use Php\Framework\Kiyomasa\Device\Turret;
-use Php\Framework\Kiyomasa\Core\FwException;
-use Php\Framework\Kiyomasa\Core\S;
+use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\S;
 use Php\Framework\Kiyomasa\Device\Log;
 
 $first_time = microtime(true);
@@ -36,9 +36,10 @@ header('X-XSS-Protection: 1; mode=block'); // XSS対策
 header('Content-Type: text/html;charset=UTF-8');
 
 require_once(__DIR__ . '/.define.php');
-require_once(__DIR__ . '/.tower.php');
 require_once(__DIR__ . '/env.php');
 require_once(__DIR__ . '/config.php');
+require_once(__DIR__ . '/../device/.turret.php');
+require_once(__DIR__ . '/../device/.tower.php');
 
 new Castle();
 

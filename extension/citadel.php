@@ -12,7 +12,7 @@
 
 namespace Yourname\Yourproject\Extension;
 
-use Php\Framework\Kiyomasa\Core\S;
+use Php\Framework\Kiyomasa\Device\S;
 
 class Citadel
 {

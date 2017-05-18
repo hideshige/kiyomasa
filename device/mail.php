@@ -34,14 +34,14 @@ class Mail
         );
         mb_internal_encoding(DEFAULT_CHARSET);
 
-        $subject2 = Turret::hDecode($subject);
+        $subject2 = Chara::hDecode($subject);
         $subject3 = mb_convert_encoding(
             $subject2,
             'ISO-2022-JP',
             DEFAULT_CHARSET
         );
         $subject4 = '=?iso-2022-jp?B?' . base64_encode($subject3) . '?=';
-        $body2 = Turret::hDecode($body);
+        $body2 = Chara::hDecode($body);
         $body3 = mb_convert_encoding(
             $body2,
             'ISO-2022-JP',

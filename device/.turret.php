@@ -248,22 +248,4 @@ class Turret
         }
         return $data;
     }
-
-    /**
-     * サニタイズした文字を戻す
-     * @param string $word 戻したい文字
-     * @return string 戻した文字
-     */
-    public static function hDecode($word)
-    {
-        $word2 = htmlspecialchars_decode($word, ENT_QUOTES);
-        $res = $word2;
-        global $g_change_chara;
-        if ($g_change_chara) {
-            foreach ($g_change_chara as $ck => $cv) {
-                $res = str_replace($ck, $cv, $word2);
-            }
-        }
-        return $res;
-    }
 }

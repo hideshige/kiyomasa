@@ -9,7 +9,7 @@
 
 namespace Yourname\Yourproject\Models;
 
-use Php\Framework\Kiyomasa\Core\FwException;
+use Php\Framework\Kiyomasa\Device\FwException;
 use Yourname\Yourproject\Extension\Citadel;
 
 class ErrorPage

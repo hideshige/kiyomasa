@@ -15,14 +15,14 @@
  */
 
 use Php\Framework\Kiyomasa\Device\Db;
-use Php\Framework\Kiyomasa\Core\S;
-use Php\Framework\Kiyomasa\Core\FwException;
+use Php\Framework\Kiyomasa\Device\S;
+use Php\Framework\Kiyomasa\Device\FwException;
 use Php\Framework\Kiyomasa\Device\Log;
 
 require_once(__DIR__ . '/.define.php');
-require_once(__DIR__ . '/.tower.php');
 require_once(__DIR__ . '/env.php');
 require_once(__DIR__ . '/config.php');
+require_once(__DIR__ . '/../device/.tower.php');
 
 new Camp;
 

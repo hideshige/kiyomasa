@@ -137,7 +137,7 @@ class Csv
         $csv = implode("\n", $csv_arr);
         // 区切り文字がずれないように"をエスケープする
         $csv = str_replace('&quot;', '""', $csv);
-        $csv = Turret::hDecode($csv);
+        $csv = Chara::hDecode($csv);
         if ($mojicode != $encode) {
             $csv = mb_convert_encoding($csv, $mojicode, $encode);
         }
@@ -171,7 +171,7 @@ class Csv
             $tsv_arr[] = implode("\t", $v);
         }
         $tsv = implode("\n", $tsv_arr);
-        $tsv = Turret::hDecode($tsv);
+        $tsv = Chara::hDecode($tsv);
         if ($mojicode != $encode) {
             $tsv = mb_convert_encoding($tsv, $mojicode, $encode);
         }
