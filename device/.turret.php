@@ -165,7 +165,8 @@ class Turret
             global $first_time;
             global $dump;
 
-            $debug_log = '<div style="clear:both;"></div>'
+            $debug_log = '<div id="fw_debug" style="position:absolute;'
+                . 'top:10;left:0;opacity:0.8;z-index:10000;display:none;">'
                 . '<p style="background:#ffcc00;">【DB SLAVE】<br />%s</p>'
                 . '<p style="background:#ff8800;">【DB MASTER】<br />%s</p>'
                 . '<p style="background:#99aaff;">【MEMCACHED】<br />%s</p>'
@@ -177,12 +178,17 @@ class Turret
                 . '<p style="background:#ff0000;">デバッグモード<br />'
                 . ' OS: %s PHP ver: %s<br />'
                 . ' メモリ使用量: %s KB (固定分) + %s KB (追加分) = %s KB<br />'
-                . ' 実行時間: %s 秒<br />'
                 . ' IP: %s<br />'
                 . ' タイムスタンプ: %s (%d)</p>'
-                . '<div style="position:absolute;top:0;left:0;width:50px;'
-                . 'background:#000066;color:white;font-size:0.8em;">'
-                . '%s</div>';
+                . '</div>'
+                . '<div style="position:absolute;top:0;left:0;width:120px;'
+                . 'z-index:10001;background:#006;color:white;font-size:0.8em;'
+                . 'opacity:0.7;" onclick="fwDebug();">%s　%s秒</div>'
+                . '<script>function fwDebug() {'
+                . "document.getElementById('fw_debug').style['display'] = "
+                . "document.getElementById('fw_debug').style['display'] === "
+                . "'none' ? 'block' : 'none';"
+                . '}</script>';
 
             $peak_memory = memory_get_peak_usage() / 1024;
             $last_time = microtime(true);
@@ -204,10 +210,10 @@ class Turret
                 number_format($first_memory),
                 number_format($peak_memory - $first_memory),
                 number_format($peak_memory),
-                round($last_time - $first_time, 3),
                 IP_ADDRESS,
                 TIMESTAMP, time(),
-                isset($env[ENV]) ? $env[ENV] : 'ENV' . ENV
+                isset($env[ENV]) ? $env[ENV] : 'ENV' . ENV,
+                round($last_time - $first_time, 5)
             );
         }
     }  
