@@ -14,7 +14,7 @@ use Yourname\Yourproject\Extension\Citadel;
 
 class ErrorPage
 {
-    public $tpl = ['header', 'error', 'footer'];
+    public $tpl = ['header', 'error_page', 'footer'];
 
     public function logic()
     {
