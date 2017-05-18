@@ -3,7 +3,7 @@
  * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.4.1
+ * @version  1.1.4.2
  * @package  shells
  *
  * ターミナルから以下のように実行する
@@ -23,6 +23,7 @@ use Php\Framework\Kiyomasa\Device\Log;
 
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
+require_once(__DIR__ . '/../conf/config.php');
 require_once(__DIR__ . '/../device/_tower.php');
 
 new Camp;

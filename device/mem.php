@@ -3,18 +3,19 @@
  * memcached モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.6.0
+ * @version  1.0.7.0
  * @package  device
  * 
- * バックアップ用テーブルを準備しておく
- CREATE TABLE `memcached` (
-  `memcached_key` VARCHAR(255) NOT NULL,
-  `memcached_value` TEXT,
-  `temp_flag` TINYINT NOT NULL DEFAULT 0,
-  `expire` DATETIME DEFAULT NULL,
-  `created_at` DATETIME DEFAULT NULL,
-  `updated_at` DATETIME DEFAULT NULL,
-  PRIMARY KEY (`memcached_key`)
+ * DBで無期限データ用バックアップテーブルを準備しておく
+ * なお、MemcachedがインストールされていないサーバでもDBで代用可能
+ CREATE TABLE memcached (
+  memcached_key VARCHAR(255) NOT NULL,
+  memcached_value TEXT,
+  temp_flag TINYINT NOT NULL DEFAULT 0,
+  expire DATETIME DEFAULT NULL,
+  created_at DATETIME DEFAULT NULL,
+  updated_at DATETIME DEFAULT NULL,
+  PRIMARY KEY (memcached_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
  *
  */
@@ -35,12 +36,18 @@ class Mem
      */
     public function __construct()
     {
-        $this->memcached1 = new Memcached();
+        if (!extension_loaded('memcached')) {
+            // Memcachedがインストールされていない
+            $this->active = false;
+        } else {
+            $this->memcached1 = new Memcached();
 
-        //主がNGの場合は副を使用
-        $this->active = $this->memcached1->addServer(MEMCACHED_SERVER, 11211);
-        if (!$this->active) {
-            Log::error('memcached down');
+            // 主がNGの場合は副を使用
+            $this->active = $this->memcached1->addServer(MEMCACHED_SERVER, 11211);
+            if (!$this->active) {
+                // Memcachedがダウンしている
+                Log::error('memcached down');
+            }
         }
     }
 
@@ -89,27 +96,28 @@ class Mem
      */
     public function get($key)
     {
-        $var = @$this->memcached1->get($key);
+        if ($this->active) {
+            $var = $this->memcached1->get($key);
+        } else {
+            $var = false;
+        }
         if ($var === false) {
             //データベースから値を取得
             $param = array ($key);
             $where = 'WHERE memcached_key = ?';
             S::$dbs->select('memcached', '*', $where);
             $res = S::$dbs->bindSelect($param);
-            if (!$res or ($res[0]['temp_flag'] and 
-                strtotime($res[0]['expire']) < time())) {
-                return false;
-            }
-
-            $var = unserialize($res[0]['memcached_value']);
-            $expire = $res[0]['temp_flag'] ? time() + COOKIE_LIFETIME : 0;
-
-            if ($this->active) {
-                //データベースの値をmemcachedに保存
-                @$this->memcached1->set($key, $var, false, $expire);
+            if (!(!$res or ($res[0]['temp_flag'] and 
+                strtotime($res[0]['expire']) < time()))) {
+                $var = unserialize($res[0]['memcached_value']);
+                $expire = $res[0]['temp_flag'] ? time() + COOKIE_LIFETIME : 0;
+                if ($this->active) {
+                    //データベースの値をmemcachedに保存
+                    $this->memcached1->set($key, $var, false, $expire);
+                }
             }
         }
-        if ($this->debug and $this->active) {
+        if ($this->debug and $this->active and $var !== false) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf(
@@ -128,7 +136,9 @@ class Mem
      */
     public function delete($key)
     {
-        $res = $this->memcached1->delete($key);
+        if ($this->active) {
+            $res = $this->memcached1->delete($key);
+        }
 
         $param = array ($key);
         $where = 'WHERE memcached_key = ?';
@@ -143,4 +153,3 @@ class Mem
         return $res;
     }
 }
-

@@ -37,6 +37,7 @@ header('Content-Type: text/html;charset=UTF-8');
 
 require_once(__DIR__ . '/../conf/env.php');
 require_once(__DIR__ . '/../conf/define.php');
+require_once(__DIR__ . '/../conf/config.php');
 require_once(__DIR__ . '/../device/_tower.php');
 
 new Castle();
@@ -164,7 +165,7 @@ class Castle
 
 /**
  * ダンプをバッファに保存してデバッグに表示する
- * "\dump(ダンプしたい変数)"の形で利用する
+ * "dump(ダンプしたい変数)"の形で利用する
  * @global string $dump ダンプ用バッファ
  * @param mixed ダンプするデータをカンマ区切りで記入する
  */

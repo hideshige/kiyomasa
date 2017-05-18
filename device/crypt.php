@@ -27,7 +27,7 @@ class Crypt
     private static function open($data, $encode_flag = true)
     {
         if (!extension_loaded('mcrypt')) {
-            throw new FwException('mcryptがインストールされていません');
+            throw new FwException('mcrypt is not installed');
         }
         
         $res = null;
