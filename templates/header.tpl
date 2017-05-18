@@ -6,4 +6,4 @@
     <title>{title}</title>
 </head>
 <body>
-
+    <h1>YOURSITE</h1>

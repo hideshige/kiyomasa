@@ -61,10 +61,15 @@
     margin-bottom: 12px;
     margin-left: 20px;
 }
+#fw_debug_dump
+{
+    padding: 7px;
+    background: #ff9;
+}
 </style>
 
 <div id="fw_debug_include">
-<!-- ELEMENT .debug -->
+<!-- ELEMENT .debug_include.tpl -->
 </div>
 <script>
 function fwDebug()

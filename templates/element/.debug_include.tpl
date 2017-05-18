@@ -15,7 +15,7 @@
         </p>
 
         <h4>【DUMP】</h4>
-        <pre>{dump}</pre>
+        <pre id="fw_debug_dump">{dump}</pre>
         <h4>【DB SLAVE】</h4>
         <p>{db_slave}</p>
         <h4>【DB MASTER】</h4>

@@ -130,10 +130,12 @@ class Turret
     }
     
     /**
-     * デバッグ情報の表示
+     * デバッグ情報の成形
+     * @return string
      */
     private function dispDebug()
     {
+        $disp = '';
         if ($this->debug) {
             ob_start();
             if (S::$post) {
@@ -193,8 +195,13 @@ class Turret
             $view = [];
             $view['DEBUG'][0] = $debug;
             
-            return View::template('.debug.tpl', $view);
+            if (S::$jflag) {
+                $disp = View::template('element/.debug_include.tpl', $view);
+            } else {
+                $disp = View::template('.debug.tpl', $view);
+            }
         }
+        return $disp;
     }  
 
     /*
