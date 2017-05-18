@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Hideshige Sawada
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  device
  * 
  */
@@ -165,56 +165,39 @@ class Turret
             global $first_time;
             global $dump;
 
-            $debug_log = '<div id="fw_debug" style="position:absolute;'
-                . 'top:10;left:0;opacity:0.8;z-index:10000;display:none;">'
-                . '<p style="background:#ffcc00;">【DB SLAVE】<br />%s</p>'
-                . '<p style="background:#ff8800;">【DB MASTER】<br />%s</p>'
-                . '<p style="background:#99aaff;">【MEMCACHED】<br />%s</p>'
-                . '<pre><p style="background:#ffcc66;">【POST】<br />%s</p>'
-                . '<p style="background:#ffcc33;">【GET】<br />%s</p>'
-                . '<p style="background:#ffdd99;">【URL】<br />%s</p>'
-                . '<p style="background:#eecc00;">【FILES】<br />%s</p>'
-                . '<p style="background:#ffff00;">【DUMP】<br />%s</p></pre>'
-                . '<p style="background:#ff0000;">デバッグモード<br />'
-                . ' OS: %s PHP ver: %s<br />'
-                . ' メモリ使用量: %s KB (固定分) + %s KB (追加分) = %s KB<br />'
-                . ' IP: %s<br />'
-                . ' タイムスタンプ: %s (%d)</p>'
-                . '</div>'
-                . '<div style="position:absolute;top:0;left:0;width:120px;'
-                . 'z-index:10001;background:#006;color:white;font-size:0.8em;'
-                . 'opacity:0.7;" onclick="fwDebug();">%s　%s秒</div>'
-                . '<script>function fwDebug() {'
-                . "document.getElementById('fw_debug').style['display'] = "
-                . "document.getElementById('fw_debug').style['display'] === "
-                . "'none' ? 'block' : 'none';"
-                . '}</script>';
-
             $peak_memory = memory_get_peak_usage() / 1024;
             $last_time = microtime(true);
             
             // ENV定数に対応
             $env = ['ローカル', '開発環境', '検証環境', '本番環境'];
             
-            echo sprintf(
-                $debug_log,
-                nl2br(htmlspecialchars(S::$dbs->disp_sql)),
-                nl2br(htmlspecialchars(S::$dbm->disp_sql)),
-                ENV > 0 ? nl2br(htmlspecialchars(S::$mem->disp_mem)) : '',
-                htmlspecialchars($post),
-                htmlspecialchars($get),
-                htmlspecialchars($url),
-                htmlspecialchars($files),
-                htmlspecialchars($dump),
-                PHP_OS, phpversion(),
-                number_format($first_memory),
-                number_format($peak_memory - $first_memory),
-                number_format($peak_memory),
-                IP_ADDRESS,
-                TIMESTAMP, time(),
-                isset($env[ENV]) ? $env[ENV] : 'ENV' . ENV,
-                round($last_time - $first_time, 5)
-            );
+            $debug = [
+                'os' => PHP_OS,
+                'php_ver' => phpversion(),
+                'memory1' => number_format($first_memory),
+                'memory2' => number_format($peak_memory - $first_memory),
+                'memory3' => number_format($peak_memory),
+                'ip' => IP_ADDRESS,
+                'timestamp' => TIMESTAMP,
+                'time' => time(),
+                'os' => PHP_OS,
+                'db_slave' => nl2br(htmlspecialchars(S::$dbs->disp_sql)),
+                'db_master' => nl2br(htmlspecialchars(S::$dbm->disp_sql)),
+                'memcached' => ENV > 0 ?
+                    nl2br(htmlspecialchars(S::$mem->disp_mem)) : '',
+                'post' => htmlspecialchars($post),
+                'get' => htmlspecialchars($get),
+                'url' => htmlspecialchars($url),
+                'files' => htmlspecialchars($files),
+                'dump' => htmlspecialchars($dump),
+                'env' => isset($env[ENV]) ? $env[ENV] : 'ENV' . ENV,
+                'process' => round($last_time - $first_time, 5),
+                'debug_disp' => $dump ? 'block' : 'none'
+            ];
+            $view = [];
+            $view['DEBUG'][0] = $debug;
+            
+            echo View::template('.debug.html', $view);
         }
     }  
 
