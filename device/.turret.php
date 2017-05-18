@@ -179,10 +179,16 @@ class Turret
                 . ' メモリ使用量: %s KB (固定分) + %s KB (追加分) = %s KB<br />'
                 . ' 実行時間: %s 秒<br />'
                 . ' IP: %s<br />'
-                . ' タイムスタンプ: %s (%d)</p>';
+                . ' タイムスタンプ: %s (%d)</p>'
+                . '<div style="position:absolute;top:0;left:0;width:50px;'
+                . 'background:#000066;color:white;font-size:0.8em;">'
+                . '%s</div>';
 
             $peak_memory = memory_get_peak_usage() / 1024;
             $last_time = microtime(true);
+            
+            // ENV定数に対応
+            $env = ['ローカル', '開発環境', '検証環境', '本番環境'];
             
             echo sprintf(
                 $debug_log,
@@ -200,7 +206,8 @@ class Turret
                 number_format($peak_memory),
                 round($last_time - $first_time, 3),
                 IP_ADDRESS,
-                TIMESTAMP, time()
+                TIMESTAMP, time(),
+                isset($env[ENV]) ? $env[ENV] : 'ENV' . ENV
             );
         }
     }  
