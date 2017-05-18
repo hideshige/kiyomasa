@@ -155,7 +155,7 @@ class View
     private static function open($tpl, $elm, $folder = '')
     {
         $content = null;
-        $add = preg_match('<\.>', $tpl) ? '' : '.html';
+        $add = preg_match('<\.>', $tpl) ? '' : '.tpl';
         $element = $elm ? 'element/' : '';
         $tpl_folder = (MOBILE_FLAG and !isset ($_SESSION['mobile_pc_flag']))
             ? 'templates_mobile/' : 'templates/';

@@ -197,7 +197,7 @@ class Turret
             $view = [];
             $view['DEBUG'][0] = $debug;
             
-            echo View::template('.debug.html', $view);
+            echo View::template('.debug.tpl', $view);
         }
     }  
 
