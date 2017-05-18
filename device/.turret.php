@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Hideshige Sawada
- * @version  1.0.1.0
+ * @version  1.0.2.0
  * @package  device
  * 
  */
@@ -50,7 +50,7 @@ class Turret
                         );
                     }
                 }
-                $this->dispDebug();
+                echo $this->dispDebug();
             } else if (is_array($res)) {
                 $json = $res;
                 $this->jsonDebug($json);
@@ -124,13 +124,8 @@ class Turret
                 . "----------------------------------------------------------\n"
                 . "【MEMCACHED】\n" . (ENV > 0 ? S::$mem->disp_mem : '')
                 . "----------------------------------------------------------\n"
-                . "【URL】\n"
-                . urldecode(filter_input(INPUT_SERVER, 'REQUEST_URI')) . "\n"
-                . "----------------------------------------------------------\n"
-                . "【DUMP】\n" . $dump
-                . "----------------------------------------------------------\n"
-                . "【MEMORY】\n"
-                . number_format(memory_get_peak_usage() / 1024) . 'KB';
+                . "【DUMP】\n" . $dump;
+            $json['fw_debug_include'] = $this->dispDebug();
         }
     }
     
@@ -172,6 +167,7 @@ class Turret
             $env = ['ローカル', '開発環境', '検証環境', '本番環境'];
             
             $debug = [
+                'request_url' => filter_input(INPUT_SERVER, 'REQUEST_URI'),
                 'os' => PHP_OS,
                 'php_ver' => phpversion(),
                 'memory1' => number_format($first_memory),
@@ -197,7 +193,7 @@ class Turret
             $view = [];
             $view['DEBUG'][0] = $debug;
             
-            echo View::template('.debug.tpl', $view);
+            return View::template('.debug.tpl', $view);
         }
     }  
 
@@ -212,22 +208,29 @@ class Turret
             }
         } else {
             //  改行コード以外のコントロールコードを排除
-            $data = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data);
+            $data = preg_replace(
+                '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data
+            );
             // UNICODE不可視文字トリム
             $invisible_utf8_codes = array(
                 '&#x00AD;',
-                '&#x2000;','&#x2001;','&#x2002;','&#x2003;','&#x2004;','&#x2005;','&#x2006;','&#x2007;','&#x2008;','&#x2009;','&#x200A;','&#x200B;','&#x200C;','&#x200D;','&#x200E;','&#x200F;',
-                '&#x2028;','&#x2029;','&#x202A;','&#x202B;','&#x202C;','&#x202D;','&#x202E;','&#x202F;',
-                '&#x205F;',
-                '&#x2060;','&#x2061;','&#x2062;','&#x2063;','&#x2064;','&#x2065;','&#x2066;','&#x2067;','&#x2068;','&#x2069;','&#x206A;','&#x206B;','&#x206C;','&#x206D;','&#x206E;','&#x206F;',
-                '&#x2322;','&#x2323;',
-                '&#x2800;',
-                '&#x3164;',
+                '&#x2000;','&#x2001;','&#x2002;','&#x2003;','&#x2004;',
+                '&#x2005;','&#x2006;','&#x2007;','&#x2008;','&#x2009;',
+                '&#x200A;','&#x200B;','&#x200C;','&#x200D;','&#x200E;',
+                '&#x200F;','&#x2028;','&#x2029;','&#x202A;','&#x202B;',
+                '&#x202C;','&#x202D;','&#x202E;','&#x202F;','&#x205F;',
+                '&#x2060;','&#x2061;','&#x2062;','&#x2063;','&#x2064;',
+                '&#x2065;','&#x2066;','&#x2067;','&#x2068;','&#x2069;',
+                '&#x206A;','&#x206B;','&#x206C;','&#x206D;','&#x206E;',
+                '&#x206F;','&#x2322;','&#x2323;','&#x2800;','&#x3164;',
                 '&#xA717;','&#xA718;','&#xA719;','&#xA71A;',
                 '&#xA720;','&#xA721;',
-                '&#xFE00;','&#xFE01;','&#xFE02;','&#xFE03;','&#xFE04;','&#xFE05;','&#xFE06;','&#xFE07;','&#xFE08;','&#xFE09;','&#xFE0A;','&#xFE0B;','&#xFE0C;','&#xFE0D;','&#xFE0E;','&#xFE0F;',
-                '&#xFEFF;',
-                '&#xFFF0;','&#xFFF1;','&#xFFF2;','&#xFFF3;','&#xFFF4;','&#xFFF5;','&#xFFF6;','&#xFFF7;','&#xFFF8;',
+                '&#xFE00;','&#xFE01;','&#xFE02;','&#xFE03;','&#xFE04;',
+                '&#xFE05;','&#xFE06;','&#xFE07;','&#xFE08;','&#xFE09;',
+                '&#xFE0A;','&#xFE0B;','&#xFE0C;','&#xFE0D;','&#xFE0E;',
+                '&#xFE0F;','&#xFEFF;',
+                '&#xFFF0;','&#xFFF1;','&#xFFF2;','&#xFFF3;','&#xFFF4;',
+                '&#xFFF5;','&#xFFF6;','&#xFFF7;','&#xFFF8;',
             );
             $invisible_strs = array_map(
                 function ($code) {

@@ -8,8 +8,8 @@ const NAME_SPACE = 'Yourname\Yourproject';
 if (ENV === 0) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 1);
-    define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
-//    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
+//    define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
+    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
 
     define('DOMAIN_NAME', '/');
     define('LINK_DOMAIN_NAME', 'http://localhost:8000/');
@@ -76,9 +76,10 @@ if (ENV === 0) {
     define('FROM_NAME', '');
 }
 
+define('COOKIE_LIFETIME', 60 * 60 * 24 * 30);
+
 const AUTO_UPDATE_TIME = 1;// DBに作成・更新日時を自動保存する場合1
 const PROJECT_PREFIX = '';// プロジェクトを示す接頭辞
-const COOKIE_LIFETIME = 60 * 60 * 24 * 30;
 const OPEN_SSL_PASSPHRASE = '';
 
 /*-------------- 以下は global で呼び出す共通パラメータ ----------------*/

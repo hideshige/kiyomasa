@@ -12,7 +12,7 @@ namespace Yourname\Yourproject\Models;
 use Php\Framework\Kiyomasa\Device\FwException;
 use Php\Framework\Kiyomasa\Device\S;
 
-class HelloWorld // クラス名はモデル名に合わせる
+class HelloWorld // クラス名はファイル名に合わせる
 {
     public $tpl = ['header', 'hello_world', 'footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
 

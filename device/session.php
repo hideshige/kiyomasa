@@ -125,7 +125,8 @@ class sessionHandlerDb
 
     public function destroy($ses_id)
     {
-        $params = array ($ses_id);
+        $params = [];
+        $params['session_id'] = $ses_id;
         S::$dbm->delete(
             't_session',
             'WHERE session_id = :session_id',
@@ -137,7 +138,8 @@ class sessionHandlerDb
 
     public function gc($ses_time)
     {
-        $params = array (time());
+        $params = [];
+        $params['session_expires'] = time();
         S::$dbm->delete(
             't_session',
             'WHERE session_expires < :session_expires',
