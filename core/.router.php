@@ -4,7 +4,7 @@
  * 
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  device
+ * @package  core
  *
  * プロジェクトのディレクトリに入り
  * > php -S localhost:(ポート番号) -t public_html core/.router.php

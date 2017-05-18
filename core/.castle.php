@@ -4,7 +4,7 @@
  *
  * @author   Hideshige Sawada
  * @version  1.4.2.2
- * @package  public_html
+ * @package  core
  * 
  * 標準コーディング規約
  * http://www.php-fig.org/

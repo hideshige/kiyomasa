@@ -24,12 +24,12 @@ class Turret
     {
         try {
             // modelファイルの読み込み
-            $file = SERVER_PATH . 'models/' . $pagename . '.php';
+            $file = SERVER_PATH . 'model/' . $pagename . '.php';
             if (!file_exists($file)) {
                 throw new FwException($file . ' not found');
             }
             require_once($file);
-            $class_name = NAME_SPACE . '\models\\' . trim(
+            $class_name = NAME_SPACE . '\Model\\' . trim(
                 str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
             );
             $model = new $class_name;

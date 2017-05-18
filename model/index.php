@@ -4,10 +4,10 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  models
+ * @package  model
  */
 
-namespace Yourname\Yourproject\Models;
+namespace Yourname\Yourproject\Model;
 
 use Yourname\Yourproject\Extension\Citadel;
 

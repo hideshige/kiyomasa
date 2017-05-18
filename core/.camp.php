@@ -3,13 +3,13 @@
  * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.4.3
- * @package  shells
+ * @version  1.1.4.4
+ * @package  core
  *
  * ターミナルから以下のように実行する
- * php shells/controller.php モデル名 パラメーター
+ * php core/.camp.php モデル名 パラメーター
  * cron 設定例
- * 00 5 * * * php /var/www/html/yoursite/core/.camp.php sample test 1>> /var/www/html/yoursite/logs/batch/test_$(date +\%y\%m\%d).log 2>&1
+ * 00 5 * * * php /var/www/html/yoursite/core/.camp.php sample test 1>> /var/www/html/yoursite/log/batch/test_$(date +\%y\%m\%d).log 2>&1
  * cronを実行できるように環境にあわせてchdir()の値を変えること
  *
  */
@@ -94,7 +94,7 @@ class Camp
     private function exec($pagename)
     {
         try {
-            $class_name = NAME_SPACE . '\Shells\\' . trim(
+            $class_name = NAME_SPACE . '\Shell\\' . trim(
                 str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
             );
 

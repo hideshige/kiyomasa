@@ -4,7 +4,7 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  conf
+ * @package  core
  */
 
 // php.iniで設定されていない場合ここで設定する

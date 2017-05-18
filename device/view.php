@@ -158,10 +158,11 @@ class View
         $add = preg_match('<\.>', $tpl) ? '' : '.tpl';
         $element = $elm ? 'element/' : '';
         $tpl_folder = (MOBILE_FLAG and !isset ($_SESSION['mobile_pc_flag']))
-            ? 'templates_mobile/' : 'templates/';
+            ? 'template_mobile/' : 'template/';
         $fname = SERVER_PATH . $tpl_folder . $folder . $element . $tpl . $add;
-        if ($tpl_folder == 'templates_mobile/' and !file_exists($fname)) {
-              $fname = SERVER_PATH . 'templates/' . $folder . $element . $tpl . $add;
+        if ($tpl_folder == 'template_mobile/' and !file_exists($fname)) {
+              $fname = SERVER_PATH . 'template/'
+                  . $folder . $element . $tpl . $add;
         }
         if (!file_exists($fname)) {
             throw new FwException('No Template');
@@ -169,8 +170,9 @@ class View
         $fh = fopen($fname, 'r');
         if (!$fh) {
             throw new FwException('Template Open Error');
+        } else {
+            $content = fread($fh, max(1, filesize($fname)));
         }
-        $content = fread($fh, max(1, filesize($fname)));
         fclose($fh);
         return $content;
     }

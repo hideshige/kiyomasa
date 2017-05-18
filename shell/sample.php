@@ -4,10 +4,10 @@
  *
  * @author   Hideshige Sawada
  * @version  1.0.0.0
- * @package  shells
+ * @package  shell
  */
 
-namespace Yourname\Yourproject\Shells;
+namespace Yourname\Yourproject\Shell;
 
 use Php\Framework\Kiyomasa\Device\Log;
 

@@ -3,7 +3,7 @@
  * ログ モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.0.3.0
+ * @version  1.0.3.1
  * @package  device
  *
  */
@@ -20,7 +20,7 @@ class Log
      */
     public static function error($log) {
         $file = sprintf(
-            '%slogs/%serror%s.log',
+            '%slog/%serror%s.log',
             SERVER_PATH,
             self::$batch,
             date('ymd')
@@ -34,7 +34,7 @@ class Log
      */
     public static function access($log) {
         $file = sprintf(
-            '%slogs/%s%s.log',
+            '%slog/%s%s.log',
             SERVER_PATH,
             self::$batch,
             date('ymd')
@@ -48,7 +48,7 @@ class Log
      */
     public static function admin($log) {
         $file = sprintf(
-            '%slogs/%sadmin%s.log',
+            '%slog/%sadmin%s.log',
             SERVER_PATH,
             self::$batch,
             date('ymd')

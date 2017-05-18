@@ -17,11 +17,11 @@ root/
 ├ core/ 
 ├ device/
 ├ extension/
-├ logs/
-├ models/
+├ log/
+├ model/
 ├ public_html/
-├ shells/
-└ templates/
+├ shell/
+└ template/
 
 ◆各ディレクトおよびファイルの説明
 
@@ -37,9 +37,9 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ *.tower.php      オートロード、ショートカットに関するファイル
 │ └ *.turret.php     ビュー関連、デバッグ関連のコントローラ
 ├ extension/          プロジェクトの拡張クラス、インターフェースなどを格納
-├ logs/               ログを格納（Gitでは更新されない）
+├ log/                ログを格納（Gitでは更新されない）
 │ └ batch/           シェルで実行した結果ログを格納
-├ models/             プロジェクトのプログラムファイルを格納
+├ model/              プロジェクトのプログラムファイルを格納
 ├ public_html/        WEBルートディレクトリ
 │ ├ css/             プロジェクトのスタイルシートを格納
 │ ├ js/              プロジェクトのJavaScriptを格納
@@ -47,11 +47,11 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ (.htaccess)      サーバ設定ファイル（WEBサーバがApacheの場合に限る）
 │ └ *index.php       最初にアクセスするファイル。変更不可
 ├ (session/)          セッションファイルを格納（Gitでは更新されない）
-├ shells/             プロジェクトのシェルプログラムを格納
-├ templates/          プロジェクトのテンプレートを格納
+├ shell/              プロジェクトのシェルプログラムを格納
+├ template/           プロジェクトのテンプレートを格納
 │ ├ element/         プロジェクトの共通部分テンプレートを格納
 │ └ *.debug.tpl      デバッグ表示用のテンプレート
-├ (templates_mobile/) プロジェクトの携帯用テンプレートを格納
+├ (template_mobile/)  プロジェクトの携帯用テンプレートを格納
 └ (.gitignore)        Gitを利用する場合に必要な設定ファイル
 
   補足
