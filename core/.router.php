@@ -7,7 +7,7 @@
  * @package  device
  *
  * プロジェクトのディレクトリに入り
- * > php -S localhost:8000 -t public_html device/_router.php
+ * > php -S localhost:(ポート番号) -t public_html core/.router.php
  * でローカルマシンから実行可能
  */
 

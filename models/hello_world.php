@@ -9,8 +9,8 @@
 
 namespace Yourname\Yourproject\Models;
 
-use Php\Framework\Kiyomasa\Device\FwException;
-use Php\Framework\Kiyomasa\Device\S;
+use Php\Framework\Kiyomasa\Core\FwException;
+use Php\Framework\Kiyomasa\Core\S;
 
 class HelloWorld // クラス名はモデル名に合わせる
 {

@@ -8,7 +8,7 @@
  * 
  */
 
-namespace Php\Framework\Kiyomasa\Device;
+namespace Php\Framework\Kiyomasa\Core;
 
 use Exception;
 

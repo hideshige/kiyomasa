@@ -3,28 +3,26 @@
  * シェルを実行する
  *
  * @author   Hideshige Sawada
- * @version  1.1.4.2
+ * @version  1.1.4.3
  * @package  shells
  *
  * ターミナルから以下のように実行する
  * php shells/controller.php モデル名 パラメーター
  * cron 設定例
- * 00 5 * * * php /var/www/html/yoursite/shells/camp.php sample test 1>> /var/www/html/yoursite/logs/batch/test_$(date +\%y\%m\%d).log 2>&1
+ * 00 5 * * * php /var/www/html/yoursite/core/.camp.php sample test 1>> /var/www/html/yoursite/logs/batch/test_$(date +\%y\%m\%d).log 2>&1
  * cronを実行できるように環境にあわせてchdir()の値を変えること
  *
  */
 
-namespace Php\Framework\Kiyomasa\Shells;
-
 use Php\Framework\Kiyomasa\Device\Db;
-use Php\Framework\Kiyomasa\Device\S;
-use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Core\S;
+use Php\Framework\Kiyomasa\Core\FwException;
 use Php\Framework\Kiyomasa\Device\Log;
 
-require_once(__DIR__ . '/../conf/env.php');
-require_once(__DIR__ . '/../conf/define.php');
-require_once(__DIR__ . '/../conf/config.php');
-require_once(__DIR__ . '/../device/_tower.php');
+require_once(__DIR__ . '/.define.php');
+require_once(__DIR__ . '/.tower.php');
+require_once(__DIR__ . '/env.php');
+require_once(__DIR__ . '/config.php');
 
 new Camp;
 
@@ -96,7 +94,7 @@ class Camp
     private function exec($pagename)
     {
         try {
-            $class_name = NAME_SPACE . '\Models\\' . trim(
+            $class_name = NAME_SPACE . '\Shells\\' . trim(
                 str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
             );
 
