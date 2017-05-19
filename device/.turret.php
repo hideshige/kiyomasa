@@ -218,10 +218,10 @@ class Turret
         if ($console_flag) {
             $sql = preg_replace(
                 "/{{COUNTER (.*?)}};/",
-                '; $1',
+                '; No.$1',
                 $sql
             );
-            //色付けの目印として配置した{{}}構文を消す
+            // 色付けの目印として配置した{{}}構文を消す
             $sql = preg_replace('/{{.*?}}/', '', $sql);
         } else {
             $sql = htmlspecialchars($sql);
@@ -231,6 +231,7 @@ class Turret
                     $sql = preg_replace(
                         "/{{STRING}}'" . preg_quote($v, '/') . "'/",
                         '&apos;<span class="fw_debug_bold fw_debug_str">'
+                        // 文字列として使用されているコロンを置換しておく
                         . preg_replace('/:/', '{{COLON}}', $v)
                         . '</span>&apos;',
                         $sql
@@ -264,8 +265,13 @@ class Turret
             );
             $sql = preg_replace("/{{COLON}}/", ':', $sql);
             $sql = preg_replace(
-                "/{{COUNTER (.*?)}};/",
-                '<span title="No.$1" class="fw_debug_u">;</span>',
+                "/{{COUNTER (\d*)}};( {{TIME}}(.*?\]))?/",
+                '<span class="fw_debug_semicolon fw_debug_u"'
+                . ' onmouseover="fwDebugNo($1, true);"'
+                . ' onmouseout="fwDebugNo($1, false);">;'
+                . '<span id="fw_debug_no$1" class="fw_debug_counter">'
+                . 'No.$1$3</span>'
+                . '</span>',
                 $sql
             );
             $sql = nl2br($sql);

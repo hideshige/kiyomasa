@@ -206,7 +206,7 @@ class Db extends DbModule
             if ($this->debug) {
                 // 実行したSQL文と実行時間、変更行数
                 $this->disp_sql .= sprintf(
-                    ">%s{{COUNTER %d (%s秒) [行数 %d]}};\n",
+                    ">%s{{COUNTER %d}}; {{TIME}} (%s秒) [行数 %d]\n",
                     $this->sql,
                     $g_counter,
                     $qt,
@@ -360,7 +360,7 @@ class Db extends DbModule
                 $using = count($u) ? sprintf('USING %s', implode(', ', $u)) : '';
                 $this->disp_sql .= sprintf(
                     "EXECUTE {{STATEMENT}}%s %s"
-                    . "{{COUNTER %d (%s秒) [行数 %d]}};\n",
+                    . "{{COUNTER %d}}; {{TIME}} (%s秒) [行数 %d]\n",
                     $statement_id,
                     $using,
                     $g_counter,

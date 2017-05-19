@@ -99,17 +99,38 @@
 {
     color: brown;
 }
+
+#fw_debug .fw_debug_semicolon
+{
+    position: relative;
+}
+
+#fw_debug .fw_debug_counter
+{
+    display: none;
+    position: absolute;
+    border: 1px solid #999;
+    background: white;
+}
 </style>
 
 <div id="fw_debug_include">
 <!-- ELEMENT .debug_include.tpl -->
 </div>
 <script>
+// デバッグの表示
 function fwDebug()
 {
     document.getElementById('fw_debug_area').style['display'] = 
         document.getElementById('fw_debug_area').style['display']
         === 'none' ? 'block' : 'none';
+}
+// カウンターの表示
+function fwDebugNo(counterNum, openFlag)
+{
+    var tagId = 'fw_debug_no' + counterNum;
+    document.getElementById(tagId).style['display'] = 
+        openFlag ? 'inline' : 'none';
 }
 </script>
 <!-- END DEBUG -->
