@@ -32,11 +32,7 @@ class Session
 {
     public function __construct()
     {
-        if (ENV > 0) {
-            $handler = new sessionHandlerMem();
-        } else {
-            $handler = new sessionHandlerDb();
-        }
+        $handler = new sessionHandlerMem();
         session_set_save_handler(
             [$handler, 'open'],
             [$handler, 'close'],
@@ -176,7 +172,7 @@ class sessionHandlerMem
 
     public function write($ses_id, $data)
     {
-        S::$mem->set($ses_id, $data, false, time() + COOKIE_LIFETIME);
+        S::$mem->set($ses_id, $data, time() + COOKIE_LIFETIME);
         return true;
     }
 

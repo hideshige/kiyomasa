@@ -122,7 +122,7 @@ class Turret
                 . "----------------------------------------------------------\n"
                 . "【DB MASTER】\n" . S::$dbm->disp_sql
                 . "----------------------------------------------------------\n"
-                . "【MEMCACHED】\n" . (ENV > 0 ? S::$mem->disp_mem : '')
+                . "【MEMCACHED】\n" . S::$mem->disp_mem
                 . "----------------------------------------------------------\n"
                 . "【DUMP】\n" . $dump;
             $json['fw_debug_include'] = $this->dispDebug();
@@ -181,8 +181,7 @@ class Turret
                 'os' => PHP_OS,
                 'db_slave' => nl2br(htmlspecialchars(S::$dbs->disp_sql)),
                 'db_master' => nl2br(htmlspecialchars(S::$dbm->disp_sql)),
-                'memcached' => ENV > 0 ?
-                    nl2br(htmlspecialchars(S::$mem->disp_mem)) : '',
+                'memcached' => nl2br(htmlspecialchars(S::$mem->disp_mem)),
                 'post' => htmlspecialchars($post),
                 'get' => htmlspecialchars($get),
                 'url' => htmlspecialchars($url),
@@ -202,7 +201,20 @@ class Turret
             }
         }
         return $disp;
-    }  
+    }
+    
+    /**
+     * デバッグSQLの成形
+     * @param string $sql
+     * @return string
+     */
+    private function modDebugSql($sql)
+    {
+        $sql = nl2br(
+            htmlspecialchars($sql)
+        );
+        return $sql;
+    }
 
     /*
      * サニタイズ

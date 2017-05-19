@@ -57,10 +57,8 @@ class Castle
             $this->dbConnect();
             
             // memchached
-            if (ENV > 0) {
-                S::$mem = new Mem();
-                S::$mem->debug = $this->debug;
-            }
+            S::$mem = new Mem();
+            S::$mem->debug = $this->debug;
 
             // セッションのセット
             new Session();

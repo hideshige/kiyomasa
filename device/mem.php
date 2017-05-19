@@ -39,6 +39,7 @@ class Mem
         if (!extension_loaded('memcached')) {
             // Memcachedがインストールされていない
             $this->active = false;
+            $this->disp_mem .= "Memcached is not installed. Execute it using DB.\n";
         } else {
             $this->memcached1 = new Memcached();
 
@@ -46,7 +47,8 @@ class Mem
             $this->active = $this->memcached1->addServer(MEMCACHED_SERVER, 11211);
             if (!$this->active) {
                 // Memcachedがダウンしている
-                Log::error('memcached down');
+                Log::error('Memcached down');
+                $this->disp_mem .= "Memcached is down. Execute it using DB.\n";
             }
         }
     }
@@ -55,10 +57,9 @@ class Mem
      * memcached に保存する
      * @param string $key キー
      * @param string or array $var　値
-     * @param boolean $comp 圧縮の有無
      * @param datetime $expire 有効期限
      */
-    public function set($key, $var, $comp = false, $expire = 0)
+    public function set($key, $var, $expire = 0)
     {
         if ($this->debug and $this->active) {
             $bt = debug_backtrace();
@@ -84,8 +85,8 @@ class Mem
             $params['expire'] = $expire
                 ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
             $params['created_at'] = TIMESTAMP;
-            S::$dbm->insert('memcached', $params, true);
-            $res = S::$dbm->bind($params);
+            S::$dbm->insert('memcached', $params, true, 'memcached');
+            $res = S::$dbm->bind($params, 'memcached');
         }
         return $res;
     }
@@ -103,10 +104,10 @@ class Mem
         }
         if ($var === false) {
             //データベースから値を取得
-            $param = array ($key);
-            $where = 'WHERE memcached_key = ?';
-            S::$dbs->select('memcached', '*', $where);
-            $res = S::$dbs->bindSelect($param);
+            $param = ['memcached_key' => $key];
+            $where = 'WHERE memcached_key = :memcached_key';
+            S::$dbs->select('memcached', '*', $where, 'memcached');
+            $res = S::$dbs->bindSelect($param, 'memcached');
             if (!(!$res or ($res[0]['temp_flag'] and 
                 strtotime($res[0]['expire']) < time()))) {
                 $var = unserialize($res[0]['memcached_value']);
@@ -142,8 +143,8 @@ class Mem
 
         $param = array ($key);
         $where = 'WHERE memcached_key = ?';
-        S::$dbm->delete('memcached', $where);
-        S::$dbm->bind($param);
+        S::$dbm->delete('memcached', $where, 'memcached');
+        S::$dbm->bind($param, 'memcached');
 
         if ($this->debug and $this->active) {
             $bt = debug_backtrace();
