@@ -181,10 +181,12 @@ function fwDebug(tagId)
     var myArea = document.getElementById('fw_debug_area_' + tagId);
     var otherArea = document.getElementById('fw_debug_area_' + otherTag);
     
-    if (myArea.style['display'] === 'none') {
+    if (myArea && myArea.style['display'] === 'none') {
         myArea.style['display'] = 'block';
-        otherArea.style['display'] = 'none';
-    } else {
+        if (otherArea) {
+            otherArea.style['display'] = 'none';
+        }
+    } else if (myArea) {
         myArea.style['display'] = 'none';
     }
 }
