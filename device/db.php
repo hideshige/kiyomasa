@@ -321,7 +321,7 @@ class Db extends DbModule
                             );
                         } else if (is_numeric($d_v)) {
                             $this->disp_sql .= sprintf(
-                                "%d>SET @%s = %d;\n",
+                                "%d>SET @%s = {INT}%d;\n",
                                 $g_counter,
                                 $this->name[$statement_id] ? $k : $i,
                                 $d_v

@@ -179,8 +179,8 @@ class Turret
                 'timestamp' => TIMESTAMP,
                 'time' => time(),
                 'os' => PHP_OS,
-                'db_slave' => nl2br(htmlspecialchars(S::$dbs->disp_sql)),
-                'db_master' => nl2br(htmlspecialchars(S::$dbm->disp_sql)),
+                'db_slave' => $this->modDebugSql(S::$dbs->disp_sql),
+                'db_master' => $this->modDebugSql(S::$dbm->disp_sql),
                 'memcached' => nl2br(htmlspecialchars(S::$mem->disp_mem)),
                 'post' => htmlspecialchars($post),
                 'get' => htmlspecialchars($get),
@@ -210,9 +210,12 @@ class Turret
      */
     private function modDebugSql($sql)
     {
-        $sql = nl2br(
-            htmlspecialchars($sql)
-        );
+        $sql = htmlspecialchars($sql);
+        $sql = preg_replace('/@(.*?) /', '@<span style="font-weight:bold;">$1</span> ', $sql);
+        $sql = preg_replace('/= NULL;/', '= <span style="font-weight:bold;color:orange;">NULL</span>;', $sql);
+        $sql = preg_replace('/= {INT}(\d.*?);/', '= <span style="font-weight:bold;color:green;">$1</span>;', $sql);
+        $sql = preg_replace("/= '(.*?)';/", '= &apos;<span style="font-weight:bold;color:red;">$1</span>&apos;;', $sql);
+        $sql = nl2br($sql);
         return $sql;
     }
 
