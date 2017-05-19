@@ -9,10 +9,8 @@
 
 namespace Yourname\Yourproject\Model;
 
-use Php\Framework\Kiyomasa\Device\FwException;
-use Php\Framework\Kiyomasa\Device\S;
-use Php\Framework\Kiyomasa\Device\Log;
-use Yourname\Yourproject\Extension\Citadel;
+use Php\Framework\Kiyomasa\Device as D;
+use Yourname\Yourproject\Extension as E;
 
 class ErrorPage
 {
@@ -22,16 +20,15 @@ class ErrorPage
     {
         try {
             $title = 'エラー';
-            Citadel::set($title);
+            E\Citadel::set($title);
             $message = 'ページが見つかりません。';
             if (isset($_SESSION['error_message'])) {
                 $message = $_SESSION['error_message'];
                 unset($_SESSION['error_message']);
             }
-            dump($_COOKIE,null);
-            S::$disp[1]['MESSAGE'][0]['message'] = $message;
-        } catch (FwException $e) {
-            Log::error($e->getMessage());
+            D\S::$disp[1]['MESSAGE'][0]['message'] = $message;
+        } catch (E\FwException $e) {
+            D\Log::error($e->getMessage());
             dump($e->getMessage());
         } finally {
         }

@@ -70,11 +70,16 @@
     position:relative;
 }
 
-.fw_debug .fw_debug_exit_button
+.fw_debug .fw_debug_header
 {
     position: absolute;
-    right: -1px;
-    top: -1px;
+    right: 8px;
+    top: 13px;
+    color: #999;
+}
+
+.fw_debug .fw_debug_exit_button
+{
     cursor: pointer;
     color: #999;
     border: 1px solid #999;
@@ -85,8 +90,10 @@
 .fw_debug h3
 {
     color: red;
-    font-size: 1.2em;
+    font-size: 1.4em;
     font-weight: bold;
+    margin-bottom: 9px;
+    font-family: 'arial';
 }
 
 .fw_debug h4

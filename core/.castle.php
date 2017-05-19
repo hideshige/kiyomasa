@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Hideshige Sawada
- * @version  1.4.2.2
+ * @version  1.4.2.3
  * @package  core
  * 
  * 標準コーディング規約

@@ -9,7 +9,7 @@
 
 namespace Yourname\Yourproject\Model;
 
-use Yourname\Yourproject\Extension\Citadel;
+use Yourname\Yourproject\Extension as E;
 
 class Index
 {
@@ -17,7 +17,7 @@ class Index
 
     public function logic()
     {
-        Citadel::set(FROM_NAME);
+        E\Citadel::set(FROM_NAME);
     }
 }
 

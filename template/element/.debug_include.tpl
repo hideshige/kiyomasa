@@ -1,7 +1,10 @@
 <!-- BEGIN DEBUG_INCLUDE -->
 <div id="fw_debug_area_{disp_type}" style="display:{debug_disp};">
     <div id="fw_debug_{disp_type}" class="fw_debug">
-        <div class="fw_debug_exit_button" onclick="fwDebug('{disp_type}');">X</div>
+        <div class="fw_debug_header">
+            KIYOMASA
+            <span class="fw_debug_exit_button" onclick="fwDebug('{disp_type}');">X</span>
+        </div>
         <h3>{request_url}</h3>
         <h4>【DUMP】</h4>
         <pre class="fw_debug_dump">{dump}</pre>
