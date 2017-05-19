@@ -105,6 +105,7 @@
 {
     padding: 7px;
     background: #ff9;
+    color: #000;
 }
 
 .fw_debug .fw_debug_bold
@@ -151,6 +152,11 @@
     border: 1px solid #999;
     background: white;
     white-space: nowrap;
+}
+
+.fw_debug .fw_debug_line
+{
+    color: #00c;
 }
 </style>
 

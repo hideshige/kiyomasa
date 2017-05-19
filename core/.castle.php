@@ -173,7 +173,7 @@ function dump()
 {
     global $dump;
     $bt = debug_backtrace();
-    $dump .= sprintf("%s %s\n", $bt[0]['file'], $bt[0]['line']);
+    $dump .= sprintf("# %s {{DUMP_LINE}}%s\n", $bt[0]['file'], $bt[0]['line']);
     ob_start();
     foreach ($bt[0]['args'] as $v) {
         var_dump($v);

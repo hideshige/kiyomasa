@@ -3,14 +3,6 @@
     <div id="fw_debug_{disp_type}" class="fw_debug">
         <div class="fw_debug_exit_button" onclick="fwDebug('{disp_type}');">X</div>
         <h3>{request_url}</h3>
-        <p>
-            OS: {os} PHP ver: {php_ver}<br />
-            メモリ使用量: {memory1} KB (固定分)
-            + {memory2} KB (追加分) = {memory3} KB<br />
-            IP: {ip}<br />
-            タイムスタンプ: {timestamp} ({time})
-        </p>
-
         <h4>【DUMP】</h4>
         <pre class="fw_debug_dump">{dump}</pre>
         <h4>【DB SLAVE】</h4>
@@ -31,6 +23,15 @@
         <pre>{cookie}</pre>
         <h4>【URL】</h4>
         <pre>{url}</pre>
+        <h4>【OS】</h4>
+        <p>
+            {os}<br />
+            PHP　{php_ver}<br />
+            メモリ　{memory1} KB (固定分)
+            + {memory2} KB (追加分) = {memory3} KB<br />
+            IPアドレス　{ip}<br />
+            タイムスタンプ　{timestamp} ({time})
+        </p>
     </div>
 </div>
 <!-- END DEBUG_INCLUDE -->

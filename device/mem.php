@@ -8,14 +8,14 @@
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
  * なお、MemcachedがインストールされていないサーバでもDBで代用可能
- CREATE TABLE memcached (
-  memcached_key VARCHAR(255) NOT NULL,
-  memcached_value TEXT,
-  temp_flag TINYINT NOT NULL DEFAULT 0,
-  expire DATETIME DEFAULT NULL,
-  created_at DATETIME DEFAULT NULL,
-  updated_at DATETIME DEFAULT NULL,
-  PRIMARY KEY (memcached_key)
+CREATE TABLE memcached (
+    memcached_key VARCHAR(255) NOT NULL,
+    memcached_value TEXT,
+    temp_flag TINYINT NOT NULL DEFAULT 0,
+    expire DATETIME DEFAULT NULL,
+    created_at DATETIME DEFAULT NULL,
+    updated_at DATETIME DEFAULT NULL,
+    PRIMARY KEY (memcached_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
  *
  */

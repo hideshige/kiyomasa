@@ -120,14 +120,14 @@ class Turret
             global $dump;
             // コンソール用
             $json['debug'] = "【DB SLAVE】\n"
-                . $this->modDebugSql(S::$dbs->disp_sql, true)
+                . $this->modDebugConsole(S::$dbs->disp_sql, true)
                 . "----------------------------------------------------------\n"
                 . "【DB MASTER】\n"
-                . $this->modDebugSql(S::$dbm->disp_sql, true)
+                . $this->modDebugConsole(S::$dbm->disp_sql, true)
                 . "----------------------------------------------------------\n"
                 . "【MEMCACHED】\n" . S::$mem->disp_mem
                 . "----------------------------------------------------------\n"
-                . "【DUMP】\n" . $dump;
+                . "【DUMP】\n" . $this->modDebugConsole($dump, true);
             // ブラウザ用
             $arr = $this->dispDebug();
             $json['fw_debug_include_ajax'] = $arr['include'];
@@ -198,13 +198,13 @@ class Turret
                 'db_slave' => $this->modDebugSql(S::$dbs->disp_sql),
                 'db_master' => $this->modDebugSql(S::$dbm->disp_sql),
                 'memcached' => nl2br(htmlspecialchars(S::$mem->disp_mem)),
-                'post' => htmlspecialchars($post),
-                'get' => htmlspecialchars($get),
-                'url' => htmlspecialchars($url),
-                'files' => htmlspecialchars($files),
-                'session' => htmlspecialchars($session),
-                'cookie' => htmlspecialchars($cookie),
-                'dump' => htmlspecialchars($dump),
+                'post' => $this->modDebugDump($post),
+                'get' => $this->modDebugDump($get),
+                'url' => $this->modDebugDump($url),
+                'files' => $this->modDebugDump($files),
+                'session' => $this->modDebugDump($session),
+                'cookie' => $this->modDebugDump($cookie),
+                'dump' => $this->modDebugDump($dump),
                 'debug_disp' => $dump ? 'block' : 'none'
             ];
             
@@ -235,75 +235,121 @@ class Turret
     }
     
     /**
-     * デバッグSQLの成形
-     * @param string $sql SQL文
-     * @param boolean $console_flag コンソール表示用の場合TRUE
+     * コンソールデバッグの成型
+     * @param string $text コンソール用文字列
      * @return string
      */
-    private function modDebugSql($sql, $console_flag = false)
+    private function modDebugConsole($text)
     {
-        if ($console_flag) {
-            $sql = preg_replace(
-                "/{{COUNTER (.*?)}};/",
-                '; No.$1',
-                $sql
-            );
-            // 色付けの目印として配置した{{}}構文を消す
-            $sql = preg_replace('/{{.*?}}/', '', $sql);
-        } else {
-            $sql = htmlspecialchars($sql);
-            preg_match_all("/{{STRING}}'(.*?)'/", $sql, $match);
-            if (isset($match[1])) {
-                foreach ($match[1] as $v) {
-                    $sql = preg_replace(
-                        "/{{STRING}}'" . preg_quote($v, '/') . "'/",
-                        '&apos;<span class="fw_debug_bold fw_debug_str">'
-                        // 文字列として使用されているコロンを置換しておく
-                        . preg_replace('/:/', '{{COLON}}', $v)
-                        . '</span>&apos;',
-                        $sql
-                    );
-                }
+        $text = preg_replace(
+            "/{{COUNTER (.*?)}};/",
+            '; No.$1',
+            $text
+        );
+        // 色付けの目印として配置した{{}}構文を消す
+        $text = preg_replace('/{{.*?}}/', '', $text);
+        return $text;
+    }
+    
+    /**
+     * SQLデバッグの成型
+     * @param string $text SQL文字列
+     * @return string
+     */
+    private function modDebugSql($text)
+    {
+        $text = htmlspecialchars($text);
+        preg_match_all("/{{STRING}}'(.*?)'/", $text, $match);
+        if (isset($match[1])) {
+            foreach ($match[1] as $v) {
+                $text = preg_replace(
+                    "/{{STRING}}'" . preg_quote($v, '/') . "'/",
+                    '&apos;<span class="fw_debug_bold fw_debug_str">'
+                    // 文字列として使用されているコロンを置換しておく
+                    . preg_replace('/:/', '{{COLON}}', $v)
+                    . '</span>&apos;',
+                    $text
+                );
             }
-            $sql = preg_replace(
-                '/{{AT}}@(\w*)/',
-                '@<span class="fw_debug_bold">$1</span>',
-                $sql
-            );
-            $sql = preg_replace(
-                '/{{NULL}}NULL/',
-                '<span class="fw_debug_bold fw_debug_null">NULL</span>',
-                $sql
-            );
-            $sql = preg_replace(
-                '/{{INT}}(\d*)/',
-                '<span class="fw_debug_bold fw_debug_int">$1</span>',
-                $sql
-            );
-            $sql = preg_replace(
-                '/{{STATEMENT}}(\w*)/',
-                '<span class="fw_debug_bold fw_debug_stmt">$1</span>',
-                $sql
-            );
-            $sql = preg_replace(
-                '/:(\w*)/',
-                '<span title=":$1" class="fw_debug_bold fw_debug_u">?</span>',
-                $sql
-            );
-            $sql = preg_replace("/{{COLON}}/", ':', $sql);
-            $sql = preg_replace(
-                "/{{COUNTER (\d*)}};( {{TIME}}(.*?\]))?/",
-                '<span class="fw_debug_semicolon fw_debug_u"'
-                . ' onmouseover="fwDebugNo($1, true);"'
-                . ' onmouseout="fwDebugNo($1, false);">;'
-                . '<span id="fw_debug_no$1" class="fw_debug_counter">'
-                . 'No.$1$3</span>'
-                . '</span>',
-                $sql
-            );
-            $sql = nl2br($sql);
         }
-        return $sql;
+        $text = preg_replace(
+            '/{{AT}}@(\w*)/',
+            '@<span class="fw_debug_bold">$1</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/{{NULL}}NULL/',
+            '<span class="fw_debug_bold fw_debug_null">NULL</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/{{INT}}(\d*)/',
+            '<span class="fw_debug_bold fw_debug_int">$1</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/{{STATEMENT}}(\w*)/',
+            '<span class="fw_debug_bold fw_debug_stmt">$1</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/:(\w*)/',
+            '<span title=":$1" class="fw_debug_bold fw_debug_u">?</span>',
+            $text
+        );
+        $text = preg_replace("/{{COLON}}/", ':', $text);
+        $text = preg_replace(
+            "/{{COUNTER (\d*)}};( {{TIME}}(.*?\]))?/",
+            '<span class="fw_debug_semicolon fw_debug_u"'
+            . ' onmouseover="fwDebugNo($1, true);"'
+            . ' onmouseout="fwDebugNo($1, false);">;'
+            . '<span id="fw_debug_no$1" class="fw_debug_counter">'
+            . 'No.$1$3</span>'
+            . '</span>',
+            $text
+        );
+        $text = nl2br($text);
+        return $text;
+    }
+    
+    /**
+     * DUMPデバッグの成型
+     * @param string $text DUMP文字列
+     * @return string
+     */
+    private function modDebugDump($text)
+    {
+        $text = htmlspecialchars($text);
+        $text = preg_replace(
+            '/NULL/',
+            '<span class="fw_debug_null">NULL</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/\[&quot;(.*?)&quot;\]/',
+            '[&quot;<span class="fw_debug_bold">$1</span>&quot;]',
+            $text
+        );
+        $text = preg_replace(
+            '/string\((\d*)\) &quot;(.*?)&quot;/',
+            'string($1) &quot;<span class="fw_debug_bold fw_debug_str">'
+            . '$2</span>&quot;',
+            $text
+        );
+        $text = preg_replace(
+            '/int\((\d*)\)/',
+            '<span class="fw_debug_int">'
+            . 'int(<span class="fw_debug_bold">$1</span>)'
+            . '</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/# (.*){{DUMP_LINE}}(\d*)/',
+            '<span class="fw_debug_line">$1</span>'
+            . '<span class="fw_debug_bold fw_debug_line">$2</span>',
+            $text
+        );
+        return $text;
     }
 
     /*
