@@ -28,8 +28,9 @@ class ErrorPage
             }
             D\S::$disp[1]['MESSAGE'][0]['message'] = $message;
         } catch (E\FwException $e) {
-            D\Log::error($e->getMessage());
-            dump($e->getMessage());
+            $mes = $e->getMessage();
+            D\Log::error($mes);
+            dump($mes);
         } finally {
         }
     }

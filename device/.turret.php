@@ -241,8 +241,8 @@ class Turret
     private function modDebugConsole($text)
     {
         $text = preg_replace(
-            "/{{COUNTER (.*?)}};/",
-            '; No.$1',
+            "/{{COUNTER (.*?)}}/",
+            '$1 ',
             $text
         );
         // 色付けの目印として配置した{{}}構文を消す
@@ -293,18 +293,20 @@ class Turret
         );
         $text = preg_replace(
             '/:(\w*)/',
-            '<span title=":$1" class="fw_debug_bold fw_debug_u">?</span>',
+            '<span name="fw_debug_process_qu" class="fw_debug_bold"'
+            . ' style="display: none;">?</span>'
+            . '<span name="fw_debug_process" class="fw_debug_bold">:$1</span>',
             $text
         );
         $text = preg_replace("/{{COLON}}/", ':', $text);
         $text = preg_replace(
-            "/{{COUNTER (\d*)}};( {{TIME}}(.*?\]))?/",
-            '<span class="fw_debug_semicolon fw_debug_u"'
-            . ' onmouseover="fwDebugNo($1, true);"'
-            . ' onmouseout="fwDebugNo($1, false);">;'
-            . '<span id="fw_debug_no$1" class="fw_debug_counter">'
-            . 'No.$1$3</span>'
-            . '</span>',
+            "/{{COUNTER (\d*)}}/",
+            '<span name="fw_debug_process" class="fw_debug_counter">$1</span> ',
+            $text
+        );
+        $text = preg_replace(
+            "/; {{TIME}}(.*?\])/",
+            '; <span name="fw_debug_process" class="fw_debug_time">$1</span>',
             $text
         );
         $text = nl2br($text);

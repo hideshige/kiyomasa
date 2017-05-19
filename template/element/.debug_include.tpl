@@ -8,7 +8,10 @@
         <h3>{request_url}</h3>
         <h4>【DUMP】</h4>
         <pre class="fw_debug_dump">{dump}</pre>
-        <h4>【DB SLAVE】</h4>
+        <h4>
+            【DB SLAVE】
+            <input type="button" onclick="fwDebugCounter();" value="CHANGE" />
+        </h4>
         <p>{db_slave}</p>
         <h4>【DB MASTER】</h4>
         <p>{db_master}</p>

@@ -7,10 +7,10 @@
  * @package  device
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
- * $params = array(
- *   'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
- *   'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
- *);
+ $params = array(
+    'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
+    'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
+ );
  *
  * ルールの意味
  * type   : フォームの種類(1 textarea, 2 radio, 3 select, 4 check, 5 text, 6 password, 7 email)
@@ -43,58 +43,56 @@
 
 <!-- BEGIN FORM_AREA -->
 <form action="/example" method="post">
-  <input type="hidden" name="post_flag" value="1" />
-  <table style="width:100%;">
-    <!-- BEGIN LIST -->
-    <tr>
-      <th style="width:100px">{question}<!-- BEGIN MUST_MARK -->
-        <span style="color:#FF0000;">*</span>
-        <!-- END MUST_MARK --></th>
-        <td<!-- BEGIN COLOR --> style="background:#F8F8F8;"<!-- END COLOR -->><!-- BEGIN MESS -->
-    <span style="color:red;">{mess}</span>
-    <!-- END MESS -->{answer}
-    </td>
-    </tr>
-    <!-- END LIST -->
-  </table>
-  <input type="submit" value="送信" />
+    <input type="hidden" name="post_flag" value="1" />
+    <table style="width:100%;">
+        <!-- BEGIN FORM -->
+        <tr>
+            <th style="width:100px">{question}<!-- BEGIN MUST_MARK -->
+                <span style="color:#FF0000;">*</span>
+            <!-- END MUST_MARK --></th>
+            <td<!-- BEGIN COLOR --> style="background:#F8F8F8;"<!-- END COLOR -->><!-- BEGIN MESS -->
+                <span style="color:red;">{mess}</span>
+                <!-- END MESS -->{answer}
+            </td>
+        </tr>
+        <!-- END FORM -->
+    </table>
+    <input type="submit" value="送信" />
 </form>
 <!-- END FORM_AREA -->
  *
  *
 モデルは以下のようにする
 $params = array(
-  'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
-  'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
+    'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
+    'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
 );
- 
+
 $box = S::$post;
 
 $form = [];
-form::formArr($params, $form, self::$box);
+Form::formArr($params, $form, $box);
 
-$form_list = &S::$disp[1]['FORM_AREA'][0]['LIST'];
+$form_list = &S::$disp[1]['FORM_AREA'][0]['FORM'];
 
 $i = 0;
 foreach ($form as $k => $v) {
-  $form_list[$i]['id'] = $k;
-  $form_list[$i]['question'] = $params[$k]['name'];
-  if (isset($params[$k]['must'])) {
-    $form_list[$i]['MUST_MARK'][0] = '';
-  }
-  $form_list[$i]['answer'] = $v;
-  $i ++;
+    $form_list[$i]['id'] = $k;
+    $form_list[$i]['question'] = $params[$k]['name'];
+    if (isset($params[$k]['must'])) {
+        $form_list[$i]['MUST_MARK'][0] = '';
+    }
+    $form_list[$i]['answer'] = $v;
+    $i ++;
 }
 if (isset(S::$post['post_flag'])) {
-  $vali = form::validation($params, self::$box);
-  if ($vali) {
-    S::$disp[1]['MESSAGE'][0]['message'] = '入力に不備があります。';
-    form::getMessage($vali, $form_list);
-    return true;
-  }
+    $vali = Form::validation($params, $box);
+    if ($vali) {
+        S::$disp[1]['MESSAGE'][0]['message'] = '入力に不備があります。';
+        Form::getMessage($vali, $form_list);
+        return true;
+    }
 }
- *
- *
  *
  */
 
@@ -261,11 +259,11 @@ class Form
         $br_flag = false
     ) {
         foreach ($params as $name => $val) {
-            if (!isset ($val['join'])) {
+            if (!isset($val['join'])) {
                 $key = $name;
                 $form[$key] = '';
             }
-            if (isset ($val['pre_add'])) {
+            if (isset($val['pre_add'])) {
                 $form[$key] .= $val['pre_add'];
             }
             if ($val['type'] === 3) {
@@ -311,7 +309,7 @@ class Form
                     $text_type,
                     $name,
                     isset($post[$name]) ? $post[$name] : '',
-                    isset ($val['size']) ? isset ($val['size']) : 10,
+                    isset($val['size']) ? $val['size'] : 10,
                     $max,
                     isset($val['tag_add']) ? $val['tag_add'] : '',
                     isset($val['must']) ? ' required' : ''
@@ -328,7 +326,7 @@ class Form
                     isset($post[$name]) ? $post[$name] : ''
                 );
             }
-            if (isset ($val['add'])) {
+            if (isset($val['add'])) {
                  $form[$key] .= $val['add'];
             }
         }
@@ -352,7 +350,7 @@ class Form
         &$form,
         $tag_add = ''
     ) {
-        if (!isset ($form[$key])) {
+        if (!isset($form[$key])) {
             $form[$key] = '';
         }
         $form[$key] .= sprintf('<select name="%s"%s>', $name, $tag_add);
@@ -384,7 +382,7 @@ class Form
         $tag_add = '',
         $br_flag = false
     ) {
-        if (!isset ($form[$key])) {
+        if (!isset($form[$key])) {
             $form[$key] = '';
         }
         foreach ($val as $k => $v) {
@@ -415,7 +413,7 @@ class Form
         $tag_add = '',
         $br_flag = false
     ) {
-        if (!isset ($form[$key])) $form[$key] = '';
+        if (!isset($form[$key])) $form[$key] = '';
         foreach ($val as $k => $v) {
             if (!isset($data)) {
                 $data = [];

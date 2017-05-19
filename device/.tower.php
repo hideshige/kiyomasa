@@ -13,9 +13,16 @@ namespace Php\Framework\Kiyomasa\Device;
 use Exception;
 
 /**
- * 例外処理クラス
+ * フレームワーク固有の例外処理クラス
  */
 class FwException extends Exception
+{
+}
+
+/**
+ * ユーザー操作による例外処理クラス
+ */
+class UserException extends Exception
 {
 }
 
@@ -58,7 +65,9 @@ spl_autoload_register(
         $file_name = SERVER_PATH
             . strtolower($arr[$count - 2] . '/' . $under) . '.php';
         if (!file_exists($file_name)) {
-            throw new FwException('Class File Not Found: ' . $file_name);
+            throw new FwException(
+                'Class File Not Found: ' . $file_name
+            );
         }
         require $file_name;
     }

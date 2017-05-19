@@ -120,13 +120,6 @@
     font-weight: bold;
 }
 
-.fw_debug .fw_debug_u
-{
-    cursor:pointer;
-    padding:0 3px;
-    text-decoration: underline;
-}
-
 .fw_debug .fw_debug_null
 {
     color: orange;
@@ -154,11 +147,12 @@
 
 .fw_debug .fw_debug_counter
 {
-    display: none;
-    position: absolute;
-    border: 1px solid #999;
-    background: white;
-    white-space: nowrap;
+    color: #f90;
+}
+
+.fw_debug .fw_debug_time
+{
+    color: #09f;
 }
 
 .fw_debug .fw_debug_line
@@ -183,6 +177,7 @@
 </div>
 <div id="fw_debug_include_ajax">
 </div>
+<div style="display:none;" id="fw_debug_counter_flag">1</div>
 <script>
 /**
  * デバッグの表示
@@ -196,6 +191,7 @@ function fwDebug(tagId)
     
     if (myArea && myArea.style['display'] === 'none') {
         myArea.style['display'] = 'block';
+        window.scrollTo(0, 0);
         if (otherArea) {
             otherArea.style['display'] = 'none';
         }
@@ -203,17 +199,32 @@ function fwDebug(tagId)
         myArea.style['display'] = 'none';
     }
 }
-        
+
 /**
  * カウンターの表示
- * @param {integer} counterNum SQLの実行順番
- * @param {boolean} openFlag カウンターを表示する場合TRUE
  */
-function fwDebugNo(counterNum, openFlag)
+function fwDebugCounter()
 {
-    var tagId = 'fw_debug_no' + counterNum;
-    document.getElementById(tagId).style['display'] = 
-        openFlag ? 'inline' : 'none';
+    var hiddenTag = document.getElementsByName('fw_debug_process');
+    var quTag = document.getElementsByName('fw_debug_process_qu');
+    var openFlag = document.getElementById('fw_debug_counter_flag').innerHTML;
+    
+    if (quTag[0]) {
+        for (var qi in quTag) {
+            if (quTag[qi].style) {
+                quTag[qi].style['display'] = openFlag === '1' ? 'inline' : 'none';
+            }
+        }
+    }
+    if (hiddenTag[0]) {
+        for (var hi in hiddenTag) {
+            if (hiddenTag[hi].style) {
+                hiddenTag[hi].style['display'] = openFlag === '1' ? 'none' : 'inline';
+            }
+        }
+        document.getElementById('fw_debug_counter_flag').innerHTML
+            = openFlag === '1' ? '0' : '1';
+    }
 }
 </script>
 <!-- END DEBUG -->

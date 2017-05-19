@@ -30,6 +30,9 @@ class HelloWorld // クラス名はファイル名に合わせる
             D\S::$disp[1]['MESSAGE_AREA'][0]['word']とは、$this->tpl[1] のテンプレート内で<!-- BEGIN MESSAGE_AREA -->～<!-- END MESSAGE_AREA -->の中の{word}を意味する
             */
         } catch (D\FwException $e) {
+            $mes = $e->getMessage();
+            D\Log::error($mes);
+            dump($mes);
         } finally {
         }
     }
