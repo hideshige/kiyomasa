@@ -1,10 +1,7 @@
-<div id="fw_debug_guide">
-    {env}　{process}秒　<input type="button" onclick="fwDebug();" value="デバッグ" />
-</div>
-
-<div id="fw_debug_area" style="display:{debug_disp};">
-    <div id="fw_debug">
-        <div id="fw_debug_exit_button" onclick="fwDebug();">X</div>
+<!-- BEGIN DEBUG_INCLUDE -->
+<div id="fw_debug_area_{disp_type}" style="display:{debug_disp};">
+    <div id="fw_debug_{disp_type}" class="fw_debug">
+        <div class="fw_debug_exit_button" onclick="fwDebug('{disp_type}');">X</div>
         <h3>{request_url}</h3>
         <p>
             OS: {os} PHP ver: {php_ver}<br />
@@ -15,7 +12,7 @@
         </p>
 
         <h4>【DUMP】</h4>
-        <pre id="fw_debug_dump">{dump}</pre>
+        <pre class="fw_debug_dump">{dump}</pre>
         <h4>【DB SLAVE】</h4>
         <p>{db_slave}</p>
         <h4>【DB MASTER】</h4>
@@ -28,7 +25,12 @@
         <pre>{get}</pre>
         <h4>【FILES】</h4>
         <pre>{files}</pre>
+        <h4>【SESSION】</h4>
+        <pre>{session}</pre>
+        <h4>【COOKIE】</h4>
+        <pre>{cookie}</pre>
         <h4>【URL】</h4>
         <pre>{url}</pre>
     </div>
 </div>
+<!-- END DEBUG_INCLUDE -->

@@ -129,13 +129,15 @@ class Turret
                 . "----------------------------------------------------------\n"
                 . "【DUMP】\n" . $dump;
             // ブラウザ用
-            $json['fw_debug_include'] = $this->dispDebug();
+            $arr = $this->dispDebug();
+            $json['fw_debug_include_ajax'] = $arr['include'];
+            $json['fw_debug_guide_ajax_time'] = $arr['process'] . '秒';
         }
     }
     
     /**
      * デバッグ情報の成形
-     * @return string
+     * @return string|array
      */
     private function dispDebug()
     {
@@ -161,6 +163,16 @@ class Turret
                 var_dump($_FILES);
             }
             $files = ob_get_clean();
+            ob_start();
+            if ($_COOKIE) {
+                var_dump($_COOKIE);
+            }
+            $cookie = ob_get_clean();
+            ob_start();
+            if ($_SESSION) {
+                var_dump($_SESSION);
+            }
+            $session = ob_get_clean();
 
             global $first_memory;
             global $first_time;
@@ -190,17 +202,32 @@ class Turret
                 'get' => htmlspecialchars($get),
                 'url' => htmlspecialchars($url),
                 'files' => htmlspecialchars($files),
+                'session' => htmlspecialchars($session),
+                'cookie' => htmlspecialchars($cookie),
                 'dump' => htmlspecialchars($dump),
-                'env' => isset($env[ENV]) ? $env[ENV] : 'ENV' . ENV,
-                'process' => round($last_time - $first_time, 5),
                 'debug_disp' => $dump ? 'block' : 'none'
             ];
+            
+            $process = round($last_time - $first_time, 5);
+            
             $view = [];
-            $view['DEBUG'][0] = $debug;
             
             if (S::$jflag) {
-                $disp = View::template('element/.debug_include.tpl', $view);
+                $debug['disp_type'] = 'ajax';
+                $view['DEBUG_INCLUDE'][0] = $debug;
+                $arr = [];
+                $arr['process'] = $process;
+                $arr['include'] = View::template(
+                    'element/.debug_include.tpl',
+                    $view
+                );
+                $disp = $arr;
             } else {
+                $debug['disp_type'] = 'html';
+                $view['DEBUG'][0]['DEBUG_INCLUDE'][0] = $debug;
+                $view['REPLACE']['env'] = isset($env[ENV])
+                    ? $env[ENV] : 'ENV' . ENV;
+                $view['REPLACE']['process'] = $process;
                 $disp = View::template('.debug.tpl', $view);
             }
         }

@@ -165,7 +165,7 @@ class View
                   . $folder . $element . $tpl . $add;
         }
         if (!file_exists($fname)) {
-            throw new FwException('No Template');
+            throw new FwException('No Template ' . $fname);
         }
         $fh = fopen($fname, 'r');
         if (!$fh) {
