@@ -118,13 +118,17 @@ class Turret
     private function jsonDebug(&$json){
         if ($this->debug) {
             global $dump;
-            $json['debug'] = "【DB SLAVE】\n" . S::$dbs->disp_sql
+            // コンソール用
+            $json['debug'] = "【DB SLAVE】\n"
+                . $this->modDebugSql(S::$dbs->disp_sql, true)
                 . "----------------------------------------------------------\n"
-                . "【DB MASTER】\n" . S::$dbm->disp_sql
+                . "【DB MASTER】\n"
+                . $this->modDebugSql(S::$dbm->disp_sql, true)
                 . "----------------------------------------------------------\n"
                 . "【MEMCACHED】\n" . S::$mem->disp_mem
                 . "----------------------------------------------------------\n"
                 . "【DUMP】\n" . $dump;
+            // ブラウザ用
             $json['fw_debug_include'] = $this->dispDebug();
         }
     }
@@ -205,17 +209,67 @@ class Turret
     
     /**
      * デバッグSQLの成形
-     * @param string $sql
+     * @param string $sql SQL文
+     * @param boolean $console_flag コンソール表示用の場合TRUE
      * @return string
      */
-    private function modDebugSql($sql)
+    private function modDebugSql($sql, $console_flag = false)
     {
-        $sql = htmlspecialchars($sql);
-        $sql = preg_replace('/@(.*?) /', '@<span style="font-weight:bold;">$1</span> ', $sql);
-        $sql = preg_replace('/= NULL;/', '= <span style="font-weight:bold;color:orange;">NULL</span>;', $sql);
-        $sql = preg_replace('/= {INT}(\d.*?);/', '= <span style="font-weight:bold;color:green;">$1</span>;', $sql);
-        $sql = preg_replace("/= '(.*?)';/", '= &apos;<span style="font-weight:bold;color:red;">$1</span>&apos;;', $sql);
-        $sql = nl2br($sql);
+        if ($console_flag) {
+            $sql = preg_replace(
+                "/{{COUNTER (.*?)}};/",
+                '; $1',
+                $sql
+            );
+            //色付けの目印として配置した{{}}構文を消す
+            $sql = preg_replace('/{{.*?}}/', '', $sql);
+        } else {
+            $sql = htmlspecialchars($sql);
+            preg_match_all("/{{STRING}}'(.*?)'/", $sql, $match);
+            if (isset($match[1])) {
+                foreach ($match[1] as $v) {
+                    $sql = preg_replace(
+                        "/{{STRING}}'" . preg_quote($v, '/') . "'/",
+                        '&apos;<span class="fw_debug_bold fw_debug_str">'
+                        . preg_replace('/:/', '{{COLON}}', $v)
+                        . '</span>&apos;',
+                        $sql
+                    );
+                }
+            }
+            $sql = preg_replace(
+                '/{{AT}}@(\w*)/',
+                '@<span class="fw_debug_bold">$1</span>',
+                $sql
+            );
+            $sql = preg_replace(
+                '/{{NULL}}NULL/',
+                '<span class="fw_debug_bold fw_debug_null">NULL</span>',
+                $sql
+            );
+            $sql = preg_replace(
+                '/{{INT}}(\d*)/',
+                '<span class="fw_debug_bold fw_debug_int">$1</span>',
+                $sql
+            );
+            $sql = preg_replace(
+                '/{{STATEMENT}}(\w*)/',
+                '<span class="fw_debug_bold fw_debug_stmt">$1</span>',
+                $sql
+            );
+            $sql = preg_replace(
+                '/:(\w*)/',
+                '<span title=":$1" class="fw_debug_bold fw_debug_u">?</span>',
+                $sql
+            );
+            $sql = preg_replace("/{{COLON}}/", ':', $sql);
+            $sql = preg_replace(
+                "/{{COUNTER (.*?)}};/",
+                '<span title="No.$1" class="fw_debug_u">;</span>',
+                $sql
+            );
+            $sql = nl2br($sql);
+        }
         return $sql;
     }
 

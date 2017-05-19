@@ -61,10 +61,43 @@
     margin-bottom: 12px;
     margin-left: 20px;
 }
+
 #fw_debug_dump
 {
     padding: 7px;
     background: #ff9;
+}
+
+#fw_debug .fw_debug_bold
+{
+    font-weight: bold;
+}
+
+#fw_debug .fw_debug_u
+{
+    cursor:pointer;
+    padding:0 3px;
+    text-decoration: underline;
+}
+
+#fw_debug .fw_debug_null
+{
+    color: orange;
+}
+
+#fw_debug .fw_debug_int
+{
+    color: green;
+}
+
+#fw_debug .fw_debug_str
+{
+    color: red;
+}
+
+#fw_debug .fw_debug_stmt
+{
+    color: brown;
 }
 </style>
 

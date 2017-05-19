@@ -21,7 +21,7 @@
  * call        ルーチンの呼び出し
  *
  * @author   Hideshige Sawada
- * @version  1.4.2.0
+ * @version  1.4.3.0
  * @package  device
  *
  */
@@ -206,9 +206,9 @@ class Db extends DbModule
             if ($this->debug) {
                 // 実行したSQL文と実行時間、変更行数
                 $this->disp_sql .= sprintf(
-                    "%d>%s; (%s) [%d]\n",
-                    $g_counter,
+                    ">%s{{COUNTER %d (%s秒) [行数 %d]}};\n",
                     $this->sql,
+                    $g_counter,
                     $qt,
                     $this->stmt[$statement_id]->rowCount()
                 );
@@ -241,10 +241,10 @@ class Db extends DbModule
 
             if ($this->debug) {
                 $this->disp_sql .= sprintf(
-                    "%d>PREPARE %s FROM '%s';\n",
-                    $g_counter,
+                    "PREPARE {{STATEMENT}}%s FROM '%s'{{COUNTER %d}};\n",
                     $statement_id,
-                    $this->sql
+                    $this->sql,
+                    $g_counter
                 );
                 $g_counter ++;
             }
@@ -315,23 +315,24 @@ class Db extends DbModule
                     if ($this->debug) {
                         if ($d_v === null) {
                             $this->disp_sql .= sprintf(
-                                "%d>SET @%s = NULL;\n",
-                                $g_counter,
-                                $this->name[$statement_id] ? $k : $i
+                                "SET {{AT}}@%s = {{NULL}}NULL{{COUNTER %d}};\n",
+                                $this->name[$statement_id] ? $k : $i,
+                                $g_counter
                             );
                         } else if (is_numeric($d_v)) {
                             $this->disp_sql .= sprintf(
-                                "%d>SET @%s = {INT}%d;\n",
-                                $g_counter,
+                                "SET {{AT}}@%s = {{INT}}%d{{COUNTER %d}};\n",
                                 $this->name[$statement_id] ? $k : $i,
-                                $d_v
+                                $d_v,
+                                $g_counter
                             );
                         } else {
                             $this->disp_sql .= sprintf(
-                                "%d>SET @%s = '%s';\n",
-                                $g_counter,
+                                "SET {{AT}}@%s = {{STRING}}'%s'"
+                                . "{{COUNTER %d}};\n",
                                 $this->name[$statement_id] ? $k : $i,
-                                $d_v
+                                $d_v,
+                                $g_counter
                             );
                         }
                         $g_counter ++;
@@ -344,7 +345,7 @@ class Db extends DbModule
                         $v,
                         is_int($v) ? PDO::PARAM_INT : PDO::PARAM_STR
                     );
-                    $u[] = sprintf('@%s', $name);
+                    $u[] = sprintf('{{AT}}@%s', $name);
                     $i ++;
                 }
             }
@@ -358,10 +359,11 @@ class Db extends DbModule
                 //デバッグ表示
                 $using = count($u) ? sprintf('USING %s', implode(', ', $u)) : '';
                 $this->disp_sql .= sprintf(
-                    "%d>EXECUTE %s %s; (%s) [%d]\n",
-                    $g_counter,
+                    "EXECUTE {{STATEMENT}}%s %s"
+                    . "{{COUNTER %d (%s秒) [行数 %d]}};\n",
                     $statement_id,
                     $using,
+                    $g_counter,
                     $qt,
                     $count
                 );
@@ -422,9 +424,9 @@ class Db extends DbModule
             if ($this->debug) {
                 global $g_counter;
                 $this->disp_sql .= sprintf(
-                    "%d>DEALLOCATE PREPARE %s;\n",
-                    $g_counter,
-                    $statement_id
+                    "DEALLOCATE PREPARE {{STATEMENT}}%s{{COUNTER %d}};\n",
+                    $statement_id,
+                    $g_counter
                 );
                 $g_counter ++;
             }
@@ -497,7 +499,8 @@ class Db extends DbModule
             $res = false;
             if ($this->debug and !$this->transaction_flag) {
                 global $g_counter;
-                $this->disp_sql .= $g_counter . ">START TRANSACTION;\n";
+                $this->disp_sql .= "START TRANSACTION{{COUNTER "
+                    . $g_counter . "}};\n";
                 $g_counter ++;
             }
             if (!$this->transaction_flag) {
@@ -520,7 +523,7 @@ class Db extends DbModule
             $res = false;
             if ($this->debug and $this->transaction_flag) {
                 global $g_counter;
-                $this->disp_sql .= $g_counter . ">COMMIT;\n";
+                $this->disp_sql .= "COMMIT{{COUNTER " . $g_counter . "}};\n";
                 $g_counter ++;
             }
             if ($this->transaction_flag) {
@@ -542,7 +545,7 @@ class Db extends DbModule
             $res = false;
             if ($this->debug and $this->transaction_flag) {
                 global $g_counter;
-                $this->disp_sql .= $g_counter . ">ROLLBACK;\n";
+                $this->disp_sql .= "ROLLBACK{{COUNTER " . $g_counter . "}};\n";
                 $g_counter ++;
             }
             if ($this->transaction_flag) {
