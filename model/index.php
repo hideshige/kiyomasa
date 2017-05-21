@@ -12,21 +12,19 @@ namespace Yourname\Yourproject\Model;
 use Php\Framework\Kiyomasa\Device as D;
 use Yourname\Yourproject\Extension as E;
 
-class Index
+class Index extends E\BaseModel
 {
     public $tpl = ['header', 'index', 'footer'];
 
-    public function logic()
+    protected function execute()
     {
-        try {
-            E\Citadel::set(FROM_NAME);
-            
-            
-        } catch (E\FwException $e) {
-            $mes = $e->getMessage();
-            D\Log::error($mes);
-            dump($mes);
-        } finally {
-        }
+        E\Citadel::set(FROM_NAME);
+    }
+    
+    protected function throwCatch($mes)
+    {
+        $this->tpl[1] = 'error_page';
+        D\S::$disp[1]['MESSAGE'][0]['message'] = $mes;
+        return true;
     }
 }

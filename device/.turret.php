@@ -26,7 +26,7 @@ class Turret
             // modelファイルの読み込み
             $file = SERVER_PATH . 'model/' . $pagename . '.php';
             if (!file_exists($file)) {
-                throw new FwException($file . ' not found');
+                throw new SystemException($file . ' not found');
             }
             require_once($file);
             $class_name = NAME_SPACE . '\Model\\' . trim(
@@ -35,11 +35,9 @@ class Turret
             $model = new $class_name;
             $res = $model->logic();
             if ($res === false) {
-                throw new FwException($pagename . ' logic notice');
+                throw new SystemException($pagename . ' logic notice');
             }
             
-            session_write_close();
-
             if (!S::$jflag) {
                 if (isset($model->tpl) and count($model->tpl)) {
                     foreach ($model->tpl as $tk => $tv) {
@@ -55,9 +53,8 @@ class Turret
                 $json = $res;
                 $this->jsonDebug($json);
                 echo json_encode($json);
-                exit;
             }
-        } catch (FwException $e) {
+        } catch (SystemException $e) {
             if (S::$dbm->transaction_flag) {
                 // トランザクションを実行中に例外処理が起きた場合、ロールバックする
                 S::$dbm->rollback();
@@ -99,13 +96,12 @@ class Turret
                 $json['alert'] = $this->debug ? $error : 'エラー';
                 echo json_encode($json);
             }
-
-            // DBセッションを明示的にリセット
+        } finally {
+            // セッション,DBを明示的にリセット
             session_write_close();
             S::$dbm = null;
             S::$dbs = null;
             exit;
-        } finally {
         }
     }
 
@@ -203,6 +199,7 @@ class Turret
                 'files' => $this->modDebugDump($files),
                 'session' => $this->modDebugDump($session),
                 'cookie' => $this->modDebugDump($cookie),
+                'namespace' => NAME_SPACE,
                 'dump' => $this->modDebugDump($dump),
                 'debug_disp' => $dump ? 'block' : 'none'
             ];

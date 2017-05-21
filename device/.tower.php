@@ -15,7 +15,7 @@ use Exception;
 /**
  * フレームワーク固有の例外処理クラス
  */
-class FwException extends Exception
+class SystemException extends Exception
 {
 }
 
@@ -53,7 +53,7 @@ spl_autoload_register(
     {
         $arr = explode('\\', $class_name);
         if (!isset($arr[1])) {
-            throw new FwException('Class Name Error: ' . $class_name);
+            throw new SystemException('Class Name Error: ' . $class_name);
         }
         $count = count($arr);
         $under = preg_replace(
@@ -65,7 +65,7 @@ spl_autoload_register(
         $file_name = SERVER_PATH
             . strtolower($arr[$count - 2] . '/' . $under) . '.php';
         if (!file_exists($file_name)) {
-            throw new FwException(
+            throw new SystemException(
                 'Class File Not Found: ' . $file_name
             );
         }

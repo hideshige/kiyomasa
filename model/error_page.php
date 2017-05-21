@@ -18,20 +18,13 @@ class ErrorPage
 
     public function logic()
     {
-        try {
-            $title = 'エラー';
-            E\Citadel::set($title);
-            $message = 'ページが見つかりません。';
-            if (isset($_SESSION['error_message'])) {
-                $message = $_SESSION['error_message'];
-                unset($_SESSION['error_message']);
-            }
-            D\S::$disp[1]['MESSAGE'][0]['message'] = $message;
-        } catch (E\FwException $e) {
-            $mes = $e->getMessage();
-            D\Log::error($mes);
-            dump($mes);
-        } finally {
+        $title = 'エラー';
+        E\Citadel::set($title);
+        $message = 'ページが見つかりません。';
+        if (isset($_SESSION['error_message'])) {
+            $message = $_SESSION['error_message'];
+            unset($_SESSION['error_message']);
         }
+        D\S::$disp[1]['MESSAGE'][0]['message'] = $message;
     }
 }

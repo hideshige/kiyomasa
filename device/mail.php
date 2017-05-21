@@ -55,7 +55,7 @@ class Mail
 
         $res = mail($to2, $subject4, $body3, $headers, $f);
         if ($res === false) {
-            throw new FwException('send mail error');
+            throw new SystemException('send mail error');
         }
         return true;
     }

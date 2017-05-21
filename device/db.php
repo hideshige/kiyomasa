@@ -415,7 +415,7 @@ class Db extends DbModule
     public function stmtClose($statement_id = 'stmt') {
         try {
             if (!$this->stmt[$statement_id]) {
-                throw new FwException('No Statement');
+                throw new SystemException('No Statement');
             }
             
             $this->stmt[$statement_id]->closeCursor();
@@ -446,7 +446,7 @@ class Db extends DbModule
         try {
             $res = $this->connect->lastInsertId();
             if (!$res) {
-                throw new FwException('get id error');
+                throw new SystemException('get id error');
             }
             return $res;
         } catch (PDOException $e) {
@@ -464,7 +464,7 @@ class Db extends DbModule
     public function lock($tables) {
         // トランザクション使用中は実行できない。
         if ($this->transaction_flag) {
-            throw new FwException('LOCK ERROR');
+            throw new SystemException('LOCK ERROR');
         }
 
         $this->lock_flag = true;

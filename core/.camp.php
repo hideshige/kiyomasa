@@ -16,7 +16,7 @@
 
 use Php\Framework\Kiyomasa\Device\Db;
 use Php\Framework\Kiyomasa\Device\S;
-use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\SystemException;
 use Php\Framework\Kiyomasa\Device\Log;
 
 require_once(__DIR__ . '/.define.php');
@@ -46,7 +46,7 @@ class Camp
                 DB_MASTER_NAME
             );
             if (!$res_dbm) {
-                throw new FwException('DB_MASTER Connect Error');
+                throw new SystemException('DB_MASTER Connect Error');
             }
             S::$dbs = new Db();
             $res_dbs = S::$dbs->connect(
@@ -64,7 +64,7 @@ class Camp
                     DB_MASTER_NAME
                 );
                 if (!$res_dbs2) {
-                    throw new FwException('DB_MASTER Connect Error');
+                    throw new SystemException('DB_MASTER Connect Error');
                 }
             }
 
@@ -79,7 +79,7 @@ class Camp
                 echo "DBM\n";
                 echo S::$dbm->disp_sql;
             }
-        } catch (FwException $e) {
+        } catch (SystemException $e) {
             Log::error($e->getMessage());
             echo "KIYOMASA ERROR\n";
             exit;
@@ -101,9 +101,9 @@ class Camp
             $model = new $class_name();
             $res = $model->logic();
             if ($res === false) {
-                throw new FwException($pagename . ' logic notice');
+                throw new SystemException($pagename . ' logic notice');
             }
-        } catch (FwException $e) {
+        } catch (SystemException $e) {
             if (S::$dbm->transaction_flag) {
                 //トランザクションを実行中に例外処理が起きた場合、ロールバックする
                 S::$dbm->rollback();
@@ -117,7 +117,7 @@ class Camp
                 $e->getLine(),
                 $e->getMessage()
             );
-            throw new FwException($error);
+            throw new SystemException($error);
         } finally {
         }
     }

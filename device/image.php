@@ -93,7 +93,7 @@ class Image
         }
 
         if (!$img_res) {
-            throw new FwException('thumbnail resample error');
+            throw new SystemException('thumbnail resample error');
         }
 
         $name = $set_name ? ($file_type ? $set_name . '.' . $itype : $set_name)
@@ -107,7 +107,7 @@ class Image
         }
 
         if (!$save) {
-            throw new FwException('thumbnail save error');
+            throw new SystemException('thumbnail save error');
         }
 
         imagedestroy($img);
@@ -141,7 +141,7 @@ class Image
         }
         $res = move_uploaded_file($file, $save_folder_file);
         if (!$res) {
-            throw new FwException('file move error');
+            throw new SystemException('file move error');
         }
     }
 
@@ -167,7 +167,7 @@ class Image
 
         //ファイルが削除されている場合false
         if (!file_exists($file)) {
-            throw new FwException('virus file deleted');
+            throw new SystemException('virus file deleted');
         }
     }
 
@@ -194,7 +194,7 @@ class Image
         } else if (preg_match('/(png|PNG)/', $file_type)) {
             $itype = 'png';
         } else {
-            throw new FwException('not image type ' . $file . ' ' . $file_type);
+            throw new SystemException('not image type ' . $file . ' ' . $file_type);
         }
         return $itype;
     }
@@ -208,7 +208,7 @@ class Image
     {
         $file_byte = filesize($file);
         if ($file_byte > $limit) {
-            throw new FwException('file size over');
+            throw new SystemException('file size over');
         }
     }
 }

@@ -2,7 +2,7 @@
 <style>
 #fw_debug_guide
 {
-    width: 340px;
+    width: 400px;
     position: fixed;
     top: 0;
     right: 0;
@@ -15,7 +15,7 @@
     float: left;
     background: blue;
     color: white;
-    width: 210px;
+    width: 230px;
     text-align: right;
     
 }
@@ -25,7 +25,7 @@
     float: left;
     background: brown;
     color: white;
-    width: 130px;
+    width: 170px;
     text-align: right;
 }
 
@@ -73,9 +73,22 @@
 .fw_debug .fw_debug_header
 {
     position: absolute;
-    right: 8px;
-    top: 13px;
+    right: 10px;
+    top: 10px;
     color: #999;
+}
+
+.fw_debug .fw_debug_logo
+{
+    position: absolute;
+    right: 13px;
+    bottom: 15px;
+    margin: 2px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    opacity: 0.2;
+    border: 27px solid #ffee00;
 }
 
 .fw_debug .fw_debug_exit_button

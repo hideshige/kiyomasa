@@ -12,7 +12,7 @@
 
 namespace Yourname\Yourproject\Extension;
 
-use Php\Framework\Kiyomasa\Device\S;
+use Php\Framework\Kiyomasa\Device as D;
 
 class Citadel
 {
@@ -28,9 +28,9 @@ class Citadel
         $token_update_flag = true
     ) {
         for ($i = 0; $i < 3; $i ++) {
-            S::$disp[$i]['REPLACE']['title'] = $title;
-            S::$disp[$i]['REPLACE']['domain'] = DOMAIN_NAME;
-            S::$disp[$i]['REPLACE']['link_domain'] = LINK_DOMAIN_NAME;
+            D\S::$disp[$i]['REPLACE']['title'] = $title;
+            D\S::$disp[$i]['REPLACE']['domain'] = DOMAIN_NAME;
+            D\S::$disp[$i]['REPLACE']['link_domain'] = LINK_DOMAIN_NAME;
         }
         //セッションまわりの処理をここに記入する
     }
@@ -58,9 +58,9 @@ class Citadel
      */
     public static function checkFormToken()
     {
-        if (!isset(S::$post['token']) or !isset($_SESSION['token'])
-            or S::$post['token'] != $_SESSION['token']) {
-            throw new FwException('Token Error');
+        if (!isset(D\S::$post['token']) or !isset($_SESSION['token'])
+            or D\S::$post['token'] != $_SESSION['token']) {
+            throw new SystemException('Token Error');
         }
     }
 }

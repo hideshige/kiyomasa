@@ -68,7 +68,7 @@ class DbModule
                 . "NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'"
             );
             if (!$query) {
-                throw new FwException('SQL MODE ERROR');
+                throw new SystemException('SQL MODE ERROR');
             }
         } catch (PDOException $e) {
             Log::error($e->getMessage());
@@ -123,6 +123,6 @@ class DbModule
             //デバッグ表示
             \dump($error_mes);
         }
-        throw new FwException($error_mes);
+        throw new SystemException($error_mes);
     }
 }

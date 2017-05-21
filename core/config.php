@@ -8,8 +8,8 @@ const NAME_SPACE = 'Yourname\Yourproject';
 if (ENV === 0) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 1);
-    define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
-//    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
+//    define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
+    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
 
     define('DOMAIN_NAME', '/');
     define('LINK_DOMAIN_NAME', 'http://localhost:8000/');

@@ -15,7 +15,7 @@ use Php\Framework\Kiyomasa\Device\Db;
 use Php\Framework\Kiyomasa\Device\Mem;
 use Php\Framework\Kiyomasa\Device\Session;
 use Php\Framework\Kiyomasa\Device\Turret;
-use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\SystemException;
 use Php\Framework\Kiyomasa\Device\S;
 use Php\Framework\Kiyomasa\Device\Log;
 
@@ -76,7 +76,7 @@ class Castle
             
             // View接続
             $this->view($turret);
-        } catch (FwException $e) {
+        } catch (SystemException $e) {
             $error = sprintf(
                 '%s(%s) %s',
                 str_replace(SERVER_PATH, '', $e->getFile()),
@@ -105,7 +105,7 @@ class Castle
             DB_MASTER_SERVER, DB_MASTER_USER, DB_MASTER_PASSWORD, DB_MASTER_NAME
         );
         if (!$res_dbm) {
-            throw new FwException('DB_MASTER Connect Error');
+            throw new SystemException('DB_MASTER Connect Error');
         }
         S::$dbs = new Db();
         $res_dbs = S::$dbs->connect(

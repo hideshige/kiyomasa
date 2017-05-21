@@ -13,7 +13,7 @@
 
 namespace Php\Framework\Kiyomasa\Device;
 
-use Php\Framework\Kiyomasa\Device\FwException;
+use Php\Framework\Kiyomasa\Device\SystemException;
 
 class Crypt
 {
@@ -27,7 +27,7 @@ class Crypt
     private static function open($data, $encode_flag = true)
     {
         if (!extension_loaded('mcrypt')) {
-            throw new FwException('mcrypt is not installed');
+            throw new SystemException('mcrypt is not installed');
         }
         
         $res = null;
@@ -41,7 +41,7 @@ class Crypt
             );
             if ($res < 0) {
                 mcrypt_module_close($td);
-                throw new FwException('暗号化エラー');
+                throw new SystemException('暗号化エラー');
             } else {
                 // dataを暗号化または復号
                 if (!$encode_flag) {
