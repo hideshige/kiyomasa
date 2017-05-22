@@ -10,7 +10,7 @@
 
 namespace Yourname\Yourproject\Extension;
 
-use Php\Framework\Kiyomasa\Device as D;
+use Php\Framework\Device as D;
 
 abstract class BaseModel
 {

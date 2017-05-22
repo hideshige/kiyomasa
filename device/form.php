@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Hideshige Sawada
- * @version  1.3.3.2
+ * @version  1.3.4.0
  * @package  device
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -96,41 +96,35 @@ if (isset(S::$post['post_flag'])) {
  *
  */
 
-namespace Php\Framework\Kiyomasa\Device;
+namespace Php\Framework\Device;
 
 class Form
 {
     private static $params;
-    private static $e;
-
-    public function __construct()
-    {
-        // エラーメッセージの配列
-        self::$e = array (
-            'must' => '入力してください。<br />',
-            'must_select' => '選んでください。<br />',
-            'max' => '文字数が%d文字を超えています。（現在%d文字）<br />',
-            'min' => '文字数が%d文字に満たないです。（現在%d文字）<br />',
-            'fill' => '文字数が%d文字ではありません。（現在%d文字）<br />',
-            'int' => '数字以外の文字が含まれています。<br />',
-            'eng' => '半角英数字以外の文字が含まれています。<br />',
-            'char' => '半角以外の文字が含まれています。<br />',
-            'hiragana' => 'ひらがな以外の文字が含まれています。<br />',
-            'katakana' => 'カタカナ以外の文字が含まれています。<br />',
-            'count' => '選択できるのは%sまでです。<br />',
-            'match_count' => '%s選択してください。<br />',
-            'select_error' => '一致する選択肢が存在しません。<br />',
-            'not_match1' => '登録されていません。<br />',
-            'not_match2' => '登録情報と一致しません。<br />',
-            'email' => '正しいメールアドレスを入力してください。<br />',
-            'email2' => 'メールアドレスは既に登録されています。<br />',
-            'email3' => '確認用のメールアドレスと異なります。<br />',
-            'password_error' => '確認用のパスワードと異なります。<br />', // model側から判定する
-            'password_error2' => 'パスワードが正しくありません。<br />', // model側から判定する
-            'checkdate' => '日付が正しくありません。<br />', // model側から判定する
-            'ng_word' => '不適切な文字が含まれています。<br />', // model側から判定する
-        );
-    }
+    private static $e = [
+        'must' => '入力してください。<br />',
+        'must_select' => '選んでください。<br />',
+        'max' => '文字数が%d文字を超えています。（現在%d文字）<br />',
+        'min' => '文字数が%d文字に満たないです。（現在%d文字）<br />',
+        'fill' => '文字数が%d文字ではありません。（現在%d文字）<br />',
+        'int' => '数字以外の文字が含まれています。<br />',
+        'eng' => '半角英数字以外の文字が含まれています。<br />',
+        'char' => '半角以外の文字が含まれています。<br />',
+        'hiragana' => 'ひらがな以外の文字が含まれています。<br />',
+        'katakana' => 'カタカナ以外の文字が含まれています。<br />',
+        'count' => '選択できるのは%sまでです。<br />',
+        'match_count' => '%s選択してください。<br />',
+        'select_error' => '一致する選択肢が存在しません。<br />',
+        'not_match1' => '登録されていません。<br />',
+        'not_match2' => '登録情報と一致しません。<br />',
+        'email' => '正しいメールアドレスを入力してください。<br />',
+        'email2' => 'メールアドレスは既に登録されています。<br />',
+        'email3' => '確認用のメールアドレスと異なります。<br />',
+        'password_error' => '確認用のパスワードと異なります。<br />', // model側から判定する
+        'password_error2' => 'パスワードが正しくありません。<br />', // model側から判定する
+        'checkdate' => '日付が正しくありません。<br />', // model側から判定する
+        'ng_word' => '不適切な文字が含まれています。<br />', // model側から判定する
+    ];
 
     /**
      * 入力フォームの内容を検証する
@@ -355,7 +349,7 @@ class Form
         }
         $form[$key] .= sprintf('<select name="%s"%s>', $name, $tag_add);
         foreach ($val as $k => $v) {
-            $select = (isset($data) and $data === $k) ? ' selected="selected"' : '';
+            $select = (isset($data) and $data == $k) ? ' selected="selected"' : '';
             $t = '<option value="%s"%s>%s</option>';
             $form[$key] .= sprintf($t, $k, $select, $v);
         }
@@ -386,7 +380,7 @@ class Form
             $form[$key] = '';
         }
         foreach ($val as $k => $v) {
-            $check = (isset($data) and $data === $k) ? ' checked="checked"' : '';
+            $check = (isset($data) and $data == $k) ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
             $t = '<label><input type="radio" name="%s" value="%s"%s%s /> %s </label>%s';
             $form[$key] .= sprintf($t, $name, $k, $check, $tag_add, $v, $br);

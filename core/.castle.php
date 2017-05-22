@@ -11,13 +11,13 @@
  * 
  */
 
-use Php\Framework\Kiyomasa\Device\Db;
-use Php\Framework\Kiyomasa\Device\Mem;
-use Php\Framework\Kiyomasa\Device\Session;
-use Php\Framework\Kiyomasa\Device\Turret;
-use Php\Framework\Kiyomasa\Device\SystemException;
-use Php\Framework\Kiyomasa\Device\S;
-use Php\Framework\Kiyomasa\Device\Log;
+use Php\Framework\Device\Db;
+use Php\Framework\Device\Mem;
+use Php\Framework\Device\Session;
+use Php\Framework\Device\Turret;
+use Php\Framework\Device\SystemException;
+use Php\Framework\Device\S;
+use Php\Framework\Device\Log;
 
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;

@@ -14,10 +14,10 @@
  *
  */
 
-use Php\Framework\Kiyomasa\Device\Db;
-use Php\Framework\Kiyomasa\Device\S;
-use Php\Framework\Kiyomasa\Device\SystemException;
-use Php\Framework\Kiyomasa\Device\Log;
+use Php\Framework\Device\Db;
+use Php\Framework\Device\S;
+use Php\Framework\Device\SystemException;
+use Php\Framework\Device\Log;
 
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');

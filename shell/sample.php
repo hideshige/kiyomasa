@@ -9,7 +9,7 @@
 
 namespace Yourname\Yourproject\Shell;
 
-use Php\Framework\Kiyomasa\Device\Log;
+use Php\Framework\Device\Log;
 
 class Sample
 {

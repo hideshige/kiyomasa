@@ -9,7 +9,7 @@
 
 namespace Yourname\Yourproject\Model;
 
-use Php\Framework\Kiyomasa\Device as D;
+use Php\Framework\Device as D;
 use Yourname\Yourproject\Extension as E;
 
 class HelloWorld extends E\BaseModel // クラス名はファイル名に合わせる

@@ -11,9 +11,9 @@
  * @package  device
  */
 
-namespace Php\Framework\Kiyomasa\Device;
+namespace Php\Framework\Device;
 
-use Php\Framework\Kiyomasa\Device\SystemException;
+use Php\Framework\Device\SystemException;
 
 class Crypt
 {
@@ -71,6 +71,3 @@ class Crypt
         return self::open($data, false);
     }
 }
-
-const CRYPT_KEY = 'keyword1';
-const CRYPT_IV = 'keyword2';

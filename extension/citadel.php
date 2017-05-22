@@ -12,7 +12,7 @@
 
 namespace Yourname\Yourproject\Extension;
 
-use Php\Framework\Kiyomasa\Device as D;
+use Php\Framework\Device as D;
 
 class Citadel
 {
@@ -34,34 +34,4 @@ class Citadel
         }
         //セッションまわりの処理をここに記入する
     }
-
-    /**
-     * サニタイズした文字を戻す
-     * @param string $word 戻したい文字
-     * @return string 戻した文字
-     */
-    public static function hDecode($word)
-    {
-        $word2 = htmlspecialchars_decode($word, ENT_QUOTES);
-        $res = $word2;
-        global $g_change_chara;
-        if ($g_change_chara) {
-            foreach ($g_change_chara as $ck => $cv) {
-                $res = str_replace($ck, $cv, $word2);
-            }
-        }
-        return $res;
-    }
-
-    /**
-     * フォームのトークンの確認
-     */
-    public static function checkFormToken()
-    {
-        if (!isset(D\S::$post['token']) or !isset($_SESSION['token'])
-            or D\S::$post['token'] != $_SESSION['token']) {
-            throw new SystemException('Token Error');
-        }
-    }
-}
 
