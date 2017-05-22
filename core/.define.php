@@ -2,7 +2,7 @@
 /**
  * フレームワーク定義
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.0.0
  * @package  core
  */

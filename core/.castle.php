@@ -1,8 +1,8 @@
 <?php
 /**
- * PHPフレームワーク KIYOMASA
+ * オープンソースPHPフレームワーク KIYOMASA
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.4.2.3
  * @package  core
  * 

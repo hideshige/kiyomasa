@@ -14,7 +14,7 @@
  *
  * <!-- ELEMENT *** -->にはelementフォルダの部分テンプレートが挿入される。
  * 
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.1.1.1
  * @package  device
  * 

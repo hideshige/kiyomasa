@@ -2,7 +2,7 @@
 /**
  * クライアントURLモジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.5.1
  * @package  device
  */

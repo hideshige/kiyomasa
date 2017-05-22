@@ -2,7 +2,7 @@
 /**
  * memcached モジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.7.0
  * @package  device
  * 

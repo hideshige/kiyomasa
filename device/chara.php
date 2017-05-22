@@ -2,7 +2,7 @@
 /**
  * 文字列関連 モジュール
  * 
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.1.1
  * @package  device
  */

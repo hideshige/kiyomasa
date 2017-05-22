@@ -2,7 +2,7 @@
 /**
  * 入力フォーム検証モジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.3.4.0
  * @package  device
  *

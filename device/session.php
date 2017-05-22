@@ -2,7 +2,7 @@
 /**
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.1.4.2
  * @package  device
  * 

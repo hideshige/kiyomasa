@@ -2,7 +2,7 @@
 /**
  * ページングモジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.4.1
  * @package  device
  *
