@@ -79,7 +79,7 @@ $i = 0;
 foreach ($form as $k => $v) {
     $form_list[$i]['id'] = $k;
     $form_list[$i]['question'] = $params[$k]['name'];
-    if (isset($params[$k]['must'])) {
+    if (isset($params[$k]['must']) or isset($params[$k]['must_select'])) {
         $form_list[$i]['MUST_MARK'][0] = '';
     }
     $form_list[$i]['answer'] = $v;
