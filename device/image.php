@@ -2,7 +2,7 @@
 /**
  * 画像 モジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.1.4.1
  * @package  device
  * 

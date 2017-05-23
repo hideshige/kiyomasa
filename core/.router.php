@@ -2,7 +2,7 @@
 /**
  * PHPビルトイン　ウェブサーバ設定
  * 
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.0.0
  * @package  core
  *

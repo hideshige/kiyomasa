@@ -2,7 +2,7 @@
 /**
  * モデルの書き方　チュートリアル
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.0.0
  * @package  model
  */

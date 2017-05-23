@@ -2,7 +2,7 @@
 /**
  * メール モジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.6.1
  * @package  device
  *

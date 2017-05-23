@@ -2,7 +2,7 @@
 /**
  * admin用のページかどうかチェックする共通モデル
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.3.0
  * @package  extension
  *

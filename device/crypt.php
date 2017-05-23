@@ -1,13 +1,13 @@
 <?php
 /**
- * 暗号化・復号モジュール
+ * 暗号化(mcrypt) モジュール
  *
  * ※メモ
  * UTF-8で日本語の暗号化データをDBに保存する場合、
  * VARCHAR(255)に収めるためには暗号化する文字を62文字以内にする必要がある。
  *
- * @author   Hideshige Sawada
- * @version  1.0.2.1
+ * @author   Sawada Hideshige
+ * @version  1.0.2.2
  * @package  device
  */
 
@@ -42,20 +42,19 @@ class Crypt
             if ($res < 0) {
                 mcrypt_module_close($td);
                 throw new SystemException('暗号化エラー');
+            }
+            // dataを暗号化または復号
+            if (!$encode_flag) {
+                $data = base64_decode($data);
+            }
+            $data = $encode_flag
+                ? mcrypt_generic($td, $data) : mdecrypt_generic($td, $data);
+            mcrypt_generic_deinit($td);
+            mcrypt_module_close($td);
+            if ($encode_flag) {
+                $data = base64_encode($data);
             } else {
-                // dataを暗号化または復号
-                if (!$encode_flag) {
-                    $data = base64_decode($data);
-                }
-                $data = $encode_flag
-                    ? mcrypt_generic($td, $data) : mdecrypt_generic($td, $data);
-                mcrypt_generic_deinit($td);
-                mcrypt_module_close($td);
-                if ($encode_flag) {
-                    $data = base64_encode($data);
-                } else {
-                    $data = trim($data);
-                }
+                $data = trim($data);
             }
         }
         return $data;

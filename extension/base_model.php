@@ -2,7 +2,7 @@
 /**
  * HTML表示用 基本モデル
  * 
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.0.0
  * @package  extension
  * 

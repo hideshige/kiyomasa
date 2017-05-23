@@ -2,7 +2,7 @@
 /**
  * CSV モジュール
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.2.2.2
  * @package  device
  */

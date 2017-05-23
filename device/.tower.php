@@ -2,7 +2,7 @@
 /**
  * タワー　例外処理やショートカットなど土台強化部
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.0.0
  * @package  device
  * 

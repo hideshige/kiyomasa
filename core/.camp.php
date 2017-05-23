@@ -2,7 +2,7 @@
 /**
  * シェルを実行する
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.1.4.4
  * @package  core
  *

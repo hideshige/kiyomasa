@@ -2,7 +2,7 @@
 /**
  * タレット　強化コントローラ部
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.0.2.0
  * @package  device
  * 

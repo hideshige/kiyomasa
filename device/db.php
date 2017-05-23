@@ -20,7 +20,7 @@
  * rollback    トランザクションの復帰
  * call        ルーチンの呼び出し
  *
- * @author   Hideshige Sawada
+ * @author   Sawada Hideshige
  * @version  1.4.3.0
  * @package  device
  *
