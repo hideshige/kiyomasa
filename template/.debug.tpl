@@ -1,6 +1,62 @@
 <!-- BEGIN DEBUG -->
 <style>
-#fw_debug_guide
+#fw_debug *
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: arial, sans-serif;
+    line-height: 20px;
+}
+
+#fw_debug p,
+#fw_debug pre
+{
+    font-size: 11px;
+    line-height: 13px;
+    padding: 5px;
+    margin: 2px 1px 10px 5px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background: #eef;
+}
+
+#fw_debug h3
+{
+    font-size: 20px;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 9px;
+}
+
+#fw_debug h4
+{
+    font-size: 15px;
+    color: blue;
+}
+
+#fw_debug input
+{
+    border: 1px solid #333;
+    background: #999;
+    margin: 2px;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0 2px;
+    color: #fff;
+}
+
+#fw_debug input:hover
+{
+    background: #aaa;
+}
+
+#fw_debug input:active
+{
+    background: #ddd;
+}
+
+#fw_debug #fw_debug_guide
 {
     width: 400px;
     position: fixed;
@@ -10,7 +66,7 @@
     opacity: 0.7;
 }
 
-#fw_debug_guide_html
+#fw_debug #fw_debug_guide_html
 {
     float: left;
     background: blue;
@@ -20,7 +76,7 @@
     
 }
 
-#fw_debug_guide_ajax
+#fw_debug #fw_debug_guide_ajax
 {
     float: left;
     background: brown;
@@ -29,7 +85,7 @@
     text-align: right;
 }
 
-#fw_debug_area_html
+#fw_debug #fw_debug_area_html
 {
     position: absolute;
     padding: 25px;
@@ -40,7 +96,7 @@
     z-index: 10001;
 }
 
-#fw_debug_area_ajax
+#fw_debug #fw_debug_area_ajax
 {
     position: absolute;
     padding: 25px;
@@ -50,7 +106,7 @@
     z-index: 10002;
 }
 
-#fw_debug_html
+#fw_debug #fw_debug_html
 {
     border: 1px solid #999;
     box-shadow: 5px 5px 10px;
@@ -60,7 +116,7 @@
     position:relative;
 }
 
-#fw_debug_ajax
+#fw_debug #fw_debug_ajax
 {
     border: 1px solid #999;
     box-shadow: 5px 5px 10px;
@@ -70,7 +126,7 @@
     position:relative;
 }
 
-.fw_debug .fw_debug_header
+#fw_debug .fw_debug_header
 {
     position: absolute;
     right: 10px;
@@ -78,20 +134,17 @@
     color: #999;
 }
 
-.fw_debug .fw_debug_logo
+#fw_debug .fw_debug_logo
 {
     position: absolute;
     right: 13px;
     bottom: 15px;
-    margin: 2px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
     opacity: 0.2;
-    border: 27px solid #ffee00;
+    font-size: 20px;
+    font-family: impact;
 }
 
-.fw_debug .fw_debug_exit_button
+#fw_debug .fw_debug_exit_button
 {
     cursor: pointer;
     color: #999;
@@ -100,97 +153,83 @@
     padding:3px 7px;
 }
 
-.fw_debug h3
-{
-    color: red;
-    font-size: 1.4em;
-    font-weight: bold;
-    margin-bottom: 9px;
-    font-family: 'arial';
-}
-
-.fw_debug h4
-{
-    color: blue;
-}
-
-.fw_debug p,
-.fw_debug pre
-{
-    margin-bottom: 12px;
-    margin-left: 20px;
-}
-
-.fw_debug .fw_debug_dump
+#fw_debug .fw_debug_dump
 {
     padding: 7px;
     background: #ff9;
     color: #000;
 }
 
-.fw_debug .fw_debug_bold
+#fw_debug .fw_debug_bold
 {
     font-weight: bold;
 }
 
-.fw_debug .fw_debug_null
+#fw_debug .fw_debug_null
 {
     color: orange;
 }
 
-.fw_debug .fw_debug_int
+#fw_debug .fw_debug_int
 {
     color: green;
 }
 
-.fw_debug .fw_debug_str
+#fw_debug .fw_debug_str
 {
     color: red;
 }
 
-.fw_debug .fw_debug_stmt
+#fw_debug .fw_debug_db_select
+{
+    color: #aaf;
+}
+
+#fw_debug .fw_debug_stmt
 {
     color: brown;
 }
 
-.fw_debug .fw_debug_semicolon
+#fw_debug .fw_debug_semicolon
 {
     position: relative;
 }
 
-.fw_debug .fw_debug_counter
+#fw_debug .fw_debug_counter
 {
     color: #f90;
 }
 
-.fw_debug .fw_debug_time
+#fw_debug .fw_debug_time
 {
     color: #09f;
 }
 
-.fw_debug .fw_debug_line
+#fw_debug .fw_debug_line
 {
     color: #00c;
 }
 </style>
 
-<div id="fw_debug_guide">
-    <div id="fw_debug_guide_html">
-        {env}　{process}秒
-        <input type="button" onclick="fwDebug('html');" value="HTML" />
+<div id="fw_debug">
+    <div id="fw_debug_guide">
+        <div id="fw_debug_guide_html">
+            {env}　{process}秒
+            <input type="button" onclick="fwDebug('html');" value="HTML" />
+        </div>
+        <div id="fw_debug_guide_ajax">
+            <span id="fw_debug_guide_ajax_time">---</span>
+            <input type="button" onclick="fwDebug('ajax');" value="Ajax" />
+        </div>
     </div>
-    <div id="fw_debug_guide_ajax">
-        <span id="fw_debug_guide_ajax_time">---</span>
-        <input type="button" onclick="fwDebug('ajax');" value="Ajax" />
-    </div>
-</div>
 
-<div id="fw_debug_include_html">    
-<!-- ELEMENT .debug_include.tpl -->
-</div>
-<div id="fw_debug_include_ajax">
-</div>
+    <div id="fw_debug_include_html">    
+    <!-- ELEMENT .debug_include.tpl -->
+    </div>
+    <div id="fw_debug_include_ajax">
+    </div>
 <div style="display:none;" id="fw_debug_counter_flag">1</div>
+</div>
 <script>
 /**
  * デバッグの表示

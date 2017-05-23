@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.0
+ * @version  1.0.7.1
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -137,20 +137,22 @@ class Mem
      */
     public function delete($key)
     {
+        $check = true;
         if ($this->active) {
-            $res = $this->memcached1->delete($key);
+            $check = $this->memcached1->delete($key);
+        }
+        if ($check) {
+            $param = array ($key);
+            $where = 'WHERE memcached_key = ?';
+            S::$dbm->delete('memcached', $where, 'memcached');
+            S::$dbm->bind($param, 'memcached');
         }
 
-        $param = array ($key);
-        $where = 'WHERE memcached_key = ?';
-        S::$dbm->delete('memcached', $where, 'memcached');
-        S::$dbm->bind($param, 'memcached');
-
-        if ($this->debug and $this->active) {
+        if ($check and $this->debug and $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf("■DELETE %s\n[K]%s\n", $dump, $key);
         }
-        return $res;
+        return $check;
     }
 }

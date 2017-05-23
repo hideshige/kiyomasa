@@ -26,7 +26,8 @@ class Turret
             // modelファイルの読み込み
             $file = SERVER_PATH . 'model/' . $pagename . '.php';
             if (!file_exists($file)) {
-                throw new SystemException($file . ' not found');
+                throw new SystemException($file . ' not found: '
+                    . filter_input(INPUT_SERVER, 'REQUEST_URI'));
             }
             require_once($file);
             $class_name = NAME_SPACE . '\Model\\' . trim(
@@ -37,6 +38,9 @@ class Turret
             if ($res === false) {
                 throw new SystemException($pagename . ' logic notice');
             }
+            
+            // デバッグにセッションの動作を表示するため事前にセッションを閉じる
+            session_write_close();
             
             if (!S::$jflag) {
                 if (isset($model->tpl) and count($model->tpl)) {
@@ -85,6 +89,7 @@ class Turret
                     // エラー画面モデルの読み込み
                     $this->disp('error_page', $folder);
                 } else {
+                    // 循環防止のフラグ
                     echo 'エラー';
                     if ($this->debug and isset($error)) {
                         echo '<br />';
@@ -97,8 +102,6 @@ class Turret
                 echo json_encode($json);
             }
         } finally {
-            // セッション,DBを明示的にリセット
-            session_write_close();
             S::$dbm = null;
             S::$dbs = null;
             exit;
@@ -269,6 +272,26 @@ class Turret
             }
         }
         $text = preg_replace(
+            '/\n/',
+            '{{BR}}',
+            $text
+        );
+        preg_match_all('/═══ BEGIN ROW ═══(.*?)═══ END ROW ═══/', $text, $match);
+        if (isset($match[1])) {
+            foreach ($match[1] as $v) {
+                $text = preg_replace(
+                    '/═══ BEGIN ROW ═══' . preg_quote($v, '/')
+                    . '═══ END ROW ═══/',
+                    '<span name="fw_debug_process" '
+                    . 'class="fw_debug_bold fw_debug_db_select">'
+                    // 文字列として使用されているコロンを置換しておく
+                    . preg_replace('/:/', '{{COLON}}', $v)
+                    . '</span>',
+                    $text
+                );
+            }
+        }
+        $text = preg_replace(
             '/{{AT}}@(\w*)/',
             '@<span class="fw_debug_bold">$1</span>',
             $text
@@ -306,7 +329,11 @@ class Turret
             '; <span name="fw_debug_process" class="fw_debug_time">$1</span>',
             $text
         );
-        $text = nl2br($text);
+        $text = preg_replace(
+            '/{{BR}}/',
+            '<br />',
+            $text
+        );
         return $text;
     }
     
@@ -318,6 +345,17 @@ class Turret
     private function modDebugDump($text)
     {
         $text = htmlspecialchars($text);
+        $text = preg_replace(
+            '/# (.*){{DUMP_LINE}}(\d*)/',
+            '<span class="fw_debug_line">$1</span>'
+            . '<span class="fw_debug_bold fw_debug_line">$2</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/\n/',
+            '{{BR}}',
+            $text
+        );
         $text = preg_replace(
             '/NULL/',
             '<span class="fw_debug_null">NULL</span>',
@@ -342,9 +380,8 @@ class Turret
             $text
         );
         $text = preg_replace(
-            '/# (.*){{DUMP_LINE}}(\d*)/',
-            '<span class="fw_debug_line">$1</span>'
-            . '<span class="fw_debug_bold fw_debug_line">$2</span>',
+            '/{{BR}}/',
+            "\n",
             $text
         );
         return $text;

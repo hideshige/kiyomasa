@@ -53,6 +53,6 @@ abstract class JsonModel
         } finally {
             return $this->json;
         }
-    }    
+    }
 }
 

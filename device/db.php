@@ -401,6 +401,9 @@ class Db extends DbModule
                 );
                 $rows = $this->stmt[$statement_id]->fetchAll();
             }
+            if ($this->debug) {
+                $this->dbSelectDump($rows);
+            }
             return $rows;
         } catch (PDOException $e) {
             $this->dbLog($e->getMessage());

@@ -125,4 +125,25 @@ class DbModule
         }
         throw new SystemException($error_mes);
     }
+    
+    
+    function dbSelectDump($rows)
+    {
+        if ($rows) {
+            $this->disp_sql .= '═══ BEGIN ROW ═══';
+            foreach ($rows as $row_k => $row) {
+                if ($row_k >= 5) {
+                    $this->disp_sql .= "═══ and more... ═══\n";
+                    break;
+                }
+                $this->disp_sql .= "═══ $row_k ═══\n";
+                foreach ($row as $k => $v) {
+                    $this->disp_sql .= sprintf(
+                        "'%s' : %s\n", $k, is_numeric($v) ? $v : "'" . $v . "'"
+                    );
+                }
+            }
+            $this->disp_sql .= '═══ END ROW ═══';
+        }
+    }
 }
