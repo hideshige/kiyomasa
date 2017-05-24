@@ -11,7 +11,7 @@
 namespace Php\Framework\Device;
 
 use Exception;
-use Error;
+use \Error;
 
 class SystemError
 {

@@ -28,8 +28,9 @@
 
 namespace Php\Framework\Device;
 
-use PDO;
-use PDOException;
+use \PDO;
+use \PDOException;
+use \Error;
 
 class Db extends DbModule
 {

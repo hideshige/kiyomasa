@@ -22,7 +22,7 @@ CREATE TABLE memcached (
 
 namespace Php\Framework\Device;
 
-use Memcached;
+use \Memcached;
 
 class Mem
 {

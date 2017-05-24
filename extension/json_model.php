@@ -11,7 +11,7 @@
 namespace Yourname\Yourproject\Extension;
 
 use Php\Framework\Device as D;
-use Error;
+use \Error;
 
 abstract class JsonModel
 {

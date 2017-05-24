@@ -18,7 +18,7 @@ use Php\Framework\Device\Turret;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
 
-use Error;
+use \Error;
 
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;

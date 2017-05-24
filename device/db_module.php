@@ -10,8 +10,8 @@
 
 namespace Php\Framework\Device;
 
-use PDO;
-use PDOException;
+use \PDO;
+use \PDOException;
 
 class DbModule
 {
