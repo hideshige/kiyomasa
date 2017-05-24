@@ -11,6 +11,7 @@
 namespace Yourname\Yourproject\Extension;
 
 use Php\Framework\Device as D;
+use Error;
 
 abstract class JsonModel
 {
@@ -42,17 +43,11 @@ abstract class JsonModel
         } catch (D\UserException $e) {
             D\S::$dbm->rollback();
             $this->throwCatch($e->getMessage());
-        } catch (D\SystemException $e) {
-            D\S::$dbm->rollback();
-            $mes = $e->getMessage();
-            // ログに記録
-            D\Log::error($mes);
-            // デバッグ表示（本番環境には表示されない）
-            dump($mes);
-            $this->json[$this->place] = 'システムエラー ' . TIMESTAMP;
+        } catch (Error $e) {
+            D\SystemError::setInfo($e, $mess);
+            $this->json[$this->place] = $mess;
         } finally {
             return $this->json;
         }
     }
 }
-

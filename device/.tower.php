@@ -11,12 +11,35 @@
 namespace Php\Framework\Device;
 
 use Exception;
+use Error;
 
-/**
- * フレームワーク固有の例外処理クラス
- */
-class SystemException extends Exception
+class SystemError
 {
+    /**
+     * エラー発生したときの処理
+     * @param object $exception Exceptionオブジェクト
+     * @param string $disp_message 画面表示用メッセージ
+     */
+    public static function setInfo($exception, $disp_message = '')
+    {   
+        S::$dbm->rollback();
+        S::$dbm->unlock();
+
+        // ログに記録し、開発環境の場合デバッグを表示
+        $file = str_replace(SERVER_PATH, '', $exception->getFile());
+        $line = $exception->getLine();
+        $info = $exception->getMessage();
+        $error = sprintf('%s(%s) %s', $file, $line, $info);
+        Log::error($error);
+        global $dump;
+        $dump .= sprintf("# %s {{DUMP_LINE}}%s\n{{ERROR_INFO}}%s\n",
+            $file, $line, $info);
+        
+        if ($exception->getCode() === 0) {
+            // セッションにエラーメッセージを記録
+            $_SESSION['error_message'] = $disp_message;
+        }
+    }
 }
 
 /**
@@ -53,7 +76,7 @@ spl_autoload_register(
     {
         $arr = explode('\\', $class_name);
         if (!isset($arr[1])) {
-            throw new SystemException('Class Name Error: ' . $class_name);
+            throw new Error('Class Name Error: ' . $class_name);
         }
         $count = count($arr);
         $under = preg_replace(
@@ -65,7 +88,7 @@ spl_autoload_register(
         $file_name = SERVER_PATH
             . strtolower($arr[$count - 2] . '/' . $under) . '.php';
         if (!file_exists($file_name)) {
-            throw new SystemException(
+            throw new Error(
                 'Class File Not Found: ' . $file_name
             );
         }

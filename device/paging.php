@@ -32,7 +32,7 @@ class Paging
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
-            throw new SystemException('page error');
+            throw new Error('page error');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page

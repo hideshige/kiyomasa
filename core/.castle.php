@@ -15,9 +15,10 @@ use Php\Framework\Device\Db;
 use Php\Framework\Device\Mem;
 use Php\Framework\Device\Session;
 use Php\Framework\Device\Turret;
-use Php\Framework\Device\SystemException;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
+
+use Error;
 
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;
@@ -76,7 +77,7 @@ class Castle
             
             // View接続
             $this->view($turret);
-        } catch (SystemException $e) {
+        } catch (Error $e) {
             $error = sprintf(
                 '%s(%s) %s',
                 str_replace(SERVER_PATH, '', $e->getFile()),
@@ -105,7 +106,7 @@ class Castle
             DB_MASTER_SERVER, DB_MASTER_USER, DB_MASTER_PASSWORD, DB_MASTER_NAME
         );
         if (!$res_dbm) {
-            throw new SystemException('DB_MASTER Connect Error');
+            throw new Error('DB_MASTER Connect Error');
         }
         S::$dbs = new Db();
         $res_dbs = S::$dbs->connect(
@@ -173,7 +174,11 @@ function dump()
 {
     global $dump;
     $bt = debug_backtrace();
-    $dump .= sprintf("# %s {{DUMP_LINE}}%s\n", $bt[0]['file'], $bt[0]['line']);
+    $dump .= sprintf(
+        "# %s {{DUMP_LINE}}%s\n",
+        str_replace(SERVER_PATH, '', $bt[0]['file']),
+        $bt[0]['line']
+    );
     ob_start();
     foreach ($bt[0]['args'] as $v) {
         var_dump($v);

@@ -49,7 +49,7 @@ class View
 
             $content = self::match($disp, $content);
             $content = str_replace('=br=', "\n", $content);
-        } catch (SystemException $e) {
+        } catch (SystemError $e) {
             Log::error($e->getMessage());
             $content = null;
         } finally {
@@ -165,11 +165,11 @@ class View
                   . $folder . $element . $tpl . $add;
         }
         if (!file_exists($fname)) {
-            throw new SystemException('No Template ' . $fname);
+            throw new Error('No Template ' . $fname);
         }
         $fh = fopen($fname, 'r');
         if (!$fh) {
-            throw new SystemException('Template Open Error');
+            throw new Error('Template Open Error');
         } else {
             $content = fread($fh, max(1, filesize($fname)));
         }

@@ -11,6 +11,7 @@
 namespace Yourname\Yourproject\Extension;
 
 use Php\Framework\Device as D;
+use Error;
 
 abstract class BaseModel
 {
@@ -33,23 +34,15 @@ abstract class BaseModel
     public function logic() {
         try {
             $check = true;
-            $this->execute();
+            $this->execte();
         } catch (D\UserException $e) {
             D\S::$dbm->rollback();
             $check = $this->throwCatch($e->getMessage());
-        } catch (D\SystemException $e) {
-            D\S::$dbm->rollback();
-            $mes = $e->getMessage();
-            // エラー内容をログに記録
-            D\Log::error($mes);
-            // デバッグ表示（本番環境には表示されない）
-            dump($mes);
-            $disp_mes = 'システムエラー　' . TIMESTAMP;
-            $_SESSION['error_message'] = $disp_mes;
+        } catch (Error $e) {
+            D\SystemError::setInfo($e, 'エラー　' . TIMESTAMP);
             $check = false;
         } finally {
             return $check;
         }
     }
 }
-

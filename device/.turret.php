@@ -10,9 +10,11 @@
 
 namespace Php\Framework\Device;
 
+use Error;
+
 class Turret
 {
-    public $debug; // デバッグモード
+    public $debug = false; // デバッグモード
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
     
     /**
@@ -26,8 +28,8 @@ class Turret
             // modelファイルの読み込み
             $file = SERVER_PATH . 'model/' . $pagename . '.php';
             if (!file_exists($file)) {
-                throw new SystemException($file . ' not found: '
-                    . filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                throw new Error($file . ' not found: '
+                    . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
             }
             require_once($file);
             $class_name = NAME_SPACE . '\Model\\' . trim(
@@ -36,7 +38,7 @@ class Turret
             $model = new $class_name;
             $res = $model->logic();
             if ($res === false) {
-                throw new SystemException($pagename . ' logic notice');
+                throw new Error($pagename . ' logic notice', 10);
             }
             
             // デバッグにセッションの動作を表示するため事前にセッションを閉じる
@@ -58,47 +60,21 @@ class Turret
                 $this->jsonDebug($json);
                 echo json_encode($json);
             }
-        } catch (SystemException $e) {
-            if (S::$dbm->transaction_flag) {
-                // トランザクションを実行中に例外処理が起きた場合、ロールバックする
-                S::$dbm->rollback();
-            } else if (S::$dbm->lock_flag) {
-                // テーブル排他ロック中に例外処理が起きた場合、テーブル排他ロックを解除する
-                S::$dbm->unlock();
-            }
-
-            if (!preg_match('/notice/', $e->getMessage())) {
-                $error = sprintf(
-                    '%s(%s) %s',
-                    str_replace(SERVER_PATH, '', $e->getFile()),
-                    $e->getLine(),
-                    $e->getMessage()
-                );
-                Log::error($error);
-            }
+        } catch (Error $e) {
+            SystemError::setInfo($e);
 
             // エラーページの表示
-            // テスト環境の場合、デバッグ用のエラーを表示する
             if (!S::$jflag) {
-                if ($this->debug and isset($error)) {
-                    dump($error);
-                }
                 if (!$this->error_flag) {
                     // 循環防止のフラグ
                     $this->error_flag = true;
                     // エラー画面モデルの読み込み
                     $this->disp('error_page', $folder);
                 } else {
-                    // 循環防止のフラグ
-                    echo 'エラー';
-                    if ($this->debug and isset($error)) {
-                        echo '<br />';
-                        echo $error;
-                    }
+                    echo '循環エラー';
                 }
             } else {
-                $json = [];
-                $json['alert'] = $this->debug ? $error : 'エラー';
+                $json = ['alert' => 'エラー'];
                 echo json_encode($json);
             }
         } finally {
@@ -349,6 +325,11 @@ class Turret
             '/# (.*){{DUMP_LINE}}(\d*)/',
             '<span class="fw_debug_line">$1</span>'
             . '<span class="fw_debug_bold fw_debug_line">$2</span>',
+            $text
+        );
+        $text = preg_replace(
+            '/{{ERROR_INFO}}(.*)/',
+            '<span class="fw_debug_bold fw_debug_str">[ERROR INFO] $1</span>',
             $text
         );
         $text = preg_replace(

@@ -21,7 +21,7 @@
  * call        ルーチンの呼び出し
  *
  * @author   Sawada Hideshige
- * @version  1.4.3.0
+ * @version  1.4.4.0
  * @package  device
  *
  */
@@ -418,7 +418,7 @@ class Db extends DbModule
     public function stmtClose($statement_id = 'stmt') {
         try {
             if (!$this->stmt[$statement_id]) {
-                throw new SystemException('No Statement');
+                throw new Error('No Statement');
             }
             
             $this->stmt[$statement_id]->closeCursor();
@@ -449,7 +449,7 @@ class Db extends DbModule
         try {
             $res = $this->connect->lastInsertId();
             if (!$res) {
-                throw new SystemException('get id error');
+                throw new Error('get id error');
             }
             return $res;
         } catch (PDOException $e) {
@@ -467,7 +467,7 @@ class Db extends DbModule
     public function lock($tables) {
         // トランザクション使用中は実行できない。
         if ($this->transaction_flag) {
-            throw new SystemException('LOCK ERROR');
+            throw new Error('LOCK ERROR');
         }
 
         $this->lock_flag = true;
@@ -486,9 +486,10 @@ class Db extends DbModule
      * @return boolean
      */
     public function unlock() {
-        $this->lock_flag = false;
-        $res = $this->query('UNLOCK TABLES');
-        return $res;
+        if ($this->lock_flag) {
+            $this->lock_flag = false;
+            $this->query('UNLOCK TABLES');
+        }
     }
 
 

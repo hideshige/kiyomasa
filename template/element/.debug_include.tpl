@@ -7,7 +7,7 @@
             <span class="fw_debug_exit_button" onclick="fwDebug('{disp_type}');">X</span>
         </div>
         <h3>{request_url}</h3>
-        <h4><span title="dump()の結果がここに出ます">【DUMP】</span></h4>
+        <h4><span title="dump()の結果がここに出ます">【DEBUG】</span></h4>
         <pre class="fw_debug_dump">{dump}</pre>
         <h4>
             【DB SLAVE】
