@@ -34,7 +34,7 @@ abstract class BaseModel
     public function logic() {
         try {
             $check = true;
-            $this->execte();
+            $this->execute();
         } catch (D\UserException $e) {
             D\S::$dbm->rollback();
             $check = $this->throwCatch($e->getMessage());

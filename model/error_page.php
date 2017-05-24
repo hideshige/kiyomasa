@@ -21,7 +21,7 @@ class ErrorPage
         $title = 'エラー';
         E\Citadel::set($title, false, false);
         $message = 'ページが見つかりません。';
-        if (isset($_SESSION['error_message'])) {
+        if (isset($_SESSION['error_message']) and $_SESSION['error_message']) {
             $message = $_SESSION['error_message'];
             unset($_SESSION['error_message']);
         }
