@@ -10,7 +10,7 @@
 
 namespace Php\Framework\Device;
 
-use Exception;
+use \Exception;
 use \Error;
 
 class SystemError

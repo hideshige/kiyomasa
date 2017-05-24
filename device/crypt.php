@@ -13,7 +13,7 @@
 
 namespace Php\Framework\Device;
 
-use Php\Framework\Device\SystemError;
+use \Error;
 
 class Crypt
 {

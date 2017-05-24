@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.1
+ * @version  1.0.7.2
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -26,7 +26,7 @@ use \Memcached;
 
 class Mem
 {
-    private $memcached1;//memcachedオブジェクト
+    private $memcached_1;//memcachedオブジェクト
     private $active;//memcachedが起動しているかどうかのフラグ
     public $disp_mem = '';//debug情報
     public $debug;//debugかどうかのフラグ
@@ -41,10 +41,10 @@ class Mem
             $this->active = false;
             $this->disp_mem .= "Memcached is not installed. Execute it using DB.\n";
         } else {
-            $this->memcached1 = new Memcached();
+            $this->memcached_1 = new Memcached();
 
             // 主がNGの場合は副を使用
-            $this->active = $this->memcached1->addServer(MEMCACHED_SERVER, 11211);
+            $this->active = $this->memcached_1->addServer(MEMCACHED_SERVER, 11211);
             if (!$this->active) {
                 // Memcachedがダウンしている
                 Log::error('Memcached down');
@@ -72,7 +72,7 @@ class Mem
             );
         }
         if ($this->active) {
-            $res = $this->memcached1->set($key, $var, $expire);
+            $res = $this->memcached_1->set($key, $var, $expire);
         }
 
         // memcachedが有効でない場合か有効期限の指定がない場合DBに値を保存
@@ -98,7 +98,7 @@ class Mem
     public function get($key)
     {
         if ($this->active) {
-            $var = $this->memcached1->get($key);
+            $var = $this->memcached_1->get($key);
         } else {
             $var = false;
         }
@@ -114,7 +114,7 @@ class Mem
                 $expire = $res[0]['temp_flag'] ? time() + COOKIE_LIFETIME : 0;
                 if ($this->active) {
                     //データベースの値をmemcachedに保存
-                    $this->memcached1->set($key, $var, false, $expire);
+                    $this->memcached_1->set($key, $var, false, $expire);
                 }
             }
         }
@@ -139,7 +139,7 @@ class Mem
     {
         $check = true;
         if ($this->active) {
-            $check = $this->memcached1->delete($key);
+            $check = $this->memcached_1->delete($key);
         }
         if ($check) {
             $param = array ($key);

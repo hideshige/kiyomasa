@@ -22,9 +22,14 @@ abstract class JsonModel
     
     /**
      * スローされた先のプログラム
-     * @param string $mes スローメッセージ
+     * @param string $mess スローメッセージ
      */
-    abstract protected function throwCatch($mes);
+    abstract protected function throwCatch($mess);
+    
+    /**
+     * 最後に実行するプログラム
+     */
+    abstract protected function finalLogic();
 
     protected $json = []; // JSON用の配列
 
@@ -37,6 +42,10 @@ abstract class JsonModel
         D\S::$jflag = true;
     }
     
+    /**
+     * プログラム実行のためのロジック
+     * @return array
+     */
     public function logic() {
         try {
             $this->execute();
@@ -44,9 +53,11 @@ abstract class JsonModel
             D\S::$dbm->rollback();
             $this->throwCatch($e->getMessage());
         } catch (Error $e) {
+            $mess =  'エラーになりました';
             D\SystemError::setInfo($e, $mess);
-            $this->json[$this->place] = $mess;
+            $this->throwCatch($mess);
         } finally {
+            $this->finalLogic();
             return $this->json;
         }
     }
