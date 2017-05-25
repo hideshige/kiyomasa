@@ -22,8 +22,6 @@
 
 namespace Php\Framework\Device;
 
-use Error;
-
 class View
 {
     /**
@@ -51,7 +49,7 @@ class View
 
             $content = self::match($disp, $content);
             $content = str_replace('=br=', "\n", $content);
-        } catch (Error $e) {
+        } catch (\Error $e) {
             Log::error($e->getMessage());
             $content = null;
         } finally {
@@ -168,11 +166,11 @@ class View
                   . $folder . $element . $tpl . $add;
         }
         if (!file_exists($fname)) {
-            throw new Error('No Template ' . $fname);
+            throw new \Error('No Template ' . $fname);
         }
         $fh = fopen($fname, 'r');
         if (!$fh) {
-            throw new Error('Template Open Error');
+            throw new \Error('Template Open Error');
         } else {
             $content = fread($fh, max(1, filesize($fname)));
         }

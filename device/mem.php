@@ -22,8 +22,6 @@ CREATE TABLE memcached (
 
 namespace Php\Framework\Device;
 
-use Memcached;
-
 class Mem
 {
     private $memcached_1;//memcachedオブジェクト
@@ -41,7 +39,7 @@ class Mem
             $this->active = false;
             $this->disp_mem .= "Memcached is not installed. Execute it using DB.\n";
         } else {
-            $this->memcached_1 = new Memcached();
+            $this->memcached_1 = new \Memcached();
 
             // 主がNGの場合は副を使用
             $this->active = $this->memcached_1->addServer(MEMCACHED_SERVER, 11211);

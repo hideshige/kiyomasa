@@ -10,8 +10,6 @@
 
 namespace Php\Framework\Device;
 
-use Error;
-
 class Turret
 {
     public $debug = false; // デバッグモード
@@ -28,7 +26,7 @@ class Turret
             // modelファイルの読み込み
             $file = SERVER_PATH . 'model/' . $pagename . '.php';
             if (!file_exists($file)) {
-                throw new Error($file . ' not found: '
+                throw new \Error($file . ' not found: '
                     . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
             }
             require_once($file);
@@ -38,7 +36,7 @@ class Turret
             $model = new $class_name;
             $res = $model->logic();
             if ($res === false) {
-                throw new Error($pagename . ' logic notice', 10);
+                throw new \Error($pagename . ' logic notice', 10);
             }
             
             // デバッグにセッションの動作を表示するため事前にセッションを閉じる

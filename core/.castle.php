@@ -17,7 +17,6 @@ use Php\Framework\Device\Session;
 use Php\Framework\Device\Turret;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
-use Error;
 
 $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;
@@ -75,7 +74,7 @@ class Castle
             }
             
             $this->open($turret);
-        } catch (Error $e) {
+        } catch (\Error $e) {
             $error = sprintf(
                 '%s(%s) %s',
                 str_replace(SERVER_PATH, '', $e->getFile()),
@@ -104,7 +103,7 @@ class Castle
             DB_MASTER_SERVER, DB_MASTER_USER, DB_MASTER_PASSWORD, DB_MASTER_NAME
         );
         if (!$res_dbm) {
-            throw new Error('DB_MASTER Connect Error');
+            throw new \Error('DB_MASTER Connect Error');
         }
         S::$dbs = new Db();
         $res_dbs = S::$dbs->connect(

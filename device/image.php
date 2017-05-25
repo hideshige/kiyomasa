@@ -10,8 +10,6 @@
 
 namespace Php\Framework\Device;
 
-use Error;
-
 class Image
 {
     /**
@@ -95,7 +93,7 @@ class Image
         }
 
         if (!$img_res) {
-            throw new Error('thumbnail resample error');
+            throw new \Error('thumbnail resample error');
         }
 
         $name = $set_name ? ($file_type ? $set_name . '.' . $itype : $set_name)
@@ -109,7 +107,7 @@ class Image
         }
 
         if (!$save) {
-            throw new Error('thumbnail save error');
+            throw new \Error('thumbnail save error');
         }
 
         imagedestroy($img);
@@ -143,7 +141,7 @@ class Image
         }
         $res = move_uploaded_file($file, $save_folder_file);
         if (!$res) {
-            throw new Error('file move error');
+            throw new \Error('file move error');
         }
     }
 

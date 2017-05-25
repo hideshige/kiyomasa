@@ -10,13 +10,10 @@
 
 namespace Php\Framework\Device;
 
-use Exception;
-use Error;
-
 /**
  * ユーザー操作による例外
  */
-class UserException extends Exception
+class UserException extends \Exception
 {
 }
 
@@ -49,7 +46,7 @@ spl_autoload_register(
     {
         $arr = explode('\\', $class_name);
         if (!isset($arr[1])) {
-            throw new Error('Class Name Error: ' . $class_name);
+            throw new \Error('Class Name Error: ' . $class_name);
         }
         $count = count($arr);
         $under = preg_replace(
@@ -61,7 +58,7 @@ spl_autoload_register(
         $file_name = SERVER_PATH
             . strtolower($arr[$count - 2] . '/' . $under) . '.php';
         if (!file_exists($file_name)) {
-            throw new Error(
+            throw new \Error(
                 'Class File Not Found: ' . $file_name
             );
         }
@@ -93,7 +90,7 @@ set_error_handler(
         $info->set($type . ': ' . $message, $file, $line);
         
         if ($no !== E_NOTICE and $no !== E_DEPRECATED) {
-            throw new Error('エラーハンドラからエラーをスローします');
+            throw new \Error('エラーハンドラからエラーをスローします');
         }
     }
 );

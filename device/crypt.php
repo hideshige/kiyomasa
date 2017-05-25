@@ -13,8 +13,6 @@
 
 namespace Php\Framework\Device;
 
-use Error;
-
 class Crypt
 {
     /**
@@ -27,7 +25,7 @@ class Crypt
     private static function open($data, $encode_flag = true)
     {
         if (!extension_loaded('mcrypt')) {
-            throw new Error('mcrypt is not installed');
+            throw new \Error('mcrypt is not installed');
         }
         
         $res = null;
@@ -41,7 +39,7 @@ class Crypt
             );
             if ($res < 0) {
                 mcrypt_module_close($td);
-                throw new Error('暗号化エラー');
+                throw new \Error('暗号化エラー');
             }
             // dataを暗号化または復号
             if (!$encode_flag) {

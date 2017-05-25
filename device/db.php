@@ -28,10 +28,6 @@
 
 namespace Php\Framework\Device;
 
-use PDO;
-use PDOException;
-use Error;
-
 class Db extends DbModule
 {
     /**
@@ -216,7 +212,7 @@ class Db extends DbModule
                 $g_counter ++;
             }
             return $this->stmt[$statement_id];
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -251,7 +247,7 @@ class Db extends DbModule
             }
 
             return $this->stmt[$statement_id];
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -343,7 +339,7 @@ class Db extends DbModule
                     $this->stmt[$statement_id]->bindValue(
                         $name,
                         $v,
-                        is_int($v) ? PDO::PARAM_INT : PDO::PARAM_STR
+                        is_int($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR
                     );
                     $u[] = sprintf('{{AT}}@%s', $name);
                     $i ++;
@@ -370,7 +366,7 @@ class Db extends DbModule
                 $g_counter ++;
             }
             return $count;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -393,12 +389,12 @@ class Db extends DbModule
             $rows = false;
             if ($count and $class_flag) {
                 $this->stmt[$statement_id]->setFetchMode(
-                    PDO::FETCH_CLASS,
+                    \PDO::FETCH_CLASS,
                     'stdClass'
                 );
             } else if ($count) {
                 $this->stmt[$statement_id]->setFetchMode(
-                    PDO::FETCH_ASSOC
+                    \PDO::FETCH_ASSOC
                 );
                 $rows = $this->stmt[$statement_id]->fetchAll();
             }
@@ -406,7 +402,7 @@ class Db extends DbModule
                 $this->dbSelectDump($rows);
             }
             return $rows;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -419,7 +415,7 @@ class Db extends DbModule
     public function stmtClose($statement_id = 'stmt') {
         try {
             if (!$this->stmt[$statement_id]) {
-                throw new Error('No Statement');
+                throw new \Error('No Statement');
             }
             
             $this->stmt[$statement_id]->closeCursor();
@@ -436,7 +432,7 @@ class Db extends DbModule
             
             unset($this->do[$statement_id]);
             unset($this->name[$statement_id]);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -450,10 +446,10 @@ class Db extends DbModule
         try {
             $res = $this->connect->lastInsertId();
             if (!$res) {
-                throw new Error('GET ID ERROR');
+                throw new \Error('GET ID ERROR');
             }
             return $res;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -468,7 +464,7 @@ class Db extends DbModule
     public function lock($tables) {
         // トランザクション使用中は実行できない。
         if ($this->transaction_flag) {
-            throw new Error('LOCK ERROR');
+            throw new \Error('LOCK ERROR');
         }
 
         $this->lock_flag = true;
@@ -512,7 +508,7 @@ class Db extends DbModule
                 $res = $this->connect->beginTransaction();
             }
             return $res;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -535,7 +531,7 @@ class Db extends DbModule
                 $res = $this->connect->commit();
             }
             return $res;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -557,7 +553,7 @@ class Db extends DbModule
                 $res = $this->connect->rollBack();
             }
             return $res;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }
@@ -582,7 +578,7 @@ class Db extends DbModule
                 $statement_id
             );
             return $res;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->dbLog($e->getMessage());
         }
     }

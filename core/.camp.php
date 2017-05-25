@@ -17,7 +17,6 @@
 use Php\Framework\Device\Db;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
-use Error;
 
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
@@ -46,7 +45,7 @@ class Camp
                 DB_MASTER_NAME
             );
             if (!$res_dbm) {
-                throw new Error('DB_MASTER Connect Error');
+                throw new \Error('DB_MASTER Connect Error');
             }
             S::$dbs = new Db();
             $res_dbs = S::$dbs->connect(
@@ -64,7 +63,7 @@ class Camp
                     DB_MASTER_NAME
                 );
                 if (!$res_dbs2) {
-                    throw new Error('DB_MASTER Connect Error');
+                    throw new \Error('DB_MASTER Connect Error');
                 }
             }
 
@@ -79,7 +78,7 @@ class Camp
                 echo "DBM\n";
                 echo S::$dbm->disp_sql;
             }
-        } catch (Error $e) {
+        } catch (\Error $e) {
             Log::error($e->getMessage());
             echo "KIYOMASA ERROR\n";
             exit;
@@ -101,9 +100,9 @@ class Camp
             $model = new $class_name();
             $res = $model->logic();
             if ($res === false) {
-                throw new Error($pagename . ' logic notice');
+                throw new \Error($pagename . ' logic notice');
             }
-        } catch (Error $e) {
+        } catch (\Error $e) {
             if (S::$dbm->transaction_flag) {
                 //トランザクションを実行中に例外処理が起きた場合、ロールバックする
                 S::$dbm->rollback();
@@ -117,7 +116,7 @@ class Camp
                 $e->getLine(),
                 $e->getMessage()
             );
-            throw new Error($error);
+            throw new \Error($error);
         } finally {
         }
     }

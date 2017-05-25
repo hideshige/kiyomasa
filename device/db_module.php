@@ -10,10 +10,6 @@
 
 namespace Php\Framework\Device;
 
-use PDO;
-use PDOException;
-use Error;
-
 class DbModule
 {
     protected $connect; // データベースオブジェクト
@@ -54,13 +50,13 @@ class DbModule
                 $db_server,
                 $db_name
             );
-            $this->connect = new PDO (
+            $this->connect = new \PDO (
                 $dsn, 
                 $db_user, 
                 $db_password, 
                 array(
-                    PDO::ATTR_PERSISTENT => false, 
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                    \PDO::ATTR_PERSISTENT => false, 
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                 )
             );
             $this->query(sprintf("SET NAMES '%s'", DEFAULT_CHARSET));
@@ -69,9 +65,9 @@ class DbModule
                 . "NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'"
             );
             if (!$query) {
-                throw new Error('SQL MODE ERROR');
+                throw new \Error('SQL MODE ERROR');
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             Log::error($e->getMessage());
             $res = false;
         } finally {
@@ -124,7 +120,7 @@ class DbModule
             //デバッグ表示
             \dump($error_mes);
         }
-        throw new Error($error_mes);
+        throw new \Error($error_mes);
     }
     
     
