@@ -86,8 +86,10 @@ set_error_handler(
             default: $type = 'エラー番号 ' . $no; break;
         }
         
-        $info = new ErrorInfo;
-        $info->set($type . ': ' . $message, $file, $line);
+        if (!preg_match('/\.library/', $file)) {
+            $info = new ErrorInfo;
+            $info->set($type . ': ' . $message, $file, $line);
+        }
         
         if ($no !== E_NOTICE and $no !== E_DEPRECATED) {
             throw new \Error('エラーハンドラからエラーをスローします');

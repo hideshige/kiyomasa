@@ -89,7 +89,6 @@ class Castle
                 echo 'エラーになりました。 ' . TIMESTAMP;
             }
             exit;
-        } finally {
         }
     }
     
@@ -157,6 +156,7 @@ class Castle
      */
     private function mainteCheck()
     {
+        return false;
     }
 }
 
