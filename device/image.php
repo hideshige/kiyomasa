@@ -10,7 +10,7 @@
 
 namespace Php\Framework\Device;
 
-use \Error;
+use Error;
 
 class Image
 {

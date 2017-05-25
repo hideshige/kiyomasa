@@ -10,9 +10,9 @@
 
 namespace Php\Framework\Device;
 
-use \PDO;
-use \PDOException;
-use \Error;
+use PDO;
+use PDOException;
+use Error;
 
 class DbModule
 {
@@ -122,7 +122,7 @@ class DbModule
         );
         if ($this->debug) {
             //デバッグ表示
-            dump($error_mes);
+            \dump($error_mes);
         }
         throw new Error($error_mes);
     }

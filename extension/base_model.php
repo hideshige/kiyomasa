@@ -30,7 +30,8 @@ abstract class BaseModel
      * プログラム実行のためのロジック
      * @return boolean FALSEの場合エラーページを表示する
      */
-    public function logic() {
+    public function logic()
+    {
         try {
             $check = true;
             $this->execute();

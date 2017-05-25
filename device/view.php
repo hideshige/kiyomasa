@@ -22,7 +22,7 @@
 
 namespace Php\Framework\Device;
 
-use \Error;
+use Error;
 
 class View
 {
@@ -99,7 +99,7 @@ class View
         foreach ($match[1] as $name) {
             $pattern = '/<!-- BEGIN ' . $name . ' -->(.*)<!-- END ' . $name . ' -->/';
             preg_match_all($pattern, $content, $match1);
-            $tag_data = $original = isset ($match1[1][0]) ? $match1[1][0] : null;
+            $tag_data = $original = isset($match1[1][0]) ? $match1[1][0] : '';
             $all_tag = '';
 
             preg_match_all('/{(.*?)}/', $original, $match2);
@@ -107,7 +107,8 @@ class View
             if (isset ($disp[$name])) {
                 $num = count($disp[$name]);
                 for ($i = 0; $i < $num; $i ++) {
-                    $tag_data = self::match(@$disp[$name][$i], $tag_data);
+                    $tag_data = isset($disp[$name][$i]) ?
+                        self::match($disp[$name][$i], $tag_data) : $tag_data;
                     foreach ($match2[1] as $data) {
                         if (isset ($disp[$name][$i][$data])) {
                             $change_data = $disp[$name][$i][$data];

@@ -36,7 +36,8 @@ abstract class JsonModel
      * プログラム実行のためのロジック
      * @return boolean FALSEの場合エラーページを表示する
      */
-    public function __construct() {
+    public function __construct()
+    {
         // JSONフラグを真に
         D\S::$jflag = true;
     }
@@ -45,7 +46,8 @@ abstract class JsonModel
      * プログラム実行のためのロジック
      * @return array
      */
-    public function logic() {
+    public function logic()
+    {
         try {
             $this->execute();
         } catch (D\UserException $e) {

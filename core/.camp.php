@@ -17,7 +17,7 @@
 use Php\Framework\Device\Db;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
-use \Error;
+use Error;
 
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');

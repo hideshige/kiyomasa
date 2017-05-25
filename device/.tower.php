@@ -10,8 +10,8 @@
 
 namespace Php\Framework\Device;
 
-use \Exception;
-use \Error;
+use Exception;
+use Error;
 
 /**
  * ユーザー操作による例外
@@ -81,18 +81,19 @@ set_error_handler(
     function ($no, $message, $file, $line)
     {
         switch ($no) {
-            case E_ERROR: $type = 'ERROR'; break;
-            case E_WARNING : $type = 'WARNING'; break;
-            case E_PARSE: $type = 'PARSE ERROR'; break;
-            case E_NOTICE: $type = 'NOTICE'; break;
-            default: $type = 'ERROR NO.' . $no; break;
+            case E_ERROR: $type = 'エラー'; break;
+            case E_WARNING : $type = 'ワーニング'; break;
+            case E_PARSE: $type = 'パースエラー'; break;
+            case E_NOTICE: $type = '警告'; break;
+            case E_DEPRECATED: $type = '非推奨'; break;
+            default: $type = 'エラー番号 ' . $no; break;
         }
         
         $info = new ErrorInfo;
-        $info->set('NOTICE: ' . $message, $file, $line);
+        $info->set($type . ': ' . $message, $file, $line);
         
-        if ($no !== E_NOTICE) {
-            throw new Error();
+        if ($no !== E_NOTICE and $no !== E_DEPRECATED) {
+            throw new Error('エラーハンドラからエラーをスローします');
         }
     }
 );

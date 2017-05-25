@@ -1,19 +1,19 @@
 <?php
 /**
- * 暗号化(mcrypt) モジュール
+ * 暗号化(mcrypt) モジュール（PHP7.2以上は使用できない）
  *
  * ※メモ
  * UTF-8で日本語の暗号化データをDBに保存する場合、
  * VARCHAR(255)に収めるためには暗号化する文字を62文字以内にする必要がある。
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.2
+ * @version  1.0.2.3
  * @package  device
  */
 
 namespace Php\Framework\Device;
 
-use \Error;
+use Error;
 
 class Crypt
 {

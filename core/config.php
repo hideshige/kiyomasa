@@ -79,10 +79,44 @@ if (ENV === 0) {
 
 define('COOKIE_LIFETIME', 60 * 60 * 24 * 30);
 
-const AUTO_UPDATE_TIME = 1;// DBに作成・更新日時を自動保存する場合1
-const PROJECT_PREFIX = '';// プロジェクトを示す接頭辞
-const CRYPT_KEY = 'crypt_keyword1';
-const CRYPT_IV = 'crypt_keyword2';
+const AUTO_UPDATE_TIME = 1; // DBに作成・更新日時を自動保存する場合1
+const CSV_MAX = 100000; // CSV最大行数
+const PROJECT_PREFIX = ''; // プロジェクトを示す接頭辞
+
+/*-------------- 暗号化 ----------------*/
+
+const OPEN_SSL_PASSPHRASE = 'ssl_keyword1'; // OpenSSL用
+const CRYPT_KEY = 'crypt_keyword1'; // mcrypt用
+const CRYPT_IV = 'crypt_keyword2'; // mcrypt用
+
+// Openssl::makeKeyにより以下を生成して追記しておく
+const OPEN_SSL_PRIVATE_KEY = <<<EOT
+-----BEGIN ENCRYPTED PRIVATE KEY-----
+MIICxjBABgkqhkiG9w0BBQ0wMzAbBgkqhkiG9w0BBQwwDgQIMT7at7VImBsCAggA
+MBQGCCqGSIb3DQMHBAgCmTxPmufFvQSCAoBqvkZBQ5rjubF5TbzFVfqAwKx3d7Sz
+h52nDlY3B36HL4u0MhtWxGFWptHT8DlyDBiUKnLYGzt2bB2Ymb7FDwlrYtZbgHMa
+4mhCo0FuvM1MLpzOLM/lzSdJy2fjANhn6+7UiEErR8osnbBmIKTzNQLn6ZUHJI32
+lrPkiojZ9pboX7ptQ8afRg/kVV6xljaEX6rZJFXd0yYr5bZhrSPonG6spva2kXuj
+LUIda7gTJz46/Oa2s79DQ7gQdll8lu6xrN3TzHbcIOt3rp6zNwjbdSwyaCqjXk1+
+QC3gWY9gG2z3m/UsckMJ8WjaBuA7v6UEAgHmSGT9AnqOQQxIx3f+GqSRr6L2AZh0
+zoWZuUztJwCUmIAtRwyET9eCNTx5rn0pBjBTAtawTtDsWJeZ/C+53KLp/ll+xiP1
+gBYN5T/ROplD/E+DMSk/odD9nOHbSOWPkqXsULeeIWOqYwxOAlxQsO9SLx/e3qcY
+W7LrpFFy1YsyOAFE+tv4TeeQsT4RrT80iyO+DPF6lTVGJ0/bkHU+j5PiHGz12BXg
+XKr7ITRsTlES11LmpapkCfsEGf/HeLIEamfmlM7wTrPX8adcY7Uoi854ocvdXYR/
+bIkSVNSk8+Y1NlSoKp8tJG0rXUNKaAg1b3tAoekLN41y6GVA3QQlN2y70GuiTI6F
+qR8/rhsz0Un0B+S/t8KM7f8J4VkqtODeOvkcfsauq4jgLTnLK5siJmAbY1ULUwqF
+PoMmrtcsSs2HH1u8/3MLyEVLW0JL3bbnC2mIl+0eFxvuU/JFXZSC5sT0tguvegbN
+zWA2i3Wir+dxoH/ElUMRJF36t1yaYRpkfENiKTxwqp6s7Uu6sT8QdH1K
+-----END ENCRYPTED PRIVATE KEY-----
+EOT;
+const OPEN_SSL_PUBLIC_KEY = <<<EOT
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2HkZ9wInlTovcq07NSa5UOSHI
+3rjRTKb5YJaZRzx1UsA/eC8cDwP24CvU68FBqFfkYM3lFWdQKKMBHva6VXfBU1XN
+/7ii51meeFd2/tBTL0QOcm7utJsMO7pdeUpm69g6V5edpzoWeN0KT0/pEzEAd9DG
+o/80+6TR6vFdGlDoxwIDAQAB
+-----END PUBLIC KEY-----
+EOT;
 
 /*-------------- 以下は global で呼び出す共通パラメータ ----------------*/
 

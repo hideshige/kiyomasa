@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.4.0
+ * @version  1.3.5.0
  * @package  device
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -22,6 +22,7 @@
  * int    : 整数のみ有効
  * eng    : 英数字のみ有効
  * char   : 半角のみ有効
+ * char2  : 全角のみ有効
  * hiragana: ひらがなのみ有効
  * katakana: カタカナのみ有効
  * email  : メールアドレスのみ有効
@@ -110,6 +111,7 @@ class Form
         'int' => '数字以外の文字が含まれています。<br />',
         'eng' => '半角英数字以外の文字が含まれています。<br />',
         'char' => '半角以外の文字が含まれています。<br />',
+        'char2' => '全角以外の文字が含まれています。<br />',
         'hiragana' => 'ひらがな以外の文字が含まれています。<br />',
         'katakana' => 'カタカナ以外の文字が含まれています。<br />',
         'count' => '選択できるのは%sまでです。<br />',
@@ -140,7 +142,17 @@ class Form
         $res = [];
 
         foreach ($params as $key => $val) {
-            $str = @htmlspecialchars_decode($data[$key], ENT_QUOTES);
+            if (isset($data[$key]) and !is_array($data[$key])) {
+                $str = htmlspecialchars_decode($data[$key], ENT_QUOTES);
+            } else if (isset($data[$key]) and is_array($data[$key])) {
+                $tmp = [];
+                foreach ($data[$key] as $tmp_k => $tmp_v) {
+                    $tmp[$tmp_k] = htmlspecialchars_decode($tmp_v, ENT_QUOTES);
+                }
+                $str = $tmp;
+            } else {
+                $str = '';
+            }
             foreach ($val as $k => $v) {
                 if ($k === 'must' and preg_replace('/^[　 \r\n]+|[　 \r\n]+$/u', '', $str) == '') {
                     $res[$key][$k] = true;
@@ -157,6 +169,8 @@ class Form
                 } else if ($k === 'eng' and $str != '' and !preg_match("/^[\w.',=-]+$/", $str)) {
                     $res[$key][$k] = true;
                 } else if ($k === 'char' and $str != '' and strlen($str) != mb_strlen($str)) {
+                    $res[$key][$k] = true;
+                } else if ($k === 'char2' and $str != '' and mb_convert_kana($str, 'R') != $str) {
                     $res[$key][$k] = true;
                 } else if ($k === 'hiragana' and $str != '' and !preg_match('/^[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょっぁぃぅぇぉーゐゑゝゞ・　 ]+$/u', $str)) {
                     $res[$key][$k] = true;
@@ -219,6 +233,7 @@ class Form
                 if (array_key_exists('int', $error_data[$name])) $m .= self::$e['int'];
                 if (array_key_exists('eng', $error_data[$name])) $m .= self::$e['eng'];
                 if (array_key_exists('char', $error_data[$name])) $m .= self::$e['char'];
+                if (array_key_exists('char2', $error_data[$name])) $m .= self::$e['char2'];
                 if (array_key_exists('hiragana', $error_data[$name])) $m .= self::$e['hiragana'];
                 if (array_key_exists('katakana', $error_data[$name])) $m .= self::$e['katakana'];
                 if (array_key_exists('email', $error_data[$name])) $m .= self::$e['email'];
