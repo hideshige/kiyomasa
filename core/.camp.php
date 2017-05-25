@@ -79,7 +79,7 @@ class Camp
                 echo "DBM\n";
                 echo S::$dbm->disp_sql;
             }
-        } catch (SystemError $e) {
+        } catch (Error $e) {
             Log::error($e->getMessage());
             echo "KIYOMASA ERROR\n";
             exit;
@@ -103,7 +103,7 @@ class Camp
             if ($res === false) {
                 throw new Error($pagename . ' logic notice');
             }
-        } catch (SystemError $e) {
+        } catch (Error $e) {
             if (S::$dbm->transaction_flag) {
                 //トランザクションを実行中に例外処理が起きた場合、ロールバックする
                 S::$dbm->rollback();

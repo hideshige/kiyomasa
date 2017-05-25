@@ -32,7 +32,7 @@ class PagingAjax
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
-            throw new Error('page error');
+            throw new UserException('ページがありません');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page 

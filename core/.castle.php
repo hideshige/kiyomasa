@@ -17,7 +17,6 @@ use Php\Framework\Device\Session;
 use Php\Framework\Device\Turret;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
-
 use \Error;
 
 $first_time = microtime(true);
@@ -75,8 +74,7 @@ class Castle
                 unset(S::$get['url']);
             }
             
-            // View接続
-            $this->view($turret);
+            $this->open($turret);
         } catch (Error $e) {
             $error = sprintf(
                 '%s(%s) %s',
@@ -123,11 +121,11 @@ class Castle
     }
     
     /**
-     * VIEW接続
+     * 開く
      * @global array $g_folder
      * @param object $turret
      */
-    private function view(&$turret)
+    private function open(&$turret)
     {
         // URLの指定がなければトップページを指定
         $folder = '';

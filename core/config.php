@@ -31,6 +31,7 @@ if (ENV === 0) {
     define('FROM_NAME', '');
 } else if (ENV === 1) {
     // テスト環境
+    ini_set('display_errors', 1);
     define('SERVER_PATH', '/var/www/html/yoursite/');
 
     define('DOMAIN_NAME', '/');

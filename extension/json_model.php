@@ -11,7 +11,6 @@
 namespace Yourname\Yourproject\Extension;
 
 use Php\Framework\Device as D;
-use \Error;
 
 abstract class JsonModel
 {
@@ -52,9 +51,10 @@ abstract class JsonModel
         } catch (D\UserException $e) {
             D\S::$dbm->rollback();
             $this->throwCatch($e->getMessage());
-        } catch (Error $e) {
+        } catch (\Error $e) {
+            $info = new D\ErrorInfo;
+            $info->set($e->getMessage(), $e->getFile(), $e->getLine());
             $mess =  'エラーになりました';
-            D\SystemError::setInfo($e, $mess);
             $this->throwCatch($mess);
         } finally {
             $this->finalLogic();

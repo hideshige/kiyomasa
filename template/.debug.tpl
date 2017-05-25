@@ -209,6 +209,13 @@
 {
     color: #00c;
 }
+
+#fw_debug .fw_debug_mode
+{
+    color: #aaf;
+    font-size:0.8em;
+    margin-left:10px;
+}
 </style>
 
 <div id="fw_debug">
@@ -259,23 +266,31 @@ function fwDebugCounter()
 {
     var hiddenTag = document.getElementsByName('fw_debug_process');
     var quTag = document.getElementsByName('fw_debug_process_qu');
-    var openFlag = document.getElementById('fw_debug_counter_flag').innerHTML;
+    var openFlag = document.getElementById('fw_debug_counter_flag');
+    var dispMode = document.getElementsByName('fw_debug_mode');
     
+    if (dispMode[0]) {
+        for (var di in dispMode) {
+            dispMode[di].innerHTML = openFlag.innerHTML
+                === '1' ? 'True SQL Mode' : 'Developper Mode';
+        }
+    }
     if (quTag[0]) {
         for (var qi in quTag) {
             if (quTag[qi].style) {
-                quTag[qi].style['display'] = openFlag === '1' ? 'inline' : 'none';
+                quTag[qi].style['display'] = openFlag.innerHTML
+                    === '1' ? 'inline' : 'none';
             }
         }
     }
     if (hiddenTag[0]) {
         for (var hi in hiddenTag) {
             if (hiddenTag[hi].style) {
-                hiddenTag[hi].style['display'] = openFlag === '1' ? 'none' : 'inline';
+                hiddenTag[hi].style['display'] = openFlag.innerHTML
+                    === '1' ? 'none' : 'inline';
             }
         }
-        document.getElementById('fw_debug_counter_flag').innerHTML
-            = openFlag === '1' ? '0' : '1';
+        openFlag.innerHTML = openFlag.innerHTML === '1' ? '0' : '1';
     }
 }
 </script>

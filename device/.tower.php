@@ -13,41 +13,13 @@ namespace Php\Framework\Device;
 use \Exception;
 use \Error;
 
-class SystemError
-{
-    /**
-     * エラー発生したときの処理
-     * @param object $exception Exceptionオブジェクト
-     * @param string $disp_message 画面表示用メッセージ
-     */
-    public static function setInfo($exception, $disp_message = '')
-    {   
-        S::$dbm->rollback();
-        S::$dbm->unlock();
-
-        // ログに記録し、開発環境の場合デバッグを表示
-        $file = str_replace(SERVER_PATH, '', $exception->getFile());
-        $line = $exception->getLine();
-        $info = $exception->getMessage();
-        $error = sprintf('%s(%s) %s', $file, $line, $info);
-        Log::error($error);
-        global $dump;
-        $dump .= sprintf("# %s {{DUMP_LINE}}%s\n{{ERROR_INFO}}%s\n",
-            $file, $line, $info);
-        
-        if ($exception->getCode() === 0) {
-            // セッションにエラーメッセージを記録
-            $_SESSION['error_message'] = $disp_message;
-        }
-    }
-}
-
 /**
- * ユーザー操作による例外処理クラス
+ * ユーザー操作による例外
  */
 class UserException extends Exception
 {
 }
+
 
 /**
  * パラメータのショートカット用スタティックオブジェクト
@@ -67,11 +39,12 @@ class S
     static $jflag; // そのモデルがJSON形式かHTML形式か
 }
 
-
-/**
- * クラスファイルのオートロード
- */
+// オートロード
 spl_autoload_register(
+    /**
+    * クラスファイルの読み込み
+    * @param string $class_name クラス名
+    */
     function ($class_name)
     {
         $arr = explode('\\', $class_name);
@@ -95,3 +68,49 @@ spl_autoload_register(
         require $file_name;
     }
 );
+
+// エラーハンドラ
+set_error_handler(
+    /**
+     * エラー処理
+     * @param integer $no
+     * @param string $message
+     * @param string $file
+     * @param integer $line
+     */
+    function ($no, $message, $file, $line)
+    {
+        switch ($no) {
+            case E_ERROR: $type = 'ERROR'; break;
+            case E_WARNING : $type = 'WARNING'; break;
+            case E_PARSE: $type = 'PARSE ERROR'; break;
+            case E_NOTICE: $type = 'NOTICE'; break;
+            default: $type = 'ERROR NO.' . $no; break;
+        }
+        
+        $info = new ErrorInfo;
+        $info->set('NOTICE: ' . $message, $file, $line);
+        
+        if ($no !== E_NOTICE) {
+            throw new Error();
+        }
+    }
+);
+
+class ErrorInfo
+{
+    public function set($message, $file, $line)
+    {
+        S::$dbm->rollback();
+        S::$dbm->unlock();
+
+        // ログに記録し、開発環境の場合デバッグを表示
+        $short_file = str_replace(SERVER_PATH, '', $file);
+        $error = sprintf('%s(%d) %s', $short_file, $line, $message);
+        Log::error($error);
+
+        global $dump;
+        $dump .= sprintf("# %s {{DUMP_LINE}}%d\n{{ERROR_INFO}}%s\n",
+            $short_file, $line, $message);
+    }
+}

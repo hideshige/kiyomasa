@@ -12,6 +12,7 @@
         <h4>
             【DB SLAVE】
             <input type="button" onclick="fwDebugCounter();" value="CHANGE" />
+            <span name="fw_debug_mode" class="fw_debug_mode">Developper Mode</span>
         </h4>
         <p>{db_slave}</p>
         <h4>【DB MASTER】</h4>

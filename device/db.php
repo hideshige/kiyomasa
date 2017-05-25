@@ -450,7 +450,7 @@ class Db extends DbModule
         try {
             $res = $this->connect->lastInsertId();
             if (!$res) {
-                throw new Error('get id error');
+                throw new Error('GET ID ERROR');
             }
             return $res;
         } catch (PDOException $e) {

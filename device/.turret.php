@@ -60,9 +60,10 @@ class Turret
                 $this->jsonDebug($json);
                 echo json_encode($json);
             }
-        } catch (Error $e) {
-            SystemError::setInfo($e);
-
+        } catch (\Error $e) {
+            $info = new ErrorInfo;
+            $info->set($e->getMessage(), $e->getFile(), $e->getLine());
+            
             // エラーページの表示
             if (!S::$jflag) {
                 if (!$this->error_flag) {
@@ -77,10 +78,6 @@ class Turret
                 $json = ['alert' => 'エラー'];
                 echo json_encode($json);
             }
-        } finally {
-            S::$dbm = null;
-            S::$dbs = null;
-            exit;
         }
     }
 
@@ -329,7 +326,7 @@ class Turret
         );
         $text = preg_replace(
             '/{{ERROR_INFO}}(.*)/',
-            '<span class="fw_debug_bold fw_debug_str">[ERROR INFO] $1</span>',
+            '<span class="fw_debug_bold fw_debug_str">$1</span>',
             $text
         );
         $text = preg_replace(

@@ -12,6 +12,7 @@ namespace Php\Framework\Device;
 
 use \PDO;
 use \PDOException;
+use \Error;
 
 class DbModule
 {
@@ -121,7 +122,7 @@ class DbModule
         );
         if ($this->debug) {
             //デバッグ表示
-            \dump($error_mes);
+            dump($error_mes);
         }
         throw new Error($error_mes);
     }
@@ -132,11 +133,13 @@ class DbModule
         if ($rows) {
             $this->disp_sql .= '═══ BEGIN ROW ═══';
             foreach ($rows as $row_k => $row) {
-                if ($row_k >= 5) {
+                if ($row_k > 3) {
                     $this->disp_sql .= "═══ and more... ═══\n";
                     break;
                 }
-                $this->disp_sql .= "═══ $row_k ═══\n";
+                if (count($rows) > 1) {
+                    $this->disp_sql .= "═══ $row_k ═══\n";
+                }
                 foreach ($row as $k => $v) {
                     $this->disp_sql .= sprintf(
                         "'%s' : %s\n", $k, is_numeric($v) ? $v : "'" . $v . "'"

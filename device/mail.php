@@ -10,6 +10,8 @@
 
 namespace Php\Framework\Device;
 
+use \Error;
+
 class Mail
 {
     /**

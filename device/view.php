@@ -15,12 +15,14 @@
  * <!-- ELEMENT *** -->にはelementフォルダの部分テンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.1.1
+ * @version  1.1.2.0
  * @package  device
  * 
  */
 
 namespace Php\Framework\Device;
+
+use \Error;
 
 class View
 {
@@ -49,7 +51,7 @@ class View
 
             $content = self::match($disp, $content);
             $content = str_replace('=br=', "\n", $content);
-        } catch (SystemError $e) {
+        } catch (Error $e) {
             Log::error($e->getMessage());
             $content = null;
         } finally {
@@ -157,7 +159,7 @@ class View
         $content = null;
         $add = preg_match('<\.>', $tpl) ? '' : '.tpl';
         $element = $elm ? 'element/' : '';
-        $tpl_folder = (MOBILE_FLAG and !isset ($_SESSION['mobile_pc_flag']))
+        $tpl_folder = (MOBILE_FLAG and !isset($_SESSION['mobile_pc_flag']))
             ? 'template_mobile/' : 'template/';
         $fname = SERVER_PATH . $tpl_folder . $folder . $element . $tpl . $add;
         if ($tpl_folder == 'template_mobile/' and !file_exists($fname)) {

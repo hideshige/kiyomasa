@@ -11,7 +11,6 @@
 namespace Yourname\Yourproject\Extension;
 
 use Php\Framework\Device as D;
-use \Error;
 
 abstract class BaseModel
 {
@@ -38,8 +37,10 @@ abstract class BaseModel
         } catch (D\UserException $e) {
             D\S::$dbm->rollback();
             $check = $this->throwCatch($e->getMessage());
-        } catch (Error $e) {
-            D\SystemError::setInfo($e, 'エラー　' . TIMESTAMP);
+        } catch (\Error $e) {
+            $info = new D\ErrorInfo;
+            $info->set($e->getMessage(), $e->getFile(), $e->getLine());
+            $_SESSION['error_message'] = 'システムエラー ' . TIMESTAMP;
             $check = false;
         } finally {
             return $check;

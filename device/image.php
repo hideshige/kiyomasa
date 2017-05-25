@@ -10,6 +10,8 @@
 
 namespace Php\Framework\Device;
 
+use \Error;
+
 class Image
 {
     /**
@@ -164,11 +166,6 @@ class Image
             sprintf('%slogs/antivirus_%s.log', SERVER_PATH, date('Ymd')),
             0644
         );
-
-        //ファイルが削除されている場合false
-        if (!file_exists($file)) {
-            throw new Error('virus file deleted');
-        }
     }
 
     /**
@@ -194,7 +191,8 @@ class Image
         } else if (preg_match('/(png|PNG)/', $file_type)) {
             $itype = 'png';
         } else {
-            throw new Error('not image type ' . $file . ' ' . $file_type);
+            throw new UserException('画像タイプ不正 '
+                . $file . ' ' . $file_type);
         }
         return $itype;
     }
@@ -208,7 +206,7 @@ class Image
     {
         $file_byte = filesize($file);
         if ($file_byte > $limit) {
-            throw new Error('file size over');
+            throw new UserException('ファイルサイズが大きすぎます');
         }
     }
 }
