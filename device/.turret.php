@@ -59,8 +59,10 @@ class Turret
                 echo json_encode($json);
             }
         } catch (\Error $e) {
-            $info = new ErrorInfo;
-            $info->set($e->getMessage(), $e->getFile(), $e->getLine());
+            if ($e->getCode() != 10) {
+                $info = new ErrorInfo;
+                $info->set($e->getMessage(), $e->getFile(), $e->getLine());
+            }
             
             // エラーページの表示
             if (!S::$jflag) {

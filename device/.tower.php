@@ -17,6 +17,23 @@ class UserException extends \Exception
 {
 }
 
+class ErrorInfo
+{
+    public function set($message, $file, $line)
+    {
+        S::$dbm->rollback();
+        S::$dbm->unlock();
+
+        // ログに記録し、開発環境の場合デバッグを表示
+        $short_file = str_replace(SERVER_PATH, '', $file);
+        $error = sprintf('%s(%d) %s', $short_file, $line, $message);
+        Log::error($error);
+
+        global $dump;
+        $dump .= sprintf("# %s {{DUMP_LINE}}%d\n{{ERROR_INFO}}%s\n",
+            $short_file, $line, $message);
+    }
+}
 
 /**
  * パラメータのショートカット用スタティックオブジェクト
@@ -62,6 +79,7 @@ spl_autoload_register(
                 'Class File Not Found: ' . $file_name
             );
         }
+        // リクワイア実行
         require $file_name;
     }
 );
@@ -92,25 +110,7 @@ set_error_handler(
         }
         
         if ($no !== E_NOTICE and $no !== E_DEPRECATED) {
-            throw new \Error('エラーハンドラからエラーをスローします');
+            throw new \Error('エラーハンドラからエラーをスローします', 10);
         }
     }
 );
-
-class ErrorInfo
-{
-    public function set($message, $file, $line)
-    {
-        S::$dbm->rollback();
-        S::$dbm->unlock();
-
-        // ログに記録し、開発環境の場合デバッグを表示
-        $short_file = str_replace(SERVER_PATH, '', $file);
-        $error = sprintf('%s(%d) %s', $short_file, $line, $message);
-        Log::error($error);
-
-        global $dump;
-        $dump .= sprintf("# %s {{DUMP_LINE}}%d\n{{ERROR_INFO}}%s\n",
-            $short_file, $line, $message);
-    }
-}
