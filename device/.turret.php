@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.0
+ * @version  1.0.2.1
  * @package  device
  * 
  */
@@ -24,7 +24,7 @@ class Turret
     {
         try {
             // modelファイルの読み込み
-            $file = SERVER_PATH . 'model/' . $pagename . '.php';
+            $file = SERVER_PATH . 'model/' . $folder . $pagename . '.php';
             if (!file_exists($file)) {
                 throw new \Error($file . ' not found: '
                     . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
@@ -47,8 +47,7 @@ class Turret
                     foreach ($model->tpl as $tk => $tv) {
                         echo View::template(
                             $tv,
-                            isset(S::$disp[$tk]) ? S::$disp[$tk] : [],
-                            $folder
+                            isset(S::$disp[$tk]) ? S::$disp[$tk] : []
                         );
                     }
                 }

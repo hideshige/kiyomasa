@@ -132,7 +132,7 @@ class Castle
         global $g_folder;
         if ($g_folder) {
           foreach ($g_folder as $v) {
-            if (S::$url[0] == $v) {
+            if (S::$url[0] === $v) {
                 $folder = $v . '/';
                 $url_num = 1;
                 break;

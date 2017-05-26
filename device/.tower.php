@@ -3,7 +3,7 @@
  * タワー　例外処理やショートカットなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  device
  * 
  */
@@ -64,23 +64,24 @@ class S
 spl_autoload_register(
     /**
     * クラスファイルの読み込み
-    * @param string $class_name クラス名
+    * @param string $class クラス名
     */
-    function (string $class_name): void
+    function (string $class): void
     {
+        $class_name = str_replace(
+            [NAME_SPACE . '\\', 'Php\Framework\\'], '', $class);
         $arr = explode('\\', $class_name);
         if (!isset($arr[1])) {
             throw new \Error('Class Name Error: ' . $class_name);
         }
-        $count = count($arr);
-        $under = preg_replace(
-            '/^_/',
-            '',
-            // スタッドリーキャップス記法をアンダースコア記法に変換
-            preg_replace('/([A-Z])/', '_$1', $arr[$count - 1])
-        );
-        $file_name = SERVER_PATH
-            . strtolower($arr[$count - 2] . '/' . $under) . '.php';
+        foreach ($arr as $k => $v) {
+            $arr[$k] = strtolower(
+                preg_replace('/^_/', '',
+                    // スタッドリーキャップス記法をアンダースコア記法に変換
+                    preg_replace('/([A-Z])/', '_$1', $v))
+            );
+        }
+        $file_name = SERVER_PATH . implode('/', $arr) . '.php';
         if (!file_exists($file_name)) {
             throw new \Error(
                 'Class File Not Found: ' . $file_name

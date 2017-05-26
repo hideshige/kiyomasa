@@ -15,7 +15,7 @@
  * <!-- ELEMENT *** -->にはelementフォルダの部分テンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.2.1
+ * @version  1.1.3.0
  * @package  device
  * 
  */
@@ -28,16 +28,14 @@ class View
      * テンプレートファイルを読み込みデータを埋め込んで表示させる
      * @param string $tpl ファイル名
      * @param array $disp テンプレートに埋め込むデータ配列
-     * @param string $folder テンプレートのあるフォルダ
      * @return string
      */
     public static function template(
         string $tpl,
-        array $disp,
-        string $folder = ''
+        array $disp
     ): string {
         try {
-            $content = self::open($tpl, false, $folder);
+            $content = self::open($tpl, false);
 
             //エレメントの反映
             $content = self::elementMatch($content);
@@ -155,24 +153,21 @@ class View
      * テンプレートの読み込み
      * @param string $tpl テンプレートファイル名
      * @param bool $elm 部分テンプレートか否か
-     * @param string $folder テンプレートのあるフォルダ
      * @return string 読み込んだコンテンツ
      * @throws \Error
      */
     private static function open(
         string $tpl,
-        bool $elm,
-        string $folder = ''
+        bool $elm
     ): string {
         $content = '';
         $add = preg_match('<\.>', $tpl) ? '' : '.tpl';
         $element = $elm ? 'element/' : '';
         $tpl_folder = (MOBILE_FLAG and !isset($_SESSION['mobile_pc_flag']))
             ? 'template_mobile/' : 'template/';
-        $fname = SERVER_PATH . $tpl_folder . $folder . $element . $tpl . $add;
+        $fname = SERVER_PATH . $tpl_folder . $element . $tpl . $add;
         if ($tpl_folder == 'template_mobile/' and !file_exists($fname)) {
-              $fname = SERVER_PATH . 'template/'
-                  . $folder . $element . $tpl . $add;
+              $fname = SERVER_PATH . 'template/' . $element . $tpl . $add;
         }
         if (!file_exists($fname)) {
             throw new \Error('No Template ' . $fname);

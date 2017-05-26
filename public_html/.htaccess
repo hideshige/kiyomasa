@@ -1,8 +1,5 @@
 RewriteEngine On
 
-# $g_folder rule
-RewriteRule ^admin/$ index.php?url=admin/index
-
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
