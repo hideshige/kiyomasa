@@ -95,7 +95,7 @@ class Castle
     /**
      * データベースの接続
      */
-    private function dbConnect()
+    private function dbConnect(): void
     {
         S::$dbm = new Db();
         $res_dbm = S::$dbm->connect(
@@ -123,7 +123,7 @@ class Castle
      * @global array $g_folder
      * @param object $turret
      */
-    private function open(&$turret)
+    private function open(turret &$turret): void
     {
         // URLの指定がなければトップページを指定
         $folder = '';
@@ -154,7 +154,7 @@ class Castle
     /**
      * メンテナンスモードの判定
      */
-    private function mainteCheck()
+    private function mainteCheck(): bool
     {
         return false;
     }

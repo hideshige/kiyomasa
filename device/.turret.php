@@ -20,7 +20,7 @@ class Turret
      * @param string $pagename 実行するモデルの名前
      * @param string $folder モデルのフォルダ名
      */
-    public function disp($pagename, $folder = '')
+    public function disp(string $pagename, string $folder = ''): void
     {
         try {
             // modelファイルの読み込み
@@ -86,7 +86,8 @@ class Turret
      * @global string $dump DUMPデータ
      * @param array $json JSON参照渡し
      */
-    private function jsonDebug(&$json){
+    private function jsonDebug(array &$json): void
+    {
         if ($this->debug) {
             global $dump;
             // コンソール用
@@ -108,6 +109,9 @@ class Turret
     
     /**
      * デバッグ情報の成形
+     * @global float $first_memory
+     * @global float $first_time
+     * @global string $dump
      * @return string|array
      */
     private function dispDebug()
@@ -211,12 +215,12 @@ class Turret
      * @param string $text コンソール用文字列
      * @return string
      */
-    private function modDebugConsole($text)
+    private function modDebugConsole($text): string
     {
         $text = preg_replace(
             "/{{COUNTER (.*?)}}/",
             '$1 ',
-            $text
+            (string)$text
         );
         // 色付けの目印として配置した{{}}構文を消す
         $text = preg_replace('/{{.*?}}/', '', $text);
@@ -228,9 +232,9 @@ class Turret
      * @param string $text SQL文字列
      * @return string
      */
-    private function modDebugSql($text)
+    private function modDebugSql($text): string
     {
-        $text = htmlspecialchars($text);
+        $text = htmlspecialchars((string)$text);
         preg_match_all("/{{STRING}}'(.*?)'/", $text, $match);
         if (isset($match[1])) {
             foreach ($match[1] as $v) {
@@ -312,12 +316,12 @@ class Turret
     
     /**
      * DUMPデバッグの成型
-     * @param string $text DUMP文字列
+     * @param string|null $text DUMP文字列
      * @return string
      */
-    private function modDebugDump($text)
+    private function modDebugDump($text): string
     {
-        $text = htmlspecialchars($text);
+        $text = htmlspecialchars((string)$text);
         $text = preg_replace(
             '/# (.*){{DUMP_LINE}}(\d*)/',
             '<span class="fw_debug_line">$1</span>'
@@ -365,8 +369,10 @@ class Turret
         return $text;
     }
 
-    /*
+    /**
      * サニタイズ
+     * @param array|string $data
+     * @return array|string
      */
     public function h($data)
     {

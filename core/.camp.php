@@ -89,8 +89,9 @@ class Camp
     /**
      * モデルを実行する
      * @param string $pagename 実行するモデルの名前
+     * @throws \Error
      */
-    private function exec($pagename)
+    private function exec(string $pagename): void
     {
         try {
             $class_name = NAME_SPACE . '\Shell\\' . trim(
@@ -117,7 +118,6 @@ class Camp
                 $e->getMessage()
             );
             throw new \Error($error);
-        } finally {
         }
     }
 }

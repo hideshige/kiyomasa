@@ -3,7 +3,7 @@
  * ログ モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.1
+ * @version  1.0.3.2
  * @package  device
  *
  */
@@ -16,9 +16,10 @@ class Log
 
     /**
      * システム上のエラーログを記録する
-     * @param string or array $log 吐き出すログ
+     * @param string|array $log 吐き出すログ
      */
-    public static function error($log) {
+    public static function error($log): void
+    {
         $file = sprintf(
             '%slog/%serror%s.log',
             SERVER_PATH,
@@ -30,9 +31,10 @@ class Log
 
     /**
      * アクセス経過ログなどを記録する
-     * @param string or array $log 吐き出すログ
+     * @param string|array $log 吐き出すログ
      */
-    public static function access($log) {
+    public static function access($log): void
+    {
         $file = sprintf(
             '%slog/%s%s.log',
             SERVER_PATH,
@@ -42,26 +44,13 @@ class Log
         self::printLog($log, $file);
     }
 
-    /*
-     * 管理者用ログを記録する
-     * @param string or array $log 吐き出すログ
-     */
-    public static function admin($log) {
-        $file = sprintf(
-            '%slog/%sadmin%s.log',
-            SERVER_PATH,
-            self::$batch,
-            date('ymd')
-        );
-        self::printLog($log, $file);
-    }
-
     /**
      * ファイルにログを吐き出す
-     * @param string or array $log 吐き出すログ
+     * @param string|array $log 吐き出すログ
      * @param string $file ファイルパス
      */
-    private static function printLog($log, $file) {
+    private static function printLog($log, string $file): void
+    {
         if (is_array($log)) {
             ob_start();
             var_dump($log);

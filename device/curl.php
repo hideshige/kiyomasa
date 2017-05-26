@@ -15,19 +15,19 @@ class Curl
      * データを送信し結果XMLオブジェクトを取得
      *
      * @param string $url アクセスするURL
-     * @param integer $type 1:XML 2:JSON 3:TEXT
+     * @param int $type 1:XML 2:JSON 3:TEXT
      * @param string $post_data POSTするデータがある場合記入する
      * @param array $headers 送信するヘッダ
-     * @param boolean $disp_headers ヘッダを取得するか否か
-     * @return array or false 結果データ(情報と内容)
+     * @param bool $disp_headers ヘッダを取得するか否か
+     * @return array 結果データ(情報と内容)
      */
     public static function getRes(
-        $url,
-        $type = 1,
-        $post_data = '',
-        $headers = [],
-        $disp_headers = false
-    ) {
+        string $url,
+        int $type = 1,
+        string $post_data = '',
+        array $headers = [],
+        bool $disp_headers = false
+    ): array {
         //クライアントURLの実行
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

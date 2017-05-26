@@ -55,9 +55,10 @@ class Mem
      * memcached に保存する
      * @param string $key キー
      * @param string or array $var　値
-     * @param datetime $expire 有効期限
+     * @param int $expire 有効期限
+     * @return int|bool
      */
-    public function set($key, $var, $expire = 0)
+    public function set(string $key, string $var, int $expire = 0)
     {
         if ($this->debug and $this->active) {
             $bt = debug_backtrace();
@@ -92,8 +93,9 @@ class Mem
     /**
      * memcach から値を取得する
      * @param string $key キー
+     * @return array|bool
      */
-    public function get($key)
+    public function get(string $key)
     {
         if ($this->active) {
             $var = $this->memcached_1->get($key);
@@ -132,8 +134,9 @@ class Mem
     /**
      * memcach から値を削除する
      * @param string $key キー
+     * @return bool
      */
-    public function delete($key)
+    public function delete(string $key)
     {
         $check = true;
         if ($this->active) {

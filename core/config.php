@@ -89,7 +89,7 @@ const OPEN_SSL_PASSPHRASE = 'ssl_keyword1'; // OpenSSL用
 const CRYPT_KEY = 'crypt_keyword1'; // mcrypt用
 const CRYPT_IV = 'crypt_keyword2'; // mcrypt用
 
-// Openssl::makeKeyにより以下を生成して追記しておく
+// Openssl::makeKeyにより以下を生成しておく
 const OPEN_SSL_PRIVATE_KEY = <<<EOT
 -----BEGIN ENCRYPTED PRIVATE KEY-----
 MIICxjBABgkqhkiG9w0BBQ0wMzAbBgkqhkiG9w0BBQwwDgQIMT7at7VImBsCAggA

@@ -19,10 +19,10 @@ class Crypt
      * 暗号化・復合して結果データを取得
      *
      * @param array or string $data 暗号化・復合するデータ
-     * @param string $encode_flag 暗号化・復合の選択指定 暗号化はTRUE 復号はFALSE
+     * @param bool $encode_flag 暗号化・復合の選択指定 暗号化はTRUE 復号はFALSE
      * @return array or string or null 暗号化・復合された結果データ
      */
-    private static function open($data, $encode_flag = true)
+    private static function open($data, bool $encode_flag = true)
     {
         if (!extension_loaded('mcrypt')) {
             throw new \Error('mcrypt is not installed');

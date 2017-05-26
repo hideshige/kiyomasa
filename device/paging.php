@@ -21,8 +21,13 @@ class Paging
      * @param int $disp_num 1ページあたりの件数
      * @return array page:現在のページ num:ページ数 left:左矢印ボタン right:右矢印ボタン tag:ページングタグ
      */
-    public static function set($counts, $url, $page, $get, $disp_num = 20)
-    {
+    public static function set(
+        int $counts,
+        string $url,
+        int $page,
+        array $get,
+        int $disp_num = 20
+    ): array {
         if (!$disp_num) {
             $disp_num = 20;
         }
@@ -60,7 +65,7 @@ class Paging
      * @param array $get GETで受け取った値
      * @return string 生成したクエリ
      */
-    private static function makeGet($get)
+    private static function makeGet(array $get): string
     {
         if (isset($get['page'])) {
             unset($get['page']);
@@ -85,7 +90,7 @@ class Paging
      * @param string $url そのURL
      * @return string
      */
-    private static function pagingTag($page_arr, $url)
+    private static function pagingTag(array $page_arr, string $url): string
     {
         $paging_tag = '';
 
@@ -163,4 +168,3 @@ class Paging
         return $paging_tag;
     }
 }
-

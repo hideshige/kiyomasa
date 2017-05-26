@@ -15,7 +15,7 @@
  * <!-- ELEMENT *** -->にはelementフォルダの部分テンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.2.0
+ * @version  1.1.2.1
  * @package  device
  * 
  */
@@ -29,9 +29,13 @@ class View
      * @param string $tpl ファイル名
      * @param array $disp テンプレートに埋め込むデータ配列
      * @param string $folder テンプレートのあるフォルダ
+     * @return string
      */
-    public static function template($tpl, $disp, $folder = '')
-    {
+    public static function template(
+        string $tpl,
+        array $disp,
+        string $folder = ''
+    ): string {
         try {
             $content = self::open($tpl, false, $folder);
 
@@ -51,7 +55,7 @@ class View
             $content = str_replace('=br=', "\n", $content);
         } catch (\Error $e) {
             Log::error($e->getMessage());
-            $content = null;
+            $content = '';
         } finally {
             return $content;
         }
@@ -62,7 +66,7 @@ class View
      * @param string $content
      * @return string
      */
-    private static function elementMatch($content)
+    private static function elementMatch(string $content): string
     {
         //部分テンプレートの挿入
         preg_match_all('/<!-- ELEMENT (.*?) -->/', $content, $element_match);
@@ -86,29 +90,30 @@ class View
 
     /**
      * テンプレートにパラメーターを挿入
-     * @param array $disp テンプレートに埋め込むデータ配列
+     * @param array|string $disp テンプレートに埋め込むデータ
      * @param string $content テンプレート
      * @return string 挿入し終えたコンテンツ
      */
-    private static function match($disp, $content)
+    private static function match($disp, string $content): string
     {
         preg_match_all('/<!-- BEGIN (.*?) -->/', $content, $match);
 
         foreach ($match[1] as $name) {
-            $pattern = '/<!-- BEGIN ' . $name . ' -->(.*)<!-- END ' . $name . ' -->/';
+            $pattern = '/<!-- BEGIN ' . $name
+                . ' -->(.*)<!-- END ' . $name . ' -->/';
             preg_match_all($pattern, $content, $match1);
             $tag_data = $original = isset($match1[1][0]) ? $match1[1][0] : '';
             $all_tag = '';
 
             preg_match_all('/{(.*?)}/', $original, $match2);
 
-            if (isset ($disp[$name])) {
+            if (isset($disp[$name])) {
                 $num = count($disp[$name]);
                 for ($i = 0; $i < $num; $i ++) {
                     $tag_data = isset($disp[$name][$i]) ?
                         self::match($disp[$name][$i], $tag_data) : $tag_data;
                     foreach ($match2[1] as $data) {
-                        if (isset ($disp[$name][$i][$data])) {
+                        if (isset($disp[$name][$i][$data])) {
                             $change_data = $disp[$name][$i][$data];
                         } else if (preg_match('/[ ,:;=]/', $data)) {
                             //改行やスペースが入っているJSデータなどの{}は変更しない
@@ -138,7 +143,7 @@ class View
                     '',
                     $content
                 );
-            } else if (isset ($match1[0][0])) {
+            } else if (isset($match1[0][0])) {
                 $content = str_replace($match1[0][0], '', $content);
             }
         }
@@ -149,13 +154,17 @@ class View
     /**
      * テンプレートの読み込み
      * @param string $tpl テンプレートファイル名
-     * @param boolean $elm 部分テンプレートか否か
+     * @param bool $elm 部分テンプレートか否か
      * @param string $folder テンプレートのあるフォルダ
-     * @return string or null 読み込んだコンテンツ
+     * @return string 読み込んだコンテンツ
+     * @throws \Error
      */
-    private static function open($tpl, $elm, $folder = '')
-    {
-        $content = null;
+    private static function open(
+        string $tpl,
+        bool $elm,
+        string $folder = ''
+    ): string {
+        $content = '';
         $add = preg_match('<\.>', $tpl) ? '' : '.tpl';
         $element = $elm ? 'element/' : '';
         $tpl_folder = (MOBILE_FLAG and !isset($_SESSION['mobile_pc_flag']))

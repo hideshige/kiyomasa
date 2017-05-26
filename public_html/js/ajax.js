@@ -44,9 +44,9 @@ function newXMLHttp() {
  * ---------------------------------------------------------------------------
  * string tagId HTMLタグID
  * string content 埋め込む内容
- * integer nodeId HTMLタグノードID
+ * int nodeId HTMLタグノードID
  * string classId HTMLタグノードクラス
- * integer addType 1:末尾に追加 2:先頭に追加 3:末尾に追加したあとスクロール
+ * int addType 1:末尾に追加 2:先頭に追加 3:末尾に追加したあとスクロール
  * string tagType 追加するHTMLタグの種類
  */
 function moreContent(tagId, content, nodeId, classId, addType, tagType) {

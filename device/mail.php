@@ -18,9 +18,13 @@ class Mail
      * @param string $subject 件名
      * @param string $body 本文
      * @return true
+     * @throws \Error
      */
-    public static function sendMail($to, $subject, $body)
-    {
+    public static function sendMail(
+        string $to,
+        string $subject,
+        string $body
+    ): bool {
         $to2 = str_replace(array ("\n", "\r"), '', $to);
         mb_internal_encoding('ISO-2022-JP');
         $from_name = mb_encode_mimeheader(

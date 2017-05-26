@@ -19,8 +19,8 @@ class Citadel
     /**
      * デフォルト値のセットとセッションまわりの確認
      * @param string $title
-     * @param boolean $login_flag ログインしていないユーザーをログイン画面に飛ばす場合TRUE
-     * @param boolean $token_update_flag トークンを強制的にアップデートしない場合FALSE
+     * @param bool $login_flag ログインしていないユーザーをログイン画面に飛ばす場合TRUE
+     * @param bool $token_update_flag トークンを強制的にアップデートしない場合FALSE
      */
     public static function set(
         $title = '',

@@ -15,15 +15,15 @@ class NgWord
     /**
      * 禁止ワードが含まれているかどうか確認し、発見した禁止ワードを配列で返す
      * @param string $word 確認する文字列
-     * @param boolean $account_flag アカウント用文字列の場合TRUE、コメント用文字列の場合FALSEを指定
-     * @param boolean $mb4_flag 4バイト文字を有効にする場合TRUE
+     * @param bool $account_flag アカウント用文字列の場合TRUE、コメント用文字列の場合FALSEを指定
+     * @param bool $mb4_flag 4バイト文字を有効にする場合TRUE
      * @return array 発見した禁止ワードを入れた配列
      */
     public static function check(
-        $word,
-        $account_flag = false,
-        $mb4_flag = false
-    ) {
+        string $word,
+        bool $account_flag = false,
+        bool $mb4_flag = false
+    ): array {
         $box = [];
 
         // 4バイト文字を許可しない場合

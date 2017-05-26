@@ -33,15 +33,16 @@ class DbModule
      * @param string $db_password ユーザーのパスワード
      * @param string $db_name データベースの名前
      * @param string $db_soft 使用するDBソフト
-     * @return boolean 成否
+     * @return bool 成否
+     * @throws \PDOException
      */
     public function connect(
-        $db_server, 
-        $db_user, 
-        $db_password, 
-        $db_name, 
-        $db_soft = 'mysql'
-    ) {
+        string $db_server, 
+        string $db_user, 
+        string $db_password, 
+        string $db_name, 
+        string $db_soft = 'mysql'
+    ): bool {
         try {
             $res = true;
             $dsn = sprintf(
@@ -54,10 +55,8 @@ class DbModule
                 $dsn, 
                 $db_user, 
                 $db_password, 
-                array(
-                    \PDO::ATTR_PERSISTENT => false, 
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
-                )
+                [\PDO::ATTR_PERSISTENT => false, 
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
             );
             $this->query(sprintf("SET NAMES '%s'", DEFAULT_CHARSET));
             $query = $this->query(
@@ -78,7 +77,7 @@ class DbModule
     /**
      * 実行時間の測定開始
      */
-    protected function before()
+    protected function before(): void
     {
         $this->time = microtime(true);
     }
@@ -87,7 +86,7 @@ class DbModule
      * 実行時間の取得
      * @return float 実行時間
      */
-    protected function after()
+    protected function after(): float
     {
         $t = microtime(true);
         $qt = round($t - $this->time, 4);
@@ -108,8 +107,10 @@ class DbModule
     /**
      * エラーメッセージの成型
      * @param string $error
+     * @throws \Error
      */
-    protected function dbLog($error) {
+    protected function dbLog(string $error): void
+    {
         $error_mes = sprintf(
             "%s\n%s\n%s",
             $error,
@@ -123,8 +124,11 @@ class DbModule
         throw new \Error($error_mes);
     }
     
-    
-    function dbSelectDump($rows)
+    /**
+     * 抽出されたデータをデバッグに表示
+     * @param array $rows
+     */
+    function dbSelectDump(array $rows): void
     {
         if ($rows) {
             $this->disp_sql .= '═══ BEGIN ROW ═══';

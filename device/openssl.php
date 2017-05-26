@@ -11,16 +11,17 @@
 
 namespace Php\Framework\Device;
 
-class Openssl {
+class Openssl
+{
     
     /**
      * 秘密鍵を使って暗号化
      * @param string $plain 暗号化したい文字
      * @return string 暗号化した文字
      */
-    public static function encrypt($plain)
+    public static function encrypt(string $plain): string
     {
-        $crypt = null;
+        $crypt = '';
         if ($plain) {
             $res = openssl_get_privatekey(
                 OPEN_SSL_PRIVATE_KEY,
@@ -38,7 +39,8 @@ class Openssl {
      * @param string $crypt 暗号化した文字
      * @return string 復号した文字
      */
-    public static function decrypt($crypt) {
+    public static function decrypt(string $crypt): string
+    {
         $plain = null;
         if ($crypt) {
             $crypt = base64_decode($crypt);
@@ -54,7 +56,7 @@ class Openssl {
      * （まず最初にこれを実行しておく）
      * @return array
      */
-    public static function makeKey()
+    public static function makeKey(): array
     {
         if (!extension_loaded('openssl')) {
             throw new Error('openssl is not installed');
@@ -69,4 +71,3 @@ class Openssl {
         return $keys;
     }
 }
-

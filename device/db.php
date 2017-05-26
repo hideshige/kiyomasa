@@ -34,15 +34,15 @@ class Db extends DbModule
      * 作成
      * @param string $table テーブル名
      * @param array $params 挿入する値（配列からフィールド名とフィールド値を取り出す）
-     * @param boolean $replace 同一キーの場合置換するかどうかの可否
+     * @param bool $replace 同一キーの場合置換するかどうかの可否
      * @param string $statement_id プリペアドステートメントID
-     * @return boolean
+     * @return object|bool
      */
     public function insert(
-        $table,
-        $params,
-        $replace = false,
-        $statement_id = 'stmt'
+        string $table,
+        array $params,
+        bool $replace = false,
+        string $statement_id = 'stmt'
     ) {
         $this->do[$statement_id] = 'insert';
         $this->name[$statement_id] = true;
@@ -84,13 +84,13 @@ class Db extends DbModule
      * @param string $params 取り出す値
      * @param string $where 取り出す条件
      * @param string $statement_id プリペアドステートメントID
-     * @return 成功した場合は結果をセットしたarrayまたはinteger、失敗した場合はfalse
+     * @return object|bool
      */
     public function select(
-        $table,
-        $params = '*',
-        $where = '',
-        $statement_id = 'stmt'
+        string $table,
+        string $params = '*',
+        string $where = '',
+        string $statement_id = 'stmt'
     ) {
         $this->do[$statement_id] = 'select';
         
@@ -109,13 +109,13 @@ class Db extends DbModule
      * @param array $params 更新する値（配列からフィールド名とフィールド値を取り出す）
      * @param string $where 検索条件
      * @param string $statement_id プリペアドステートメントID
-     * @return boolean 成功ならtrue、失敗ならfalse
+     * @return object|bool
      */
     public function update(
-        $table,
-        $params,
-        $where = '',
-        $statement_id = 'stmt'
+        string $table,
+        array $params,
+        string $where = '',
+        string $statement_id = 'stmt'
     ) {
         $this->do[$statement_id] = 'update';
         
@@ -154,12 +154,12 @@ class Db extends DbModule
      * @param string $table テーブル名
      * @param string $where 検索条件
      * @param string $statement_id プリペアドステートメントID
-     * @return boolean 成功ならtrue、失敗ならfalse
+     * @return object|bool
      */
     public function delete(
-        $table,
-        $where = '',
-        $statement_id = 'stmt'
+        string $table,
+        string $where = '',
+        string $statement_id = 'stmt'
     ) {
         $this->do[$statement_id] = 'delete';
         
@@ -175,15 +175,16 @@ class Db extends DbModule
 
     /**
      * 実行
+     * @global int $g_counter
      * @param string $sql 実行するSQL文
      * @param string $dev_sql 画面表示用・ログ用SQL文(バイナリをテキストに置き換えたもの)
      * @param string $statement_id ステートメントID
-     * @return object 実行結果(foreachすると配列になる)
+     * @return object|bool
      */
     public function query(
-        $sql = null,
-        $dev_sql = null,
-        $statement_id = 'stmt'
+        string $sql = null,
+        string $dev_sql = null,
+        string $statement_id = 'stmt'
     ) {
         try {
             global $g_counter;
@@ -220,13 +221,14 @@ class Db extends DbModule
 
     /**
      * ステートメントの準備
+     * @global int $g_counter
      * @param string $statement_id プリペアドステートメントID
      * @param string $sql クエリ
-     * @return boolean 成功した場合はステートメントのtrue、失敗した場合はfalse
+     * @return object|bool
      */
     public function prepare(
-        $statement_id = 'stmt',
-        $sql = null
+        string $statement_id = 'stmt',
+        string $sql = ''
     ) {
         try {
             global $g_counter;
@@ -255,26 +257,27 @@ class Db extends DbModule
     /**
      * 明示的にプレースホルダを変える
      * (通常は使用しなくても問題がないが必要な時があれば利用する)
-     * @param boolean $name_flag プレースホルダが:nameならTRUE,?ならFALSE
+     * @param bool $name_flag プレースホルダが:nameならTRUE,?ならFALSE
      * @param string $statement_id プリペアドステートメントID
      */
     public function nameFlag(
-        $name_flag,
-        $statement_id = 'stmt'
-    ) {
+        bool $name_flag,
+        string $statement_id = 'stmt'
+    ): void {
         $this->name[$statement_id] = $name_flag;
     }
 
     /**
      * ステートメントの実行
+     * @global int $g_counter
      * @param array $params 挿入する値
      * @param string $statement_id プリペアドステートメントID
-     * @return integer 成功すれば変更した件数を返す
+     * @return int 成功すれば変更した件数を返す
      */
     public function bind(
-        $params = [],
-        $statement_id = 'stmt'
-    ) {
+        array $params = [],
+        string $statement_id = 'stmt'
+    ): int {
         try {
             global $g_counter;
             
@@ -374,15 +377,15 @@ class Db extends DbModule
 
     /**
      * ステートメントの結合と抽出
-     * @param array,null $param 結合するパラメータ
+     * @param array $param 結合するパラメータ
      * @param string $statement_id プリペアドステートメントID
-     * @param boolean $class_flag クラスを取得する場合TRUE
-     * @return boolean
+     * @param bool $class_flag クラスを取得する場合TRUE
+     * @return array|bool
      */
     public function bindSelect(
-        $param = null,
-        $statement_id = 'stmt',
-        $class_flag = false
+        array $param = [],
+        string $statement_id = 'stmt',
+        bool $class_flag = false
     ) {
         try {
             $count = $this->bind($param, $statement_id);
@@ -410,9 +413,12 @@ class Db extends DbModule
 
     /**
      * プリペアドステートメントの解放
+     * @global int $g_counter
      * @param string $statement_id プリペアドステートメントID
+     * @throws \Error
      */
-    public function stmtClose($statement_id = 'stmt') {
+    public function stmtClose(string $statement_id = 'stmt'): void
+    {
         try {
             if (!$this->stmt[$statement_id]) {
                 throw new \Error('No Statement');
@@ -440,9 +446,10 @@ class Db extends DbModule
 
     /**
      * AUTO_INCREMENTで最後に作成した番号を返す
-     * @return integer
+     * @return int
      */
-    public function getId() {
+    public function getId(): int
+    {
         try {
             $res = $this->connect->lastInsertId();
             if (!$res) {
@@ -459,30 +466,29 @@ class Db extends DbModule
      * テーブル排他ロック
      * （ロック中のテーブルは別の人は更新できない）
      * @params string $tables ロックするテーブル（カンマ区切り）
-     * @return boolean
      */
-    public function lock($tables) {
+    public function lock(string $tables): void
+    {
         // トランザクション使用中は実行できない。
         if ($this->transaction_flag) {
             throw new \Error('LOCK ERROR');
         }
 
         $this->lock_flag = true;
-        $res = $this->query(
+        $this->query(
             sprintf(
                 'LOCK TABLES %s WRITE',
                 preg_replace('/,/', ' WRITE,', $tables)
             )
         );
-        return $res;
     }
 
 
     /**
      * テーブル排他ロック解除
-     * @return boolean
      */
-    public function unlock() {
+    public function unlock(): void
+    {
         if ($this->lock_flag) {
             $this->lock_flag = false;
             $this->query('UNLOCK TABLES');
@@ -492,9 +498,11 @@ class Db extends DbModule
 
     /**
      * トランザクションの開始
-     * @return boolean
+     * @global int $g_counter
+     * @return bool
      */
-    public function transaction() {
+    public function transaction(): bool
+    {
         try {
             $res = false;
             if ($this->debug and !$this->transaction_flag) {
@@ -516,9 +524,11 @@ class Db extends DbModule
 
     /**
      * トランザクションの確定
-     * @return boolean
+     * @global int $g_counter
+     * @return bool
      */
-    public function commit() {
+    public function commit(): bool
+    {
         try {
             $res = false;
             if ($this->debug and $this->transaction_flag) {
@@ -538,9 +548,11 @@ class Db extends DbModule
 
     /**
      * トランザクションの復帰
-     * @return boolean
+     * @global int $g_counter
+     * @return bool
      */
-    public function rollback() {
+    public function rollback(): bool
+    {
         try {
             $res = false;
             if ($this->debug and $this->transaction_flag) {
@@ -563,13 +575,13 @@ class Db extends DbModule
      * @param string $name ルーチンの名前
      * @param mixed $param パラメータ
      * @param string $statement_id ステートメントID
-     * @return boolean
+     * @return bool
      */
     public function call(
-        $name,
-        $param,
-        $statement_id = 'stmt'
-    ) {
+        string $name,
+        array $param,
+        string $statement_id = 'stmt'
+    ): bool {
         try {
             $params = implode(', ', $param);
             $res = $this->query(

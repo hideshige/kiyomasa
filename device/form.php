@@ -135,9 +135,9 @@ class Form
      * return array (検証結果を格納した配列を返す)
      */
     public static function validation(
-        $params,
-        $data
-    ) {
+        array $params,
+        array $data
+    ): array {
         self::$params = $params;
         $res = [];
 
@@ -205,10 +205,10 @@ class Form
      * @param array $error_customize ユーザー定義エラー array ('must' => '入力されていません') の形でエラーメッセージを追加できる
      */
     public static function getMessage(
-        $error_data,
-        &$form_list,
-        $error_customize = []
-    ) {
+        array $error_data,
+        array &$form_list,
+        array $error_customize = []
+    ): void {
         $k = 0;
         foreach (self::$params as $name => $v) {
             if (isset($v['join'])) {
@@ -259,14 +259,14 @@ class Form
      * @param array $params 検証ルール
      * @param array $form フォームオブジェクト
      * @param array $post ポストデータ
-     * @param boolean $br_flag チェックボックスとラジオボタンに改行を入れるかどうか
+     * @param bool $br_flag チェックボックスとラジオボタンに改行を入れるかどうか
      */
     public static function formArr(
-        $params,
-        &$form,
-        $post,
-        $br_flag = false
-    ) {
+        array $params,
+        array &$form,
+        array $post,
+        bool $br_flag = false
+    ): void {
         foreach ($params as $name => $val) {
             if (!isset($val['join'])) {
                 $key = $name;
@@ -352,13 +352,13 @@ class Form
      * @param string $tag_add タグに付加する文字
      */
     private static function selectForm(
-        $name,
-        $key,
-        $val,
-        $data,
-        &$form,
-        $tag_add = ''
-    ) {
+        string $name,
+        string $key,
+        array $val,
+        string $data,
+        array &$form,
+        string $tag_add = ''
+    ): void {
         if (!isset($form[$key])) {
             $form[$key] = '';
         }
@@ -380,17 +380,17 @@ class Form
      * @param string $data 受け取ったデータの値
      * @param array $form フォームオブジェクト
      * @param string $tag_add タグに付加する文字
-     * @param boolean $br_flag 改行を入れるか否か
+     * @param bool $br_flag 改行を入れるか否か
      */
     private static function radioForm(
-        $name,
-        $key,
-        $val,
-        $data,
-        &$form,
-        $tag_add = '',
-        $br_flag = false
-    ) {
+        string $name,
+        string $key,
+        array $val,
+        string $data,
+        array &$form,
+        string $tag_add = '',
+        bool $br_flag = false
+    ): void {
         if (!isset($form[$key])) {
             $form[$key] = '';
         }
@@ -408,20 +408,20 @@ class Form
      * @param string $name チェックボックスの名前
      * @param string $key チェックボックスのキー
      * @param array $val チェックボックスの内容
-     * @param array $data 受け取ったデータの値
+     * @param array|string $data 受け取ったデータの値
      * @param array $form フォームオブジェクト
      * @param string $tag_add タグに付加する文字
-     * @param boolean $br_flag 改行を入れるか否か
+     * @param bool $br_flag 改行を入れるか否か
      */
     private static function checkForm(
-        $name,
-        $key,
-        $val,
+        string $name,
+        string $key,
+        array $val,
         $data,
-        &$form,
-        $tag_add = '',
-        $br_flag = false
-    ) {
+        array &$form,
+        string $tag_add = '',
+        bool $br_flag = false
+    ): void {
         if (!isset($form[$key])) $form[$key] = '';
         foreach ($val as $k => $v) {
             if (!isset($data)) {
@@ -441,15 +441,15 @@ class Form
 
     /**
      * 確認画面を表示
-     * @param object $form フォームオブジェクト
+     * @param array $form フォームオブジェクト
      * @param array $question 問題の入った配列
      * @param array $answer 回答の入った配列
      */
     public static function dispConfirm(
-        &$form,
-        $question,
-        $answer
-    ) {
+        array &$form,
+        array $question,
+        array $answer
+    ): void {
         foreach ($question as $k => $v) {
             $form[$k]['question_num'] = $k + 1;
             $form[$k]['question'] = nl2br($v['question']);
@@ -486,15 +486,15 @@ class Form
 
     /**
      * データ作成
-     * @param object $form フォームオブジェクト
+     * @param array $form フォームオブジェクト
      * @param array $question 問題の入った配列
      * @param array $answer 回答の入った配列
      */
     public static function makeData(
-        &$form,
-        $question,
-        $answer
-    ) {
+        array &$form,
+        array $question,
+        array $answer
+    ): void {
         foreach ($question as $k => $v) {
             $form[$k]['question_id'] = $v['question_id'];
             $form[$k]['answer_type'] = $v['answer_type'];
@@ -513,4 +513,3 @@ class Form
         }
     }
 }
-

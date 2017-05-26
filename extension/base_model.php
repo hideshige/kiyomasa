@@ -22,13 +22,13 @@ abstract class BaseModel
     /**
      * スローされた先のプログラム
      * @param string $mes スローメッセージ
-     * @return boolean
+     * @return bool
      */
     abstract protected function throwCatch($mes);
     
     /**
      * プログラム実行のためのロジック
-     * @return boolean FALSEの場合エラーページを表示する
+     * @return bool FALSEの場合エラーページを表示する
      */
     public function logic()
     {

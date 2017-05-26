@@ -16,7 +16,7 @@ class Chara
      * @param string $kana カナ文字
      * @return string ローマ字
      */
-    public static function kana2Latin($kana)
+    public static function kana2Latin(string $kana): string
     {
         // 小文字を大文字にし、半角カナを全角カナにし、全角英数字を半角英数字にする
         $kana = strtoupper(mb_convert_kana($kana, 'CKVa', DEFAULT_CHARSET));
@@ -64,7 +64,7 @@ class Chara
      * @param string $word 戻したい文字
      * @return string 戻した文字
      */
-    public static function hDecode($word)
+    public static function hDecode(string $word): string
     {
         $word2 = htmlspecialchars_decode($word, ENT_QUOTES);
         $res = $word2;

@@ -19,7 +19,14 @@ class UserException extends \Exception
 
 class ErrorInfo
 {
-    public function set($message, $file, $line)
+    /**
+     * エラー情報のセット
+     * @global string $dump
+     * @param string $message
+     * @param string $file
+     * @param int $line
+     */
+    public function set(string $message, string $file, int $line): void
     {
         S::$dbm->rollback();
         S::$dbm->unlock();
@@ -59,7 +66,7 @@ spl_autoload_register(
     * クラスファイルの読み込み
     * @param string $class_name クラス名
     */
-    function ($class_name)
+    function (string $class_name): void
     {
         $arr = explode('\\', $class_name);
         if (!isset($arr[1])) {
@@ -88,12 +95,13 @@ spl_autoload_register(
 set_error_handler(
     /**
      * エラー処理
-     * @param integer $no
+     * @param int $no
      * @param string $message
      * @param string $file
-     * @param integer $line
+     * @param int $line
+     * @throws \Error
      */
-    function ($no, $message, $file, $line)
+    function (int $no, string $message, string $file, int $line): void
     {
         switch ($no) {
             case E_ERROR: $type = 'エラー'; break;

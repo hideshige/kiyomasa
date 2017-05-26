@@ -34,7 +34,7 @@ abstract class JsonModel
 
     /**
      * プログラム実行のためのロジック
-     * @return boolean FALSEの場合エラーページを表示する
+     * @return bool FALSEの場合エラーページを表示する
      */
     public function __construct()
     {

@@ -19,10 +19,10 @@ class Csv
      * @return array 取得した配列
      */
     public static function csvFileToArray(
-        $file,
-        $encode = DEFAULT_CHARSET,
-        $mojicode = 'SJIS-win'
-    ) {
+        string $file,
+        string $encode = DEFAULT_CHARSET,
+        string $mojicode = 'SJIS-win'
+    ): array {
         setlocale(LC_ALL, 'ja_JP');
         $data = [];
         if (file_exists($file)) {
@@ -111,16 +111,16 @@ class Csv
     /**
      * 配列をCSVに変換
      * @param array $get_data 配列データ
-     * @param boolean $header 1行目を書き出すか否か
+     * @param bool $header 1行目を書き出すか否か
      * @param string $mojicode CSVファイルの文字コード
      * @param string $encode エンコード
      * @return string CSVデータ
      */
     public static function arrayToCsv(
-        $get_data,
-        $header = true,
-        $mojicode = 'SJIS-win',
-        $encode = DEFAULT_CHARSET
+        array $get_data,
+        bool $header = true,
+        string $mojicode = 'SJIS-win',
+        string $encode = DEFAULT_CHARSET
     ) {
         if (!$get_data) { return null; }
         if (sizeof($get_data) > CSV_MAX) { return null; }
@@ -147,7 +147,7 @@ class Csv
     /**
      * 配列をTSVに変換
      * @param array $get_data 配列データ
-     * @param boolean $header 1行目を書き出すか否か
+     * @param bool $header 1行目を書き出すか否か
      * @param string $mojicode CSVファイルの文字コード
      * @param string $encode エンコード
      * @return string TSVデータ
