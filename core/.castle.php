@@ -37,6 +37,7 @@ header('Content-Type: text/html;charset=UTF-8');
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
 require_once(__DIR__ . '/config.php');
+require_once(__DIR__ . '/../device/.rampart.php');
 require_once(__DIR__ . '/../device/.turret.php');
 require_once(__DIR__ . '/../device/.tower.php');
 

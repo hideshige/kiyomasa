@@ -12,11 +12,11 @@ namespace Yourname\Yourproject\Model;
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Extension as E;
 
-class ErrorPage
+class ErrorPage implements D\HtmlProp
 {
     public $tpl = ['header', 'error_page', 'footer'];
 
-    public function logic()
+    public function logic(): bool
     {
         $title = 'エラー';
         E\Citadel::set($title, false, false);
@@ -26,5 +26,6 @@ class ErrorPage
             unset($_SESSION['error_message']);
         }
         D\S::$disp[1]['MESSAGE'][0]['message'] = $message;
+        return true;
     }
 }

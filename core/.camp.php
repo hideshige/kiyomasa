@@ -22,6 +22,7 @@ require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
 require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/../device/.tower.php');
+require_once(__DIR__ . '/../device/.rampart.php');
 
 new Camp;
 
@@ -101,16 +102,11 @@ class Camp
             $model = new $class_name();
             $res = $model->logic();
             if ($res === false) {
-                throw new \Error($pagename . ' logic notice');
+                throw new \Error($pagename . ' logic notice', 10);
             }
         } catch (\Error $e) {
-            if (S::$dbm->transaction_flag) {
-                //トランザクションを実行中に例外処理が起きた場合、ロールバックする
-                S::$dbm->rollback();
-            } else if (S::$dbm->lock_flag) {
-                //テーブル排他ロック中に例外処理が起きた場合、テーブル排他ロックを解除する
-                S::$dbm->unlock();
-            }
+            S::$dbm->rollback();
+            S::$dbm->unlock();
             $error = sprintf(
                 '%s(%s) %s',
                 str_replace(SERVER_PATH, '', $e->getFile()),

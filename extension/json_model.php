@@ -8,27 +8,27 @@
  * 
  */
 
-namespace Yourname\Yourproject\Extension;
+namespace Dh\Ai\Extension;
 
 use Php\Framework\Device as D;
 
-abstract class JsonModel
+abstract class JsonModel implements D\AjaxProp
 {
     /**
      * プログラムを実行する
      */
-    abstract protected function execute();
+    abstract protected function execute(): void;
     
     /**
      * スローされた先のプログラム
      * @param string $mess スローメッセージ
      */
-    abstract protected function throwCatch($mess);
+    abstract protected function throwCatch(string $mess): bool;
     
     /**
      * 最後に実行するプログラム
      */
-    abstract protected function finalLogic();
+    abstract protected function finalLogic(): void;
 
     protected $json = []; // JSON用の配列
 
@@ -46,7 +46,7 @@ abstract class JsonModel
      * プログラム実行のためのロジック
      * @return array
      */
-    public function logic()
+    public function logic(): array
     {
         try {
             $this->execute();

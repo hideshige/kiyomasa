@@ -12,25 +12,25 @@ namespace Yourname\Yourproject\Extension;
 
 use Php\Framework\Device as D;
 
-abstract class BaseModel
+abstract class BaseModel implements D\HtmlProp
 {
     /**
      * プログラムを実行する
      */
-    abstract protected function execute();
+    abstract protected function execute(): void;
     
     /**
      * スローされた先のプログラム
      * @param string $mes スローメッセージ
      * @return bool
      */
-    abstract protected function throwCatch($mes);
+    abstract protected function throwCatch(string $mes): bool;
     
     /**
      * プログラム実行のためのロジック
      * @return bool FALSEの場合エラーページを表示する
      */
-    public function logic()
+    public function logic(): bool
     {
         try {
             $check = true;

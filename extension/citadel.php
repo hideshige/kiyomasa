@@ -23,10 +23,10 @@ class Citadel
      * @param bool $token_update_flag トークンを強制的にアップデートしない場合FALSE
      */
     public static function set(
-        $title = '',
-        $login_flag = true,
-        $token_update_flag = true
-    ) {
+        string $title = '',
+        bool $login_flag = true,
+        bool $token_update_flag = true
+    ): void {
         for ($i = 0; $i < 3; $i ++) {
             D\S::$disp[$i]['REPLACE']['title'] = $title;
             D\S::$disp[$i]['REPLACE']['domain'] = DOMAIN_NAME;

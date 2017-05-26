@@ -257,13 +257,13 @@ class Form
     /**
      * 選択フォームの一括生成
      * @param array $params 検証ルール
-     * @param array $form フォームオブジェクト
+     * @param array|null $form フォームオブジェクト
      * @param array $post ポストデータ
      * @param bool $br_flag チェックボックスとラジオボタンに改行を入れるかどうか
      */
     public static function formArr(
         array $params,
-        array &$form,
+        &$form,
         array $post,
         bool $br_flag = false
     ): void {

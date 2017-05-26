@@ -12,11 +12,11 @@ namespace Yourname\Yourproject\Model;
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Extension as E;
 
-class Mainte
+class Mainte implements D\HtmlProp
 {
     public $tpl = ['header', 'mainte', 'footer'];
 
-    public function logic()
+    public function logic(): bool
     {
         if (D\S::$url[0] == 'mainte') {
             header('Location: /');
@@ -28,5 +28,6 @@ class Mainte
             echo 'ただいまメンテナンス中です';
             exit;
         }
+        return true;
     }
 }

@@ -9,15 +9,17 @@
 
 namespace Yourname\Yourproject\Shell;
 
-use Php\Framework\Device\Log;
+use Php\Framework\Devic as D;
+use Yourname\Yourproject\Extention as E;
 
-class Sample
+class Sample extends E\BaseShell
 {
-    public function logic()
+    public function execute(): void
     {
-        Log::$batch = 'batch/';
+        D\Log::$batch = 'batch/';
         global $argv;
 
+        var_dump($argv);
         echo 'TEST';
     }
 }

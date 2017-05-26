@@ -16,12 +16,12 @@ class Index extends E\BaseModel
 {
     public $tpl = ['header', 'index', 'footer'];
 
-    protected function execute()
+    protected function execute(): void
     {
         E\Citadel::set(FROM_NAME);
     }
     
-    protected function throwCatch($mes)
+    protected function throwCatch(string $mes): bool
     {
         $this->tpl[1] = 'error_page';
         D\S::$disp[1]['MESSAGE'][0]['message'] = $mes;
