@@ -27,11 +27,24 @@ class Citadel
         bool $login_flag = true,
         bool $token_update_flag = true
     ): void {
+        self::titleSet($title);
         for ($i = 0; $i < 3; $i ++) {
-            D\S::$disp[$i]['REPLACE']['title'] = $title;
             D\S::$disp[$i]['REPLACE']['domain'] = DOMAIN_NAME;
             D\S::$disp[$i]['REPLACE']['link_domain'] = LINK_DOMAIN_NAME;
         }
         //セッションまわりの処理をここに記入する
+    }
+    
+    /**
+     * タイトルのセット
+     * @param string $title
+     */
+    public static function titleSet(string $title): void
+    {
+        if ($title) {
+            for ($i = 0; $i < 3; $i ++) {
+                D\S::$disp[$i]['REPLACE']['title'] = $title;
+            }
+        }
     }
 }

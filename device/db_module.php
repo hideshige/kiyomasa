@@ -3,7 +3,7 @@
  * データベース接続モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  device
  *
  */
@@ -111,16 +111,18 @@ class DbModule
      */
     protected function dbLog(string $error): void
     {
+        $bind = [];
+        if ($this->bind_params) {
+            foreach ($this->bind_params as $k => $v) {
+                $bind[] = '@' . $k . " = '" . $v . "'"; 
+            }
+        }
         $error_mes = sprintf(
-            "%s\n%s\n%s",
+            "%s\n[QUERY] %s;\n[PARAM] %s",
             $error,
             $this->sql,
-            implode(',', $this->bind_params)
+            implode(',', $bind)
         );
-        if ($this->debug) {
-            //デバッグ表示
-            \dump($error_mes);
-        }
         throw new \Error($error_mes);
     }
     

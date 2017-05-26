@@ -88,11 +88,10 @@
 #fw_debug #fw_debug_area_html
 {
     position: absolute;
-    padding: 25px;
+    padding: 30px;
     font-size: 0.8em;
     top: 0;
     left: 0;
-    
     z-index: 10001;
 }
 

@@ -21,7 +21,7 @@
  * call        ルーチンの呼び出し
  *
  * @author   Sawada Hideshige
- * @version  1.4.4.0
+ * @version  1.4.4.1
  * @package  device
  *
  */
@@ -312,33 +312,33 @@ class Db extends DbModule
                     }
                     $d_v = (strlen($v) > 5000) ? '[longtext or binary]' : $v;
 
+                    $name = $this->name[$statement_id] ? $k : $i;
                     if ($this->debug) {
                         if ($d_v === null) {
                             $this->disp_sql .= sprintf(
                                 "{{COUNTER %d}}SET {{AT}}@%s = {{NULL}}NULL;\n",
                                 $g_counter,
-                                $this->name[$statement_id] ? $k : $i
+                                $name
                             );
                         } else if (is_numeric($d_v)) {
                             $this->disp_sql .= sprintf(
                                 "{{COUNTER %d}}SET {{AT}}@%s = {{INT}}%d;\n",
                                 $g_counter,
-                                $this->name[$statement_id] ? $k : $i,
+                                $name,
                                 $d_v
                             );
                         } else {
                             $this->disp_sql .= sprintf(
                                 "{{COUNTER %d}}SET {{AT}}@%s = {{STRING}}'%s';\n",
                                 $g_counter,
-                                $this->name[$statement_id] ? $k : $i,
+                                $name,
                                 $d_v
                             );
                         }
                         $g_counter ++;
                     }
-                    $this->bind_params[] = $v;
+                    $this->bind_params[$name] = $v;
 
-                    $name = $this->name[$statement_id] ? $k : $i;
                     $this->stmt[$statement_id]->bindValue(
                         $name,
                         $v,

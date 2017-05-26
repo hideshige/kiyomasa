@@ -18,7 +18,7 @@ class Crypt
     /**
      * 暗号化・復合して結果データを取得
      *
-     * @param array or string $data 暗号化・復合するデータ
+     * @param array|string $data 暗号化・復合するデータ
      * @param bool $encode_flag 暗号化・復合の選択指定 暗号化はTRUE 復号はFALSE
      * @return array or string or null 暗号化・復合された結果データ
      */
