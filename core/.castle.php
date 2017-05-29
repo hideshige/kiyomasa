@@ -133,7 +133,6 @@ class Castle
     {
         // URLの指定がなければトップページを指定
         $folder = '';
-        $pagename = 'index';
         if (isset(S::$get['url'])) {
             global $g_folder;
             if ($g_folder) {
@@ -148,6 +147,9 @@ class Castle
                 preg_replace('<^/' . $folder . '>', '', S::$get['url']));
             unset(S::$get['url']);
             $pagename = S::$url[0];
+        }
+        if (!$pagename) {
+            $pagename = 'index';
         }
         
         if ($this->mainteCheck() and !$this->debug) {
