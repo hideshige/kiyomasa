@@ -14,7 +14,7 @@ use Yourname\Yourproject\Extension as E;
 
 class HelloWorld extends E\BaseModel // クラス名はファイル名に合わせる
 {
-    public $tpl = ['header', 'hello_world', 'footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
+    public $tpl = ['part/header', 'content/hello_world', 'part/footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
 
     protected function execute(): void
     {

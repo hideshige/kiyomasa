@@ -4,11 +4,11 @@
  *
  * @author   Sawada Hideshige
  * @version  1.0.3.1
- * @package  device
+ * @package  device/equipment
  *
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Equipment;
 
 class NgWord
 {

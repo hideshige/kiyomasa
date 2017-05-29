@@ -8,10 +8,10 @@
  *
  * @author   Sawada Hideshige
  * @version  1.0.2.3
- * @package  device
+ * @package  device/equipment
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Equipment;
 
 class Crypt
 {

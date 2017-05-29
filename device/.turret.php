@@ -69,7 +69,7 @@ class Turret
                     // 循環防止のフラグ
                     $this->error_flag = true;
                     // エラー画面モデルの読み込み
-                    $this->disp('error_page', $folder);
+                    $this->disp('error_page', 'content/');
                 } else {
                     echo '循環エラー';
                 }
@@ -88,18 +88,6 @@ class Turret
     private function jsonDebug(array &$json): void
     {
         if ($this->debug) {
-            global $dump;
-            // コンソール用
-            $json['debug'] = "【DB SLAVE】\n"
-                . $this->modDebugConsole(S::$dbs->disp_sql, true)
-                . "----------------------------------------------------------\n"
-                . "【DB MASTER】\n"
-                . $this->modDebugConsole(S::$dbm->disp_sql, true)
-                . "----------------------------------------------------------\n"
-                . "【MEMCACHED】\n" . S::$mem->disp_mem
-                . "----------------------------------------------------------\n"
-                . "【DUMP】\n" . $this->modDebugConsole($dump, true);
-            // ブラウザ用
             $arr = $this->dispDebug();
             $json['fw_debug_include_ajax'] = $arr['include'];
             $json['fw_debug_guide_ajax_time'] = $arr['process'] . '秒';
@@ -168,7 +156,6 @@ class Turret
                 'ip' => IP_ADDRESS,
                 'timestamp' => TIMESTAMP,
                 'time' => time(),
-                'os' => PHP_OS,
                 'db_slave' => $this->modDebugSql(S::$dbs->disp_sql),
                 'db_master' => $this->modDebugSql(S::$dbm->disp_sql),
                 'memcached' => nl2br(htmlspecialchars(S::$mem->disp_mem)),
@@ -207,23 +194,6 @@ class Turret
             }
         }
         return $disp;
-    }
-    
-    /**
-     * コンソールデバッグの成型
-     * @param string $text コンソール用文字列
-     * @return string
-     */
-    private function modDebugConsole($text): string
-    {
-        $text = preg_replace(
-            "/{{COUNTER (.*?)}}/",
-            '$1 ',
-            (string)$text
-        );
-        // 色付けの目印として配置した{{}}構文を消す
-        $text = preg_replace('/{{.*?}}/', '', $text);
-        return $text;
     }
     
     /**

@@ -4,10 +4,10 @@
  *
  * @author   Sawada Hideshige
  * @version  1.2.2.2
- * @package  device
+ * @package  device/equipment
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Equipment;
 
 class Csv
 {

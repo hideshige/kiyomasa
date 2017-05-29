@@ -69,28 +69,33 @@ class Castle
             // HTMLクエリのセット
             S::$post = $turret->h($_POST);
             S::$get = $turret->h($_GET);
-            if (isset(S::$get['url'])) {
-                S::$url = explode('/', preg_replace('<^/>', '', S::$get['url']));
-                unset(S::$get['url']);
-            }
             
             $this->open($turret);
         } catch (\Error $e) {
-            $error = sprintf(
-                '%s(%s) %s',
-                str_replace(SERVER_PATH, '', $e->getFile()),
-                $e->getLine(),
-                $e->getMessage()
-            );
-            Log::error($error);
-            // テスト環境の場合、デバッグ用のエラーを表示する
-            if ($this->debug) {
-                echo $error;
-            } else {
-                echo 'エラーになりました。 ' . TIMESTAMP;
-            }
-            exit;
+            $this->error($e);
         }
+    }
+    
+    /**
+     * エラー処理
+     * @param object $e
+     */
+    private function error($e): void
+    {
+        $error = sprintf(
+            '%s(%s) %s',
+            str_replace(SERVER_PATH, '', $e->getFile()),
+            $e->getLine(),
+            $e->getMessage()
+        );
+        Log::error($error);
+        // テスト環境の場合、デバッグ用のエラーを表示する
+        if ($this->debug) {
+            echo $error;
+        } else {
+            echo 'エラーになりました。 ' . TIMESTAMP;
+        }
+        exit;
     }
     
     /**
@@ -128,21 +133,21 @@ class Castle
     {
         // URLの指定がなければトップページを指定
         $folder = '';
-        $url_num = 0;
-        global $g_folder;
-        if ($g_folder) {
-          foreach ($g_folder as $v) {
-            if (S::$url[0] === $v) {
-                $folder = $v . '/';
-                $url_num = 1;
-                break;
+        $pagename = 'index';
+        if (isset(S::$get['url'])) {
+            global $g_folder;
+            if ($g_folder) {
+                foreach ($g_folder as $v) {
+                    if (preg_match('</' . $v . '>', S::$get['url'])) {
+                        $folder = $v . '/';
+                        break;
+                    }
+                }
             }
-          }
-        }
-        if (isset(S::$url[$url_num]) and S::$url[$url_num]) {
-            $pagename = S::$url[$url_num];
-        } else {
-            $pagename = 'index';
+            S::$url = explode('/', 
+                preg_replace('<^/' . $folder . '>', '', S::$get['url']));
+            unset(S::$get['url']);
+            $pagename = S::$url[0];
         }
         
         if ($this->mainteCheck() and !$this->debug) {

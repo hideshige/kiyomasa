@@ -1,16 +1,16 @@
 <?php
 /**
- * ページングモジュール(Ajax用)
+ * ページングモジュール
  *
  * @author   Sawada Hideshige
  * @version  1.0.4.1
- * @package  device
- * 
+ * @package  device/equipment
+ *
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Equipment;
 
-class PagingAjax
+class Paging
 {
     /**
      * ページング処理
@@ -29,7 +29,7 @@ class PagingAjax
         int $disp_num = 20
     ): array {
         if (!$disp_num) {
-           $disp_num = 20;
+            $disp_num = 20;
         }
 
         $page_arr = [];
@@ -40,7 +40,7 @@ class PagingAjax
             throw new UserException('ページがありません');
         }
 
-        $page_arr['page'] = $page_arr['num'] < $page 
+        $page_arr['page'] = $page_arr['num'] < $page
             ? $page_arr['num'] : $page;
 
         $page_arr['left'] = ($page_arr['page'] == 1 or !$counts)
@@ -93,24 +93,21 @@ class PagingAjax
     private static function pagingTag(array $page_arr, string $url): string
     {
         $paging_tag = '';
+
         if ($page_arr['num'] > 1) {
             //左矢印
             if ($page_arr['maxleft_flag']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', 1, false);">&lt;&lt;</li>',
+                    '<li class="arrowList off"><a href="%spage=1">&lt;&lt;</a></li>',
                     $url
                 );
-            } else {
-                $paging_tag .= '<li class="hover_off">&lt;&lt;</li>';
             }
             if ($page_arr['left']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&lt;</li>',
+                    '<li class="arrowList"><a href="%spage=%d">&lt;</a></li>',
                     $url,
                     $page_arr['left']
                 );
-            } else {
-                $paging_tag .= '<li class="hover_off">&lt;</li>';
             }
 
             //ページリングを10個に絞り込み、現在のページを中央に置く
@@ -133,9 +130,9 @@ class PagingAjax
             //ページリンク
             $p = $start_page;
             for ($i = 1; $i <= $link_count; $i ++) {
-                $aclass = ($p == $page_arr['page']) ? ' page_on' : '';
+                $aclass = ($p == $page_arr['page']) ? ' class="on"' : '';
                 $paging_tag .= sprintf(
-                    '<li class="hover_on%s" onclick="loadList(\'%s\', %d, false);">%s</li>',
+                    '<li%s><a href="%spage=%d">%s</a></li>',
                     $aclass,
                     $url,
                     $p,
@@ -147,27 +144,23 @@ class PagingAjax
             //右矢印
             if ($page_arr['right']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&gt;</li>',
+                    '<li class="arrowList"><a href="%spage=%d">&gt;</a></li>',
                     $url,
                     $page_arr['right']
                 );
-            } else {
-                $paging_tag .= '<li class="hover_off">&gt;</li>';
             }
             if ($page_arr['maxright_flag']) {
                 $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&gt;&gt;</li>',
+                    '<li class="arrowList"><a href="%spage=%d">&gt;&gt;</a></li>',
                     $url,
                     $page_arr['num']
                 );
-            } else {
-                $paging_tag .= '<li class="hover_off">&gt;&gt;</li>';
             }
         }
 
         if ($paging_tag) {
             $paging_tag = sprintf(
-                '<ul class="paging_list noprint">%s</ul>',
+                '<ul class="pagingList">%s</ul>',
                 $paging_tag
             );
         }

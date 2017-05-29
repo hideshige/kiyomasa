@@ -14,7 +14,7 @@ use Yourname\Yourproject\Extension as E;
 
 class Mainte implements D\HtmlProp
 {
-    public $tpl = ['header', 'mainte', 'footer'];
+    public $tpl = ['part/header', 'mainte', 'part/footer'];
 
     public function logic(): bool
     {

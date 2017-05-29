@@ -4,7 +4,7 @@
  *
  * @author   Sawada Hideshige
  * @version  1.3.5.0
- * @package  device
+ * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
  $params = array(
@@ -97,7 +97,7 @@ if (isset(S::$post['post_flag'])) {
  *
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Equipment;
 
 class Form
 {

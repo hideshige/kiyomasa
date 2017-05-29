@@ -1,3 +1,3 @@
 OK
 
-<p><a href="/hello_world">デモページ</a></p>
+<p><a href="/content/hello_world">デモページ</a></p>

@@ -4,12 +4,12 @@
  *
  * @author   Sawada Hideshige
  * @version  1.0.1.0
- * @package  device
+ * @package  device/equipment
  * 
  * 
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Equipment;
 
 class Openssl
 {

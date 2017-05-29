@@ -4,11 +4,11 @@
  *
  * @author   Sawada Hideshige
  * @version  1.1.4.2
- * @package  device
+ * @package  device/equipment
  * 
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Equipment;
 
 class Image
 {
