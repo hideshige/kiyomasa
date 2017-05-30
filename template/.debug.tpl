@@ -230,7 +230,7 @@
     </div>
 
     <div id="fw_debug_include_html">    
-    <!-- ELEMENT .debug_include.tpl -->
+    <!-- ELEMENT element/.debug_include.tpl -->
     </div>
     <div id="fw_debug_include_ajax">
     </div>

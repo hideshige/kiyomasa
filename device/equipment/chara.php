@@ -67,13 +67,12 @@ class Chara
     public static function hDecode(string $word): string
     {
         $word2 = htmlspecialchars_decode($word, ENT_QUOTES);
-        $res = $word2;
         global $g_change_chara;
         if ($g_change_chara) {
             foreach ($g_change_chara as $ck => $cv) {
-                $res = str_replace($ck, $cv, $word2);
+                $word2 = str_replace($ck, $cv, $word2);
             }
         }
-        return $res;
+        return $word2;
     }
 }

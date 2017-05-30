@@ -128,9 +128,9 @@ class DbModule
     
     /**
      * 抽出されたデータをデバッグに表示
-     * @param array|bool $rows
+     * @param array $rows
      */
-    function dbSelectDump($rows): void
+    function dbSelectDump(array $rows): void
     {
         if ($rows) {
             $this->disp_sql .= '═══ BEGIN ROW ═══';

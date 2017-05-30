@@ -12,10 +12,10 @@
  * として指定した場合、<!-- BEGEIN *** -->～<!-- END *** --->を無視して
  * テンプレートの{???}に$txtが置き換えられる。
  *
- * <!-- ELEMENT *** -->にはelementフォルダの部分テンプレートが挿入される。
+ * <!-- ELEMENT *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.3.0
+ * @version  1.1.4.0
  * @package  device
  * 
  */
@@ -35,7 +35,7 @@ class View
         array $disp
     ): string {
         try {
-            $content = self::open($tpl, false);
+            $content = self::open($tpl);
 
             //エレメントの反映
             $content = self::elementMatch($content);
@@ -67,12 +67,13 @@ class View
     private static function elementMatch(string $content): string
     {
         //部分テンプレートの挿入
+        $element_match = [];
         preg_match_all('/<!-- ELEMENT (.*?) -->/', $content, $element_match);
 
         if ($element_match[1]) {
             $element_match[1] = array_unique($element_match[1]);
             foreach ($element_match[1] as $ek => $element_name) {
-                $element = self::open($element_name, true);
+                $element = self::open($element_name);
                 $element = str_replace("\n", '=br=', $element);
                 $content = str_replace(
                     $element_match[0][$ek],
@@ -94,6 +95,7 @@ class View
      */
     private static function match($disp, string $content): string
     {
+        $match = [];
         preg_match_all('/<!-- BEGIN (.*?) -->/', $content, $match);
 
         foreach ($match[1] as $name) {
@@ -152,22 +154,19 @@ class View
     /**
      * テンプレートの読み込み
      * @param string $tpl テンプレートファイル名
-     * @param bool $elm 部分テンプレートか否か
      * @return string 読み込んだコンテンツ
      * @throws \Error
      */
     private static function open(
-        string $tpl,
-        bool $elm
+        string $tpl
     ): string {
         $content = '';
         $add = preg_match('<\.>', $tpl) ? '' : '.tpl';
-        $element = $elm ? 'element/' : '';
         $tpl_folder = (MOBILE_FLAG and !isset($_SESSION['mobile_pc_flag']))
             ? 'template_mobile/' : 'template/';
-        $fname = SERVER_PATH . $tpl_folder . $element . $tpl . $add;
+        $fname = SERVER_PATH . $tpl_folder . $tpl . $add;
         if ($tpl_folder == 'template_mobile/' and !file_exists($fname)) {
-              $fname = SERVER_PATH . 'template/' . $element . $tpl . $add;
+              $fname = SERVER_PATH . 'template/' . $tpl . $add;
         }
         if (!file_exists($fname)) {
             throw new \Error('No Template ' . $fname);

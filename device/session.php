@@ -46,7 +46,7 @@ class Session
         ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
         ini_set('session.cookie_httponly', 1);
         session_save_path(SERVER_PATH . 'session');
-        session_name(PROJECT_PREFIX . 'login');
+        session_name(PROJECT_PREFIX . 'login_sesid');
         session_set_cookie_params(COOKIE_LIFETIME, '/', '', false, true);
         session_start();
     }

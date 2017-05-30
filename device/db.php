@@ -380,16 +380,16 @@ class Db extends DbModule
      * @param array $param 結合するパラメータ
      * @param string $statement_id プリペアドステートメントID
      * @param bool $class_flag クラスを取得する場合TRUE
-     * @return array|bool
+     * @return array
      */
     public function bindSelect(
         array $param = [],
         string $statement_id = 'stmt',
         bool $class_flag = false
-    ) {
+    ): array {
         try {
             $count = $this->bind($param, $statement_id);
-            $rows = false;
+            $rows = [];
             if ($count and $class_flag) {
                 $this->stmt[$statement_id]->setFetchMode(
                     \PDO::FETCH_CLASS,
@@ -400,6 +400,9 @@ class Db extends DbModule
                     \PDO::FETCH_ASSOC
                 );
                 $rows = $this->stmt[$statement_id]->fetchAll();
+            }
+            if ($rows === false) {
+                throw new \Error('Fetch Error');
             }
             if ($this->debug) {
                 $this->dbSelectDump($rows);
