@@ -1,14 +1,14 @@
 <?php
 /**
- * データベース接続モジュール
+ * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
- * @package  device
+ * @version  1.0.2.0
+ * @package  device/db
  *
  */
 
-namespace Php\Framework\Device;
+namespace Php\Framework\Device\Db;
 
 class DbModule
 {
@@ -45,24 +45,14 @@ class DbModule
     ): bool {
         try {
             $res = true;
-            $dsn = sprintf(
-                '%s:host=%s;dbname=%s',
-                $db_soft,
-                $db_server,
-                $db_name
-            );
-            $this->connect = new \PDO (
-                $dsn, 
-                $db_user, 
-                $db_password, 
-                [\PDO::ATTR_PERSISTENT => false, 
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
-            );
+            $dsn = sprintf('%s:host=%s;dbname=%s',
+                $db_soft, $db_server, $db_name);
+            $this->connect = new \PDO ($dsn, $db_user, $db_password,
+                [\PDO::ATTR_PERSISTENT => false,
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->query(sprintf("SET NAMES '%s'", DEFAULT_CHARSET));
-            $query = $this->query(
-                "SET sql_mode = 'STRICT_TRANS_TABLES, NO_ZERO_IN_DATE, "
-                . "NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'"
-            );
+            $query = $this->query("SET sql_mode = 'STRICT_TRANS_TABLES,"
+                . " NO_ZERO_IN_DATE, NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'");
             if (!$query) {
                 throw new \Error('SQL MODE ERROR');
             }
@@ -149,6 +139,116 @@ class DbModule
                 }
             }
             $this->disp_sql .= '═══ END ROW ═══';
+        }
+    }
+
+    /**
+     * 実行
+     * @global int $g_counter
+     * @param string $sql 実行するSQL文
+     * @param string $dev_sql 画面表示用・ログ用SQL文(バイナリをテキストに置き換えたもの)
+     * @param string $statement_id ステートメントID
+     * @return object|bool
+     */
+    public function query(
+        string $sql = null,
+        string $dev_sql = null,
+        string $statement_id = 'stmt'
+    ) {
+        try {
+            if ($sql) {
+                $this->sql = $sql;
+            }
+
+            $this->before();
+            $this->stmt[$statement_id] = $this->connect->query($this->sql);
+            $qt = $this->after();
+
+            // バイナリなど表示用・ログ用SQL文がある場合には書き換え
+            if ($dev_sql) {
+                $this->sql = $dev_sql;
+            }
+
+            $this->queryDebug($qt);
+            return $this->stmt[$statement_id];
+        } catch (\PDOException $e) {
+            $this->dbLog($e->getMessage());
+        }
+    }
+    
+    /**
+     * クエリの内容をデバッグに表示
+     * @global int $g_counter
+     * @param float $qt
+     * @param string $statement_id
+     */
+    private function queryDebug(float $qt, string $statement_id = 'stmt')
+    {
+        if ($this->debug) {
+            // 実行したSQL文と実行時間、変更行数
+            global $g_counter;
+            $this->disp_sql .= sprintf(
+                "{{COUNTER %d}}%s; {{TIME}} (%s秒) [行数 %d]\n",
+                $g_counter, $this->sql, $qt,
+                $this->stmt[$statement_id]->rowCount());
+            $g_counter ++;
+        }
+    }
+    
+    /**
+     * テーブル排他ロック
+     * （ロック中のテーブルは別の人は更新できない）
+     * @params string $tables ロックするテーブル（カンマ区切り）
+     */
+    public function lock(string $tables): void
+    {
+        // トランザクション使用中は実行できない。
+        if ($this->transaction_flag) {
+            throw new \Error('LOCK ERROR');
+        }
+
+        $this->lock_flag = true;
+        $this->query(
+            sprintf(
+                'LOCK TABLES %s WRITE',
+                preg_replace('/,/', ' WRITE,', $tables)
+            )
+        );
+    }
+
+    /**
+     * テーブル排他ロック解除
+     */
+    public function unlock(): void
+    {
+        if ($this->lock_flag) {
+            $this->lock_flag = false;
+            $this->query('UNLOCK TABLES');
+        }
+    }
+    
+    /**
+     * ルーチンの呼び出し
+     * @param string $name ルーチンの名前
+     * @param mixed $param パラメータ
+     * @param string $statement_id ステートメントID
+     * @return bool
+     */
+    public function call(
+        string $name,
+        array $param,
+        string $statement_id = 'stmt'
+    ): bool {
+        try {
+            $params = implode(', ', $param);
+            $res = $this->query(
+                sprintf('CALL %s(%s)', $name, $params),
+                null,
+                $statement_id
+            );
+            return $res;
+        } catch (\PDOException $e) {
+            $this->dbLog($e->getMessage());
         }
     }
 }

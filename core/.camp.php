@@ -14,7 +14,7 @@
  *
  */
 
-use Php\Framework\Device\Db;
+use Php\Framework\Device\Db\DbCrud;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
 
@@ -38,7 +38,7 @@ class Camp
                 exit;
             }
             Log::$batch = 'batch/';
-            S::$dbm = new Db();
+            S::$dbm = new DbCrud();
             $res_dbm = S::$dbm->connect(
                 DB_MASTER_SERVER,
                 DB_MASTER_USER,
@@ -48,7 +48,7 @@ class Camp
             if (!$res_dbm) {
                 throw new \Error('DB_MASTER Connect Error');
             }
-            S::$dbs = new Db();
+            S::$dbs = new DbCrud();
             $res_dbs = S::$dbs->connect(
                 DB_SLAVE_SERVER,
                 DB_SLAVE_USER,

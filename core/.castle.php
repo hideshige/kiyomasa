@@ -11,7 +11,7 @@
  * 
  */
 
-use Php\Framework\Device\Db;
+use Php\Framework\Device\Db\DbCrud;
 use Php\Framework\Device\Mem;
 use Php\Framework\Device\Session;
 use Php\Framework\Device\Turret;
@@ -103,14 +103,14 @@ class Castle
      */
     private function dbConnect(): void
     {
-        S::$dbm = new Db();
+        S::$dbm = new DbCrud();
         $res_dbm = S::$dbm->connect(
             DB_MASTER_SERVER, DB_MASTER_USER, DB_MASTER_PASSWORD, DB_MASTER_NAME
         );
         if (!$res_dbm) {
             throw new \Error('DB_MASTER Connect Error');
         }
-        S::$dbs = new Db();
+        S::$dbs = new DbCrud();
         $res_dbs = S::$dbs->connect(
             DB_SLAVE_SERVER, DB_SLAVE_USER, DB_SLAVE_PASSWORD, DB_SLAVE_NAME
         );
@@ -133,11 +133,12 @@ class Castle
     {
         // URLの指定がなければトップページを指定
         $folder = '';
+        $pagename = '';
         if (isset(S::$get['url'])) {
             global $g_folder;
             if ($g_folder) {
                 foreach ($g_folder as $v) {
-                    if (preg_match('</' . $v . '>', S::$get['url'])) {
+                    if (preg_match('<^/' . $v . '>', S::$get['url'])) {
                         $folder = $v . '/';
                         break;
                     }
