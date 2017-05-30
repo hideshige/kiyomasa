@@ -251,4 +251,36 @@ class DbModule
             $this->dbLog($e->getMessage());
         }
     }
+    
+    /**
+     * 時刻のカラムに自動で登録
+     * @param string $type
+     * @param array $params
+     * @param string $statement_id
+     */
+    protected function addTimeColumn(
+        string $type,
+        array &$params,
+        string $statement_id,
+        bool $bind_flag = true
+    ): void {
+        if ($type === 'insert' and
+            AUTO_UPDATE_TIME and !isset($params['created_at'])) {
+            $params['created_at'] = TIMESTAMP;
+        }
+        if (($type === 'insert' or $type === 'update') and
+            AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
+            $this->column_count[$statement_id] = count($params);
+            if (!$bind_flag or $type === 'insert') {
+                $params['updated_at'] = TIMESTAMP;
+            } else {
+                array_splice(
+                    $params,
+                    $this->column_count[$statement_id],
+                    0,
+                    [TIMESTAMP]
+                );
+            }
+        }
+    }
 }

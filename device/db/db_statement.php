@@ -82,27 +82,16 @@ class DbStatement extends DbModule
 
             $i = 1;
             $u = $this->bind_params = [];
-            if (is_array ($params)) {
-                if (AUTO_UPDATE_TIME and !isset($params['created_at'])
-                    and $this->do[$statement_id] === 'insert') {
-                    $params['created_at'] = TIMESTAMP;
-                }
-                if (AUTO_UPDATE_TIME and !isset($params['updated_at'])
-                    and ($this->do[$statement_id] === 'insert'
-                    or $this->do[$statement_id] === 'update')) {
-                    array_splice(
-                        $params,
-                        $this->column_count[$statement_id],
-                        0,
-                        [TIMESTAMP]
-                    );
-                }
+            if (is_array($params)) {
+                $this->addTimeColumn(
+                    $this->do[$statement_id], $params, $statement_id, true);
 
                 foreach ($params as $k => $v) {
                     if ($k === 0) {
                         // array_spliceで入れたupdated_atはキーが0になるためキー名を変える
                         $k = 'updated_at';
                     }
+                    
                     $d_v = (strlen($v) > 5000) ? '[longtext or binary]' : $v;
 
                     $name = $this->name[$statement_id] ? $k : $i;
@@ -169,10 +158,11 @@ class DbStatement extends DbModule
 
     /**
      * ステートメントの結合と抽出
+     * （これは全件を一挙にフェッチするため負荷に注意する）
      * @param array $param 結合するパラメータ
      * @param string $statement_id プリペアドステートメントID
-     * @param bool $class_flag クラスを取得する場合TRUE
-     * @return array
+     * @param bool $class_flag クラスオブジェクトとして取得する場合TRUE
+     * @return array|stdClass
      */
     public function bindSelect(
         array $param = [],
@@ -181,14 +171,14 @@ class DbStatement extends DbModule
     ): array {
         try {
             $count = $this->bind($param, $statement_id);
-            $rows = [];
             if ($count and $class_flag) {
                 $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_CLASS,
                     'stdClass');
+                $rows = $this->stmt[$statement_id]->fetchObject('stdClass');
             } else if ($count) {
                 $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_ASSOC);
-                $rows = $this->stmt[$statement_id]->fetchAll();
             }
+            $rows = $this->stmt[$statement_id]->fetchAll();
             if ($rows === false) {
                 throw new \Error('Fetch Error');
             }

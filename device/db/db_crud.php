@@ -156,26 +156,6 @@ class DbCrud extends DbStatement
     }
     
     /**
-     * 時刻のカラムに自動で登録
-     * @param array $params
-     * @param string $statement_id
-     */
-    private function addTimeColumn(
-        string $type,
-        array &$params,
-        string $statement_id
-    ): void {
-        if ($type === 'insert' and
-            AUTO_UPDATE_TIME and !isset($params['created_at'])) {
-            $params['created_at'] = '';
-        }
-        if (AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
-            $this->column_count[$statement_id] = count($params);
-            $params['updated_at'] = '';
-        }
-    }
-    
-    /**
      * トランザクションの開始
      * @global int $g_counter
      * @return bool
