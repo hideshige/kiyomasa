@@ -228,7 +228,7 @@ class DbStatement extends DbModule
      * 1行フェッチ
      * @param string $class_name クラスオブジェクトとして取得する場合指定する
      * @param string $statement_id プリペアドステートメントID
-     * @return object|array
+     * @return object|array|bool
      */
     public function fetch(
         string $class_name = '',

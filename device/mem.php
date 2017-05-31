@@ -90,7 +90,7 @@ class Mem
             $var = false;
         }
         if ($var === false) {
-            $this->dbSelect($key);
+            $var = $this->dbSelect($key);
         }
         if ($this->debug and $this->active and $var !== false) {
             $bt = debug_backtrace();
@@ -127,7 +127,7 @@ class Mem
     /**
      * データベースから抽出
      * @param string $key
-     * @return string|bool
+     * @return mixed
      */
     private function dbSelect(string $key)
     {
@@ -152,11 +152,11 @@ class Mem
     /**
      * データベースに保存する
      * @param string $key キー
-     * @param string|array $var 値
+     * @param mixed $var 値
      * @param int $expire 有効期限
      * @return int|bool
      */
-    private function dbSet(string $key, string $var, int $expire)
+    private function dbSet(string $key, $var, int $expire)
     {
         $temp_flag = $expire ? 1 : 0;
         $params = [];
