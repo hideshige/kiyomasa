@@ -3,7 +3,7 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.4.1
+ * @version  1.4.5.0
  * @package  device/db
  *
  */
@@ -43,7 +43,7 @@ class DbStatement extends DbModule
 
             return $this->stmt[$statement_id];
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('prepare', $e->getMessage());
         }
     }
     
@@ -72,99 +72,133 @@ class DbStatement extends DbModule
         string $statement_id = 'stmt'
     ): int {
         try {
-            global $g_counter;
-            
             $this->before();
             
             if (!isset($this->name[$statement_id])) {
                 $this->name[$statement_id] = true;
             }
 
-            $i = 1;
-            $u = $this->bind_params = [];
-            if (is_array($params)) {
-                $this->addTimeColumn(
-                    $this->do[$statement_id], $params, $statement_id, true);
-
-                foreach ($params as $k => $v) {
-                    if ($k === 0) {
-                        // array_spliceで入れたupdated_atはキーが0になるためキー名を変える
-                        $k = 'updated_at';
-                    }
-                    
-                    $d_v = (strlen($v) > 5000) ? '[longtext or binary]' : $v;
-
-                    $name = $this->name[$statement_id] ? $k : $i;
-                    if ($this->debug) {
-                        if ($d_v === null) {
-                            $this->disp_sql .= sprintf(
-                                "{{COUNTER %d}}SET {{AT}}@%s = {{NULL}}NULL;\n",
-                                $g_counter,
-                                $name
-                            );
-                        } else if (is_numeric($d_v)) {
-                            $this->disp_sql .= sprintf(
-                                "{{COUNTER %d}}SET {{AT}}@%s = {{INT}}%d;\n",
-                                $g_counter,
-                                $name,
-                                $d_v
-                            );
-                        } else {
-                            $this->disp_sql .= sprintf(
-                                "{{COUNTER %d}}SET {{AT}}@%s = {{STRING}}'%s';\n",
-                                $g_counter,
-                                $name,
-                                $d_v
-                            );
-                        }
-                        $g_counter ++;
-                    }
-                    $this->bind_params[$name] = $v;
-
-                    $this->stmt[$statement_id]->bindValue(
-                        $name,
-                        $v,
-                        is_int($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR
-                    );
-                    $u[] = sprintf('{{AT}}@%s', $name);
-                    $i ++;
-                }
-            }
+            $this->bindValueSet($params, $statement_id);
 
             $this->stmt[$statement_id]->execute();
-            $qt = $this->after($this->bind_params);
-            $this->bind_params = [];
             $count = $this->stmt[$statement_id]->rowCount();
-
-            if ($this->debug) {
-                //デバッグ表示
-                $using = count($u) ? sprintf('USING %s', implode(', ', $u)) : '';
-                $this->disp_sql .= sprintf(
-                    "{{COUNTER %d}}EXECUTE {{STATEMENT}}%s %s;"
-                    . " {{TIME}} (%s秒) [行数 %d]\n",
-                    $g_counter,
-                    $statement_id,
-                    $using,
-                    $qt,
-                    $count
-                );
-                $g_counter ++;
-            }
+            $this->executeDebug($statement_id, $count);
             return $count;
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('bind', $e->getMessage());
         }
     }
-
+    
     /**
-     * ステートメントの結合と抽出
+     * バインドの値をセット
+     * @param array $params
+     * @param string $statement_id
+     */
+    private function bindValueSet(array $params, string $statement_id): void
+    {
+        $this->bind_params = [];
+        $this->addTimeColumn(
+            $this->do[$statement_id], $params, $statement_id, true);
+        
+        $i = 1;
+        foreach ($params as $k => $v) {
+            if ($k === 0) {
+                // array_spliceで入れた0の配列キーをupdated_atに変える
+                $k = 'updated_at';
+            }
+
+            $name = $this->name[$statement_id] ? $k : $i;
+            $this->bind_params[$name] = $v;
+            $this->bindDebug($name, $v);
+
+            $this->stmt[$statement_id]->bindValue($name, $v,
+                is_int($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
+            $i ++;
+        }
+    }
+    
+    /**
+     * バインドのデバッグ表示
+     * @global int $g_counter
+     * @param string|int $name
+     * @param string|int|null $value
+     */
+    private function bindDebug($name, $value): void
+    {
+        if ($this->debug) {
+            $d_v = (strlen($value) > 5000) ? '[longtext or binary]' : $value;
+            global $g_counter;
+            if ($d_v === null) {
+                $this->disp_sql .= sprintf(
+                    "{{COUNTER %d}}SET {{AT}}@%s = {{NULL}}NULL;\n",
+                    $g_counter, $name);
+            } else if (is_numeric($d_v)) {
+                $this->disp_sql .= sprintf(
+                    "{{COUNTER %d}}SET {{AT}}@%s = {{INT}}%d;\n",
+                    $g_counter, $name, $d_v);
+            } else {
+                $this->disp_sql .= sprintf(
+                    "{{COUNTER %d}}SET {{AT}}@%s = {{STRING}}'%s';\n",
+                    $g_counter, $name, $d_v);
+            }
+            $g_counter ++;
+        }
+    }
+    
+    /**
+     * 処理実行のデバッグ表示
+     * @global int $g_counter
+     * @param string $statement_id
+     * @param int $count
+     */
+    private function executeDebug(
+        string $statement_id,
+        int $count
+    ): void {
+        if ($this->debug) {
+            global $g_counter;
+            $this->disp_sql .= sprintf(
+                "{{COUNTER %d}}EXECUTE {{STATEMENT}}%s %s;"
+                . " {{TIME}} (%s秒) [行数 %d]\n",
+                $g_counter,
+                $statement_id,
+                $this->debugUsing(),
+                $this->after(),
+                $count
+            );
+            $g_counter ++;
+        }
+    }
+    
+    /**
+     * デバッグのUSING表示用
+     * @return string
+     */
+    private function debugUsing(): string
+    {
+        $using = '';
+        if (count($this->bind_params)) {
+            $using .= 'USING ';
+            $using_arr = [];
+            $bind_arr = array_keys($this->bind_params);
+            foreach ($bind_arr as $v) {
+                $using_arr[] = '{{AT}}@' . $v;
+            }
+            $using .= implode(', ', $using_arr);
+            $this->bind_params = [];
+        }
+        return $using;
+    }
+    
+    /**
+     * ステートメントの結合と一括抽出
      * （これは全件を一挙にフェッチするため負荷に注意する）
      * @param array $param 結合するパラメータ
      * @param string $statement_id プリペアドステートメントID
-     * @param bool $class_flag クラスオブジェクトとして取得する場合TRUE
-     * @return array|stdClass
+     * @param bool $class_flag 配列の中にクラスオブジェクトを入れる場合TRUE
+     * @return array
      */
-    public function bindSelect(
+    public function bindFetchAll(
         array $param = [],
         string $statement_id = 'stmt',
         bool $class_flag = false
@@ -172,9 +206,8 @@ class DbStatement extends DbModule
         try {
             $count = $this->bind($param, $statement_id);
             if ($count and $class_flag) {
-                $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_CLASS,
-                    'stdClass');
-                $rows = $this->stmt[$statement_id]->fetchObject('stdClass');
+                $this->stmt[$statement_id]->setFetchMode(
+                    \PDO::FETCH_CLASS, 'stdClass');
             } else if ($count) {
                 $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_ASSOC);
             }
@@ -187,10 +220,32 @@ class DbStatement extends DbModule
             }
             return $rows;
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('bindFetchAll', $e->getMessage());
         }
     }
-
+    
+    /**
+     * 1行フェッチ
+     * @param string $class_name クラスオブジェクトとして取得する場合指定する
+     * @param string $statement_id プリペアドステートメントID
+     * @return object|array
+     */
+    public function fetch(
+        string $class_name = '',
+        string $statement_id = 'stmt'
+    ) {
+        try {
+            if ($class_name) {
+                $rows = $this->stmt[$statement_id]->fetchObject($class_name);
+            } else {
+                $rows = $this->stmt[$statement_id]->fetch(\PDO::FETCH_ASSOC);
+            }
+            return $rows;
+        } catch (\PDOException $e) {
+            $this->dbLog('fetch', $e->getMessage());
+        }
+    }
+    
     /**
      * プリペアドステートメントの解放
      * @global int $g_counter
@@ -210,16 +265,14 @@ class DbStatement extends DbModule
                 global $g_counter;
                 $this->disp_sql .= sprintf(
                     "{{COUNTER %d}}DEALLOCATE PREPARE {{STATEMENT}}%s;\n",
-                    $g_counter,
-                    $statement_id
-                );
+                    $g_counter, $statement_id);
                 $g_counter ++;
             }
             
             unset($this->do[$statement_id]);
             unset($this->name[$statement_id]);
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('stmtClose', $e->getMessage());
         }
     }
 }

@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.2
+ * @version  1.0.8.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -54,7 +54,7 @@ class Mem
     /**
      * memcached に保存する
      * @param string $key キー
-     * @param string or array $var　値
+     * @param string|array $var 値
      * @param int $expire 有効期限
      * @return int|bool
      */
@@ -63,12 +63,8 @@ class Mem
         if ($this->debug and $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s(%s)", $bt[0]['file'], $bt[0]['line']);
-            $this->disp_mem .= sprintf(
-                "■SET %s\n[K]%s [V]%s\n",
-                $dump,
-                $key,
-                print_r($var, true)
-            );
+            $this->disp_mem .= sprintf("■SET %s\n[K]%s [V]%s\n",
+                $dump, $key, print_r($var, true));
         }
         if ($this->active) {
             $res = $this->memcached_1->set($key, $var, $expire);
@@ -76,16 +72,7 @@ class Mem
 
         // memcachedが有効でない場合か有効期限の指定がない場合DBに値を保存
         if (!$this->active or !$expire) {
-            $temp_flag = $expire ? 1 : 0;
-            $params = [];
-            $params['memcached_key'] = $key;
-            $params['memcached_value'] = serialize($var);
-            $params['temp_flag'] = $temp_flag;
-            $params['expire'] = $expire
-                ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
-            $params['created_at'] = TIMESTAMP;
-            S::$dbm->insert('memcached', $params, true, 'memcached');
-            $res = S::$dbm->bind($params, 'memcached');
+            $res = $this->dbSet($key, $var, $expire);
         }
         return $res;
     }
@@ -103,34 +90,17 @@ class Mem
             $var = false;
         }
         if ($var === false) {
-            //データベースから値を取得
-            $param = ['memcached_key' => $key];
-            $where = 'WHERE memcached_key = :memcached_key';
-            S::$dbs->select('memcached', '*', $where, 'memcached');
-            $res = S::$dbs->bindSelect($param, 'memcached');
-            if (!(!$res or ($res[0]['temp_flag'] and 
-                strtotime($res[0]['expire']) < time()))) {
-                $var = unserialize($res[0]['memcached_value']);
-                $expire = $res[0]['temp_flag'] ? time() + COOKIE_LIFETIME : 0;
-                if ($this->active) {
-                    //データベースの値をmemcachedに保存
-                    $this->memcached_1->set($key, $var, false, $expire);
-                }
-            }
+            $this->dbSelect($key);
         }
         if ($this->debug and $this->active and $var !== false) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
-            $this->disp_mem .= sprintf(
-                "■GET %s\n[K]%s [V]%s\n",
-                $dump,
-                $key,
-                print_r($var, true)
-            );
+            $this->disp_mem .= sprintf("■GET %s\n[K]%s [V]%s\n",
+                $dump, $key, print_r($var, true));
         }
         return $var;
     }
-
+    
     /**
      * memcach から値を削除する
      * @param string $key キー
@@ -143,10 +113,7 @@ class Mem
             $check = $this->memcached_1->delete($key);
         }
         if ($check) {
-            $param = array ($key);
-            $where = 'WHERE memcached_key = ?';
-            S::$dbm->delete('memcached', $where, 'memcached');
-            S::$dbm->bind($param, 'memcached');
+            $this->dbDelete($key);
         }
 
         if ($check and $this->debug and $this->active) {
@@ -155,5 +122,64 @@ class Mem
             $this->disp_mem .= sprintf("■DELETE %s\n[K]%s\n", $dump, $key);
         }
         return $check;
+    }
+    
+    /**
+     * データベースから抽出
+     * @param string $key
+     * @return string|bool
+     */
+    private function dbSelect(string $key)
+    {
+        $var = false;
+        $param = ['memcached_key' => $key];
+        $where = 'WHERE memcached_key = :memcached_key';
+        S::$dbs->select('memcached', '*', $where, 'memcached');
+        S::$dbs->bind($param, 'memcached');
+        $res = S::$dbs->fetch('stdClass', 'memcached');
+        if (!(!$res or ($res->temp_flag and 
+            strtotime($res->expire) < time()))) {
+            $var = unserialize($res->memcached_value);
+            $expire = $res->temp_flag ? time() + COOKIE_LIFETIME : 0;
+            if ($this->active) {
+                //データベースの値をmemcachedに保存
+                $this->memcached_1->set($key, $var, false, $expire);
+            }
+        }
+        return $var;
+    }
+
+    /**
+     * データベースに保存する
+     * @param string $key キー
+     * @param string|array $var 値
+     * @param int $expire 有効期限
+     * @return int|bool
+     */
+    private function dbSet(string $key, string $var, int $expire)
+    {
+        $temp_flag = $expire ? 1 : 0;
+        $params = [];
+        $params['memcached_key'] = $key;
+        $params['memcached_value'] = serialize($var);
+        $params['temp_flag'] = $temp_flag;
+        $params['expire'] = $expire
+            ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
+        $params['created_at'] = TIMESTAMP;
+        S::$dbm->insert('memcached', $params, true, 'memcached');
+        $res = S::$dbm->bind($params, 'memcached');
+        return $res;
+    }
+    
+    /**
+     * データベースから削除
+     * @param string $key
+     */
+    private function dbDelete(string $key): void
+    {
+        $param = [$key];
+        $where = 'WHERE memcached_key = ?';
+        S::$dbm->delete('memcached', $where, 'memcached');
+        S::$dbm->bind($param, 'memcached');
     }
 }

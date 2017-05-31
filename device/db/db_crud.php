@@ -32,7 +32,7 @@ class DbCrud extends DbStatement
         $res = false;
 
         if ($params) {
-            $this->addTimeColumn('insert', $params, $statement_id);
+            $this->addTimeColumn('insert', $params, $statement_id, false);
             $params_keys = array_keys($params);
             foreach ($params_keys as $v) {
                 $params[$v] = ':' . $v;
@@ -94,7 +94,7 @@ class DbCrud extends DbStatement
         $this->name[$statement_id] = preg_match('/\?/', $where) ? false : true;
 
         if (is_array($params)) {
-            $this->addTimeColumn('update', $params, $statement_id);
+            $this->addTimeColumn('update', $params, $statement_id, false);
             $values = [];
             $i = 0;
             $params_keys = array_keys($params);
@@ -151,7 +151,7 @@ class DbCrud extends DbStatement
             }
             return $res;
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('getId', $e->getMessage());
         }
     }
     
@@ -176,7 +176,7 @@ class DbCrud extends DbStatement
             }
             return $res;
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('transaction', $e->getMessage());
         }
     }
 
@@ -200,7 +200,7 @@ class DbCrud extends DbStatement
             }
             return $res;
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('commit', $e->getMessage());
         }
     }
 
@@ -224,7 +224,7 @@ class DbCrud extends DbStatement
             }
             return $res;
         } catch (\PDOException $e) {
-            $this->dbLog($e->getMessage());
+            $this->dbLog('rollback', $e->getMessage());
         }
     }
 }

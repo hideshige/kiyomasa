@@ -12,6 +12,14 @@ namespace Yourname\Yourproject\Model;
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Extension as E;
 
+class Test
+{
+    public function show()
+    {
+        dump($this->session_id);
+    }
+}
+
 class HelloWorld extends E\BaseModel // クラス名はファイル名に合わせる
 {
     public $tpl = ['part/header', 'content/hello_world', 'part/footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可

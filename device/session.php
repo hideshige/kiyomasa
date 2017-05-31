@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.2
+ * @version  1.1.4.3
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -54,7 +54,7 @@ class Session
     /**
      * セッションIDの値を変えてCOOKIEを更新
      */
-    public static function sessionIdChange()
+    public static function sessionIdChange(): void
     {
         session_regenerate_id();
     }
@@ -77,18 +77,32 @@ class Session
  */
 class sessionHandlerDb
 {
-
-    public function open($save_path, $session_name)
+    /**
+     * 開く
+     * @param string $save_path
+     * @param string $session_name
+     * @return bool
+     */
+    public function open(string $save_path, string $session_name): bool
     {
         return true;
     }
 
-    public function close()
+    /**
+     * 閉じる
+     * @return bool
+     */
+    public function close(): bool
     {
         return true;
     }
 
-    public function read($ses_id)
+    /**
+     * 読み込み
+     * @param string $ses_id
+     * @return string
+     */
+    public function read(string $ses_id): string
     {
         $read = '';
         $params = [];
@@ -101,14 +115,21 @@ class sessionHandlerDb
             . 'session_expires > :session_expires',
             'session'
         );
-        $res = S::$dbm->bindSelect($params, 'session');
+        S::$dbm->bind($params, 'session');
+        $res = S::$dbm->Fetch('stdClass', 'session');
         if ($res) {
-            $read = $res[0]['session_value'];
+            $read = $res->session_value;
         }
         return $read;
     }
 
-    public function write($ses_id, $data)
+    /**
+     * 書き込み
+     * @param string $ses_id
+     * @param string $data
+     * @return bool
+     */
+    public function write(string $ses_id, string $data): bool
     {
         $params = [];
         $params['session_id'] = $ses_id;
@@ -119,7 +140,12 @@ class sessionHandlerDb
         return true;
     }
 
-    public function destroy($ses_id)
+    /**
+     * 削除
+     * @param string $ses_id
+     * @return bool
+     */
+    public function destroy(string $ses_id): bool
     {
         $params = [];
         $params['session_id'] = $ses_id;
@@ -132,7 +158,12 @@ class sessionHandlerDb
         return true;
     }
 
-    public function gc($ses_time)
+    /**
+     * 有効期限が切れているものを一括削除
+     * @param int $ses_time
+     * @return bool
+     */
+    public function gc($ses_time): bool
     {
         $params = [];
         $params['session_expires'] = time();
@@ -151,17 +182,32 @@ class sessionHandlerDb
  */
 class sessionHandlerMem
 {
-    public function open($save_path, $session_name)
+    /**
+     * 開く
+     * @param string $save_path
+     * @param string $session_name
+     * @return bool
+     */
+    public function open(string $save_path, string $session_name): bool
     {
         return true;
     }
 
-    public function close()
+    /**
+     * 閉じる
+     * @return bool
+     */
+    public function close(): bool
     {
         return true;
     }
 
-    public function read($ses_id)
+    /**
+     * 読み込み
+     * @param string $ses_id
+     * @return string
+     */
+    public function read(string $ses_id): string
     {
         $res = S::$mem->get($ses_id);
         if (!$res) {
@@ -170,19 +216,35 @@ class sessionHandlerMem
         return $res;
     }
 
-    public function write($ses_id, $data)
+    /**
+     * 書き込み
+     * @param string $ses_id
+     * @param string $data
+     * @return bool
+     */
+    public function write(string $ses_id, string $data): bool
     {
         S::$mem->set($ses_id, $data, time() + COOKIE_LIFETIME);
         return true;
     }
 
-    public function destroy($ses_id)
+    /**
+     * 削除
+     * @param string $ses_id
+     * @return bool
+     */
+    public function destroy(string $ses_id): bool
     {
         S::$mem->delete($ses_id);
         return true;
     }
 
-    public function gc($ses_time)
+    /**
+     * 有効期限が切れているものを一括削除
+     * @param type $ses_time
+     * @return bool
+     */
+    public function gc($ses_time): bool
     {
         return true;
     }
