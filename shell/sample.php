@@ -16,7 +16,6 @@ class Sample extends E\BaseShell
 {
     public function execute(): void
     {
-        D\Log::$batch = 'batch/';
         global $argv;
 
         var_dump($argv);

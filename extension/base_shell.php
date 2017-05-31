@@ -27,6 +27,7 @@ abstract class BaseShell implements D\ShellProp
     {
         try {
             $check = true;
+            D\Log::$batch = 'batch/';
             $this->execute();
         } catch (\Error $e) {
             echo $e->getMessage();
