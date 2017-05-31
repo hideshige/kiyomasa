@@ -10,6 +10,8 @@
 
 namespace Yourname\Yourproject\Extension;
 
+use Php\Framework\Device as D;
+
 abstract class BaseShell implements D\ShellProp
 {
     /**

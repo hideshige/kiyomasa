@@ -14,7 +14,7 @@
  *
  */
 
-use Php\Framework\Device\Db\DbCrud;
+use Php\Framework\Device\Db\DbSet;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
 
@@ -38,52 +38,25 @@ class Camp
                 exit;
             }
             Log::$batch = 'batch/';
-            S::$dbm = new DbCrud();
-            $res_dbm = S::$dbm->connect(
-                DB_MASTER_SERVER,
-                DB_MASTER_USER,
-                DB_MASTER_PASSWORD,
-                DB_MASTER_NAME
-            );
-            if (!$res_dbm) {
-                throw new \Error('DB_MASTER Connect Error');
-            }
-            S::$dbs = new DbCrud();
-            $res_dbs = S::$dbs->connect(
-                DB_SLAVE_SERVER,
-                DB_SLAVE_USER,
-                DB_SLAVE_PASSWORD,
-                DB_SLAVE_NAME
-            );
-            if (!$res_dbs) {
-                Log::error('DB_SLAVE Connect Error ---> DB_MASTER Connect Change');
-                $res_dbs2 = S::$dbm->connect(
-                    DB_MASTER_SERVER,
-                    DB_MASTER_USER,
-                    DB_MASTER_PASSWORD,
-                    DB_MASTER_NAME
-                );
-                if (!$res_dbs2) {
-                    throw new \Error('DB_MASTER Connect Error');
-                }
-            }
-
-            S::$dbm->debug = $this->debug;
-            S::$dbs->debug = $this->debug;
+            
+            $this->debug = ENV <= 1 ? true : false;
+            
+            // データベースに接続
+            $db_set = new DbSet();
+            $db_set->dbConnect($this->debug);
             
             $this->exec($argv[1]);
 
             if ($this->debug) {
-                echo "DBS\n";
-                echo S::$dbs->disp_sql;
-                echo "DBM\n";
-                echo S::$dbm->disp_sql;
+                echo "<DBS>\n";
+                echo S::$dbs->sql . "\n";
+                echo "<DBM>\n";
+                echo S::$dbm->sql . "\n";
             }
         } catch (\Error $e) {
             Log::error($e->getMessage());
             echo "KIYOMASA ERROR\n";
             exit;
-        } finally {
         }
     }
 
@@ -98,7 +71,7 @@ class Camp
             $class_name = NAME_SPACE . '\Shell\\' . trim(
                 str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
             );
-
+            
             $model = new $class_name();
             $res = $model->logic();
             if ($res === false) {

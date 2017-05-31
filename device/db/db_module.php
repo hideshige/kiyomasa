@@ -19,7 +19,7 @@ class DbModule
     protected $column_count = []; // 更新するカラムの数
     protected $bind_params = []; // バインドする値（デバッグ表示およびログ用）
     protected $time; // ステートメント開始時間
-    protected $sql = ''; // 実行するSQL
+    public $sql = ''; // 実行するSQL
     public $debug; // デバッグフラグ
     public $disp_sql = ''; // デバッグ表示用に成型したSQL
     public $transaction_flag = false; // トランザクション実行中の場合TRUE
@@ -120,7 +120,7 @@ class DbModule
     {
         if ($rows and $this->debug) {
             $this->disp_sql .= '═══ BEGIN ROW ═══';
-            foreach ($rows as $row_k => $row) {
+            foreach ($rows as $row_k => $row_v) {
                 if ($row_k > 3) {
                     $this->disp_sql .= "═══ and more... ═══\n";
                     break;
@@ -128,12 +128,21 @@ class DbModule
                 if (count($rows) > 1) {
                     $this->disp_sql .= "═══ $row_k ═══\n";
                 }
-                foreach ($row as $k => $v) {
-                    $this->disp_sql .= sprintf("'%s' : %s\n", $k, 
-                        is_numeric($v) ? $v : "'" . $v . "'");
-                }
+                $this->dbSelectDumpDetail($row_v);
             }
             $this->disp_sql .= '═══ END ROW ═══';
+        }
+    }
+    
+    /**
+     * 抽出されたデータの詳細
+     * @param array|object $rows
+     */
+    protected function dbSelectDumpDetail($rows): void
+    {
+        foreach ($rows as $k => $v) {
+            $this->disp_sql .= sprintf("'%s' : %s\n", $k, 
+                is_numeric($v) ? $v : "'" . $v . "'");
         }
     }
 

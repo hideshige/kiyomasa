@@ -34,10 +34,7 @@ class DbStatement extends DbModule
             if ($this->debug) {
                 $this->disp_sql .= sprintf(
                     "{{COUNTER %d}}PREPARE {{STATEMENT}}%s FROM '%s';\n",
-                    $g_counter,
-                    $statement_id,
-                    $this->sql
-                );
+                    $g_counter, $statement_id, $this->sql);
                 $g_counter ++;
             }
 
@@ -80,7 +77,10 @@ class DbStatement extends DbModule
 
             $this->bindValueSet($params, $statement_id);
 
-            $this->stmt[$statement_id]->execute();
+            $res = $this->stmt[$statement_id]->execute();
+            if (!$res) {
+                throw new \Error('Bind Error');
+            }
             $count = $this->stmt[$statement_id]->rowCount();
             $this->executeDebug($statement_id, $count);
             return $count;
@@ -215,9 +215,7 @@ class DbStatement extends DbModule
             if ($rows === false) {
                 throw new \Error('Fetch Error');
             }
-            if ($this->debug) {
-                $this->dbSelectDump($rows);
-            }
+            $this->dbSelectDump($rows);
             return $rows;
         } catch (\PDOException $e) {
             $this->dbLog('bindFetchAll', $e->getMessage());
@@ -239,6 +237,13 @@ class DbStatement extends DbModule
                 $rows = $this->stmt[$statement_id]->fetchObject($class_name);
             } else {
                 $rows = $this->stmt[$statement_id]->fetch(\PDO::FETCH_ASSOC);
+            }
+            if ($rows and $this->debug) {
+                // デバッグ表示
+                $this->disp_sql .= '═══ BEGIN ROW ═══';
+                $this->dbSelectDumpDetail($rows);
+                $this->disp_sql .= "═════════\n";
+                $this->disp_sql .= '═══ END ROW ═══';
             }
             return $rows;
         } catch (\PDOException $e) {

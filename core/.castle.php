@@ -11,7 +11,7 @@
  * 
  */
 
-use Php\Framework\Device\Db\DbCrud;
+use Php\Framework\Device\Db\DbSet;
 use Php\Framework\Device\Mem;
 use Php\Framework\Device\Session;
 use Php\Framework\Device\Turret;
@@ -54,7 +54,8 @@ class Castle
             $this->debug = ENV <= 1 ? true : false;
             
             // データベースに接続
-            $this->dbConnect();
+            $db_set = new DbSet();
+            $db_set->dbConnect($this->debug);
             
             // memchached
             S::$mem = new Mem();
@@ -96,32 +97,6 @@ class Castle
             echo 'エラーになりました。 ' . TIMESTAMP;
         }
         exit;
-    }
-    
-    /**
-     * データベースの接続
-     */
-    private function dbConnect(): void
-    {
-        S::$dbm = new DbCrud();
-        $res_dbm = S::$dbm->connect(
-            DB_MASTER_SERVER, DB_MASTER_USER, DB_MASTER_PASSWORD, DB_MASTER_NAME
-        );
-        if (!$res_dbm) {
-            throw new \Error('DB_MASTER Connect Error');
-        }
-        S::$dbs = new DbCrud();
-        $res_dbs = S::$dbs->connect(
-            DB_SLAVE_SERVER, DB_SLAVE_USER, DB_SLAVE_PASSWORD, DB_SLAVE_NAME
-        );
-        if (!$res_dbs) {
-            Log::error(
-                'DB_SLAVE Connect Error ---> DB_MASTER Connect Change'
-            );
-            S::$dbs = S::$dbm;
-        }
-        S::$dbm->debug = $this->debug;
-        S::$dbs->debug = $this->debug;
     }
     
     /**
