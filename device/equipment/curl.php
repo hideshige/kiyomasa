@@ -1,9 +1,9 @@
 <?php
 /**
- * クライアントURLモジュール
+ * cURL(カール)　モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.1
+ * @version  1.0.5.2
  * @package  device/equipment
  */
 
@@ -28,25 +28,7 @@ class Curl
         array $headers = [],
         bool $disp_headers = false
     ): array {
-        //クライアントURLの実行
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, $disp_headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        // cacert.pemを用意しておく
-        curl_setopt($ch, CURLOPT_CAINFO, SERVER_PATH . 'device/cacert.pem');
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
-        if ($headers) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        }
-        if ($post_data) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        }
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        $ch = self::header($url, $post_data, $headers, $disp_headers);
 
         $data = [];
         $data['content'] = curl_exec($ch);
@@ -61,5 +43,41 @@ class Curl
             }
         }
         return $data;
+    }
+    
+    /**
+     * cURLハンドルの作成とヘッダの設定
+     * @param string $url
+     * @param string $post_data
+     * @param array $headers
+     * @param bool $disp_headers
+     * @return resource
+     */
+    private static function header(
+        string $url,
+        string $post_data,
+        array $headers,
+        bool $disp_headers
+    ) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, $disp_headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        // cacert.pemを作って用意しておく
+        curl_setopt($ch, CURLOPT_CAINFO,
+            SERVER_PATH . 'device/equipment/cacert.pem');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+        if ($headers) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+        if ($post_data) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        }
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        return $ch;
     }
 }

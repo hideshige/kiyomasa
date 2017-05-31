@@ -1,9 +1,9 @@
 <?php
 /**
- * シェルを実行する
+ * キャンプ　シェルコントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.4
+ * @version  1.1.4.5
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -13,6 +13,8 @@
  * cronを実行できるように環境にあわせてchdir()の値を変えること
  *
  */
+
+namespace Php\Framework\Core;
 
 use Php\Framework\Device\Db\DbSet;
 use Php\Framework\Device\S;
@@ -48,15 +50,11 @@ class Camp
             $this->exec($argv[1]);
 
             if ($this->debug) {
-                echo "<DBS>\n";
-                echo S::$dbs->sql . "\n";
-                echo "<DBM>\n";
-                echo S::$dbm->sql . "\n";
+                echo "<DBS>\n" . S::$dbs->sql . "\n";
+                echo "<DBM>\n" . S::$dbm->sql . "\n";
             }
         } catch (\Error $e) {
-            Log::error($e->getMessage());
-            echo "KIYOMASA ERROR\n";
-            exit;
+            echo $e->getMessage();
         }
     }
 

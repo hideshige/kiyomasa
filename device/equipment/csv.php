@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.2.2
+ * @version  1.2.2.3
  * @package  device/equipment
  */
 
@@ -58,7 +58,7 @@ class Csv
     /**
      * fgetcsv()の文字化けの問題を解消
      * @param object $handle ファイルポインタ
-     * @return false or array 結果
+     * @return bool|array 結果
      */
     private static function fgetcsvReg(&$handle)
     {
@@ -122,8 +122,9 @@ class Csv
         string $mojicode = 'SJIS-win',
         string $encode = DEFAULT_CHARSET
     ) {
-        if (!$get_data) { return null; }
-        if (sizeof($get_data) > CSV_MAX) { return null; }
+        if (!$get_data or sizeof($get_data) > CSV_MAX) {
+            return '';
+        }
 
         $csv_arr = [];
 
@@ -134,10 +135,10 @@ class Csv
             }
             $csv_arr[] = '"' . implode('","', $v) . '"';
         }
-        $csv = implode("\n", $csv_arr);
-        // 区切り文字がずれないように"をエスケープする
-        $csv = str_replace('&quot;', '""', $csv);
-        $csv = Chara::hDecode($csv);
+        $csv = Chara::hDecode(
+            // 区切り文字がずれないように"をエスケープする
+            str_replace('&quot;', '""', implode("\n", $csv_arr))
+        );
         if ($mojicode != $encode) {
             $csv = mb_convert_encoding($csv, $mojicode, $encode);
         }
@@ -158,8 +159,9 @@ class Csv
         $mojicode = DEFAULT_CHARSET,
         $encode = DEFAULT_CHARSET
     ) {
-        if (!$get_data) { return null; }
-        if (sizeof($get_data) > CSV_MAX) { return null; }
+        if (!$get_data or sizeof($get_data) > CSV_MAX) {
+            return '';
+        }
 
         $tsv_arr = [];
 
@@ -170,8 +172,7 @@ class Csv
             }
             $tsv_arr[] = implode("\t", $v);
         }
-        $tsv = implode("\n", $tsv_arr);
-        $tsv = Chara::hDecode($tsv);
+        $tsv = Chara::hDecode(implode("\n", $tsv_arr));
         if ($mojicode != $encode) {
             $tsv = mb_convert_encoding($tsv, $mojicode, $encode);
         }
