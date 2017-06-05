@@ -101,7 +101,7 @@ class Castle
             unset(S::$get['url']);
             $pagename = S::$url[0];
         }
-        if (!isset($pagename)) {
+        if (!isset($pagename) or !$pagename) {
             $pagename = 'index';
         }
         

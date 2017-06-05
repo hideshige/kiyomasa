@@ -14,7 +14,7 @@ use Yourname\Yourproject\Extention as E;
 
 class Sample extends E\BaseShell
 {
-    public function execute(): void
+    protected function execute(): void
     {
         global $argv;
 
