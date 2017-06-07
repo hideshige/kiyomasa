@@ -34,7 +34,7 @@ class DbStatement extends DbModule
             if ($this->debug) {
                 $this->disp_sql .= sprintf(
                     "{{COUNTER %d}}PREPARE {{STATEMENT}}%s FROM '%s';\n",
-                    $g_counter, $statement_id, $this->sql);
+                    $g_counter, $statement_id, addslashes($this->sql));
                 $g_counter ++;
             }
 
