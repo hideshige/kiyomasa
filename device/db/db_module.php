@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.0
+ * @version  1.0.3.1
  * @package  device/db
  *
  */
@@ -47,7 +47,7 @@ class DbModule
             $res = true;
             $dsn = sprintf('%s:host=%s;dbname=%s',
                 $db_soft, $db_server, $db_name);
-            $this->connect = new \PDO ($dsn, $db_user, $db_password,
+            $this->connect = new \PDO($dsn, $db_user, $db_password,
                 [\PDO::ATTR_PERSISTENT => false,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->query(sprintf("SET NAMES '%s'", DEFAULT_CHARSET));
@@ -141,8 +141,8 @@ class DbModule
     protected function dbSelectDumpDetail($rows): void
     {
         foreach ($rows as $k => $v) {
-            $this->disp_sql .= sprintf("'%s' : %s\n", $k, 
-                is_numeric($v) ? $v : "'" . $v . "'");
+            $this->disp_sql .= sprintf("'%s' : %s\n", $k,
+                is_numeric($v) ? $v : (is_null($v) ? 'NULL' : "'" . $v . "'"));
         }
     }
 

@@ -3,7 +3,7 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.0
+ * @version  1.4.5.1
  * @package  device/db
  *
  */
@@ -24,6 +24,10 @@ class DbStatement extends DbModule
         string $sql = ''
     ) {
         try {
+            if (!isset($this->do[$statement_id])) {
+                $this->do[$statement_id] = 'prepare';
+            }
+            
             global $g_counter;
             if ($sql) {
                 $this->sql = $sql;
@@ -70,7 +74,7 @@ class DbStatement extends DbModule
     ): int {
         try {
             $this->before();
-            
+
             if (!isset($this->name[$statement_id])) {
                 $this->name[$statement_id] = true;
             }
@@ -83,6 +87,8 @@ class DbStatement extends DbModule
             }
             $count = $this->stmt[$statement_id]->rowCount();
             $this->executeDebug($statement_id, $count);
+            unset($this->do[$statement_id]);
+            unset($this->name[$statement_id]);
             return $count;
         } catch (\PDOException $e) {
             $this->dbLog('bind', $e->getMessage());
@@ -102,7 +108,7 @@ class DbStatement extends DbModule
         
         $i = 1;
         foreach ($params as $k => $v) {
-            if ($k === 0) {
+            if ($k === 0 and $this->do[$statement_id] === 'update') {
                 // array_spliceで入れた0の配列キーをupdated_atに変える
                 $k = 'updated_at';
             }
@@ -273,9 +279,6 @@ class DbStatement extends DbModule
                     $g_counter, $statement_id);
                 $g_counter ++;
             }
-            
-            unset($this->do[$statement_id]);
-            unset($this->name[$statement_id]);
         } catch (\PDOException $e) {
             $this->dbLog('stmtClose', $e->getMessage());
         }

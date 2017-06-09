@@ -3,7 +3,7 @@
  * ページングモジュール(Ajax用)
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.1
+ * @version  1.0.4.2
  * @package  device/equipment
  * 
  */
@@ -19,6 +19,7 @@ class PagingAjax
      * @param int $page  ページ番号
      * @param array $get GETで取得した配列
      * @param int $disp_num 1ページあたりの件数
+     * @param bool $max 最初のページ、最後のページへのリンクを表示する場合TRUE
      * @return array page:現在のページ num:ページ数 left:左矢印ボタン right:右矢印ボタン tag:ページングタグ
      */
     public static function set(
@@ -26,7 +27,8 @@ class PagingAjax
         string $url,
         int $page,
         array $get,
-        int $disp_num = 20
+        int $disp_num = 20,
+        bool $max = false
     ): array {
         if (!$disp_num) {
            $disp_num = 20;
@@ -48,10 +50,10 @@ class PagingAjax
         $page_arr['right'] = ($page_arr['num'] == $page_arr['page'] or !$counts)
             ? null : $page_arr['page'] + 1;
 
-        $page_arr['maxleft_flag'] = $page_arr['page'] != 1
-            ? true : false;
-        $page_arr['maxright_flag'] = $page_arr['num'] != $page_arr['page']
-            ? true : false;
+        $page_arr['maxleft_flag'] = $max and
+            $page_arr['page'] != 1 ? true : false;
+        $page_arr['maxright_flag'] = $max and
+            $page_arr['num'] != $page_arr['page'] ? true : false;
 
         $q = self::makeGet($get);
         $page_arr['tag'] = self::pagingTag($page_arr, sprintf('%s%s', $url, $q));

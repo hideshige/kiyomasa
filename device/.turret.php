@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.1
+ * @version  1.0.2.2
  * @package  device
  * 
  */
@@ -248,7 +248,7 @@ class Turret
             $text
         );
         $text = preg_replace(
-            '/{{INT}}(\d*)/',
+            '/{{INT}}([\d\-\.]*)/',
             '<span class="fw_debug_bold fw_debug_int">$1</span>',
             $text
         );

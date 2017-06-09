@@ -3,7 +3,7 @@
  * データベース（CRUD、トランザクション関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.0.1
  * @package  device/db
  *
  */
@@ -224,7 +224,7 @@ class DbCrud extends DbStatement
             $res = false;
             if ($this->debug and $this->transaction_flag) {
                 global $g_counter;
-                $this->disp_sql .= "{{COUNTER " . $g_counter . "}};ROLLBACK\n";
+                $this->disp_sql .= "{{COUNTER " . $g_counter . "}}ROLLBACK;\n";
                 $g_counter ++;
             }
             if ($this->transaction_flag) {
