@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.2.3
+ * @version  1.2.3.1
  * @package  device/equipment
  */
 
@@ -115,6 +115,7 @@ class Csv
      * @param string $mojicode CSVファイルの文字コード
      * @param string $encode エンコード
      * @return string CSVデータ
+     * @throws D\UserException
      */
     public static function arrayToCsv(
         array $get_data,
@@ -123,7 +124,7 @@ class Csv
         string $encode = DEFAULT_CHARSET
     ) {
         if (!$get_data or sizeof($get_data) > CSV_MAX) {
-            return '';
+            throw new D\UserException(CSV_MAX . '件以内に絞り込んでください');
         }
 
         $csv_arr = [];
@@ -152,6 +153,7 @@ class Csv
      * @param string $mojicode CSVファイルの文字コード
      * @param string $encode エンコード
      * @return string TSVデータ
+     * @throws D\UserException
      */
     public static function arrayToTsv(
         $get_data,
@@ -160,7 +162,7 @@ class Csv
         $encode = DEFAULT_CHARSET
     ) {
         if (!$get_data or sizeof($get_data) > CSV_MAX) {
-            return '';
+            throw new D\UserException(CSV_MAX . '件以内に絞り込んでください');
         }
 
         $tsv_arr = [];

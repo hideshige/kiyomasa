@@ -3,7 +3,7 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.1
+ * @version  1.4.5.2
  * @package  device/db
  *
  */
@@ -38,7 +38,8 @@ class DbStatement extends DbModule
             if ($this->debug) {
                 $this->disp_sql .= sprintf(
                     "{{COUNTER %d}}PREPARE {{STATEMENT}}%s FROM '%s';\n",
-                    $g_counter, $statement_id, addslashes($this->sql));
+                    $g_counter, $statement_id,
+                    preg_replace("/'/", "\\'", $this->sql));
                 $g_counter ++;
             }
 
