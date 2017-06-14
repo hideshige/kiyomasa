@@ -3,7 +3,7 @@
  * データベースのセットアップ
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  device/db
  *
  */
@@ -11,6 +11,7 @@
 namespace Php\Framework\Device\Db;
 
 use Php\Framework\Device\S;
+use Php\Framework\Device\Log;
 
 class DbSet
 {

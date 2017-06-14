@@ -3,7 +3,7 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.2
+ * @version  1.4.5.3
  * @package  device/db
  *
  */
@@ -88,8 +88,6 @@ class DbStatement extends DbModule
             }
             $count = $this->stmt[$statement_id]->rowCount();
             $this->executeDebug($statement_id, $count);
-            unset($this->do[$statement_id]);
-            unset($this->name[$statement_id]);
             return $count;
         } catch (\PDOException $e) {
             $this->dbLog('bind', $e->getMessage());
@@ -113,8 +111,8 @@ class DbStatement extends DbModule
                 // array_spliceで入れた0の配列キーをupdated_atに変える
                 $k = 'updated_at';
             }
-
             $name = $this->name[$statement_id] ? $k : $i;
+            
             $this->bind_params[$name] = $v;
             $this->bindDebug($name, $v);
 
@@ -272,6 +270,8 @@ class DbStatement extends DbModule
             }
             
             $this->stmt[$statement_id]->closeCursor();
+            unset($this->do[$statement_id]);
+            unset($this->name[$statement_id]);
             
             if ($this->debug) {
                 global $g_counter;

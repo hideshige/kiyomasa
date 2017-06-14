@@ -3,12 +3,14 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.1
+ * @version  1.0.3.2
  * @package  device/db
  *
  */
 
 namespace Php\Framework\Device\Db;
+
+use Php\Framework\Device\Log;
 
 class DbModule
 {
