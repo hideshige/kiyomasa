@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.8.0
+ * @version  1.0.8.1
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -136,7 +136,7 @@ class Mem
         $where = 'WHERE memcached_key = :memcached_key';
         S::$dbs->select('memcached', '*', $where, 'memcached');
         S::$dbs->bind($param, 'memcached');
-        $res = S::$dbs->fetch('stdClass', 'memcached');
+        $res = S::$dbs->fetch('\stdClass', 'memcached');
         if (!(!$res or ($res->temp_flag and 
             strtotime($res->expire) < time()))) {
             $var = unserialize($res->memcached_value);

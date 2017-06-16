@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.2
+ * @version  1.0.2.3
  * @package  device
  * 
  */
@@ -45,10 +45,8 @@ class Turret
             if (!S::$jflag) {
                 if (isset($model->tpl) and count($model->tpl)) {
                     foreach ($model->tpl as $tk => $tv) {
-                        echo View::template(
-                            $tv,
-                            isset(S::$disp[$tk]) ? S::$disp[$tk] : []
-                        );
+                        echo View::template($tv,
+                            isset(S::$disp[$tk]) ? S::$disp[$tk] : []);
                     }
                 }
                 echo $this->dispDebug();

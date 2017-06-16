@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.3
+ * @version  1.1.4.4
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -116,7 +116,7 @@ class sessionHandlerDb
             'session'
         );
         S::$dbm->bind($params, 'session');
-        $res = S::$dbm->Fetch('stdClass', 'session');
+        $res = S::$dbm->Fetch('\stdClass', 'session');
         if ($res) {
             $read = $res->session_value;
         }

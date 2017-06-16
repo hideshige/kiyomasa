@@ -3,7 +3,7 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.3
+ * @version  1.4.5.4
  * @package  device/db
  *
  */
@@ -212,7 +212,7 @@ class DbStatement extends DbModule
             $count = $this->bind($param, $statement_id);
             if ($count and $class_flag) {
                 $this->stmt[$statement_id]->setFetchMode(
-                    \PDO::FETCH_CLASS, 'stdClass');
+                    \PDO::FETCH_CLASS, '\stdClass');
             } else if ($count) {
                 $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_ASSOC);
             }

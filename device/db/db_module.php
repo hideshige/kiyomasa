@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.2
+ * @version  1.0.3.3
  * @package  device/db
  *
  */
@@ -55,9 +55,6 @@ class DbModule
             $this->query(sprintf("SET NAMES '%s'", DEFAULT_CHARSET));
             $query = $this->query("SET sql_mode = 'STRICT_TRANS_TABLES, "
                 . "NO_ZERO_IN_DATE, NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'");
-            if (!$query) {
-                throw new \Error('SQL MODE ERROR');
-            }
         } catch (\PDOException $e) {
             Log::error($e->getMessage());
             $res = false;

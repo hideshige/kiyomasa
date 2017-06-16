@@ -52,7 +52,8 @@ class View
             $content = self::match($disp, $content);
             $content = str_replace('=br=', "\n", $content);
         } catch (\Error $e) {
-            Log::error($e->getMessage());
+            $info = new ErrorInfo;
+            $info->set($e->getMessage(), $e->getFile(), $e->getLine());
             $content = '';
         } finally {
             return $content;
@@ -155,7 +156,7 @@ class View
      * テンプレートの読み込み
      * @param string $tpl テンプレートファイル名
      * @return string 読み込んだコンテンツ
-     * @throws \Error
+     * @throws ViewError
      */
     private static function open(
         string $tpl
