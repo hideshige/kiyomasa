@@ -234,7 +234,7 @@
     </div>
     <div id="fw_debug_include_ajax">
     </div>
-<div style="display:none;" id="fw_debug_counter_flag">1</div>
+<div style="display: none;" id="fw_debug_counter_flag">1</div>
 </div>
 <script>
 /**
