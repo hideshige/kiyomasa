@@ -4,10 +4,10 @@
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  model
+ * @package  content
  */
 
-namespace Yourname\Yourproject\Model;
+namespace Yourname\Yourproject\Model\Content;
 
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Extension as E;

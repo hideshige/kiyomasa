@@ -17,15 +17,17 @@ define('TIMESTAMP', date('Y-m-d H:i:s'));
 $http_client_ip = filter_input(INPUT_SERVER, 'HTTP_CLIENT_IP');
 $http_x_forwarded_for = filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR');
 if ($http_client_ip){
-   $ip = $http_client_ip;
+    $ip = $http_client_ip;
 } else if ($http_x_forwarded_for) {
-   $ip = $http_x_forwarded_for;
+    $ip = $http_x_forwarded_for;
 } else {
-   $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
+    $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
 }
 define('IP_ADDRESS', $ip);
 define('USER_AGENT', filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'));
-define('MOBILE_FLAG', preg_match('/(iPhone|iPod|Android|BlackBerry|Windows Phone)/', USER_AGENT) ? true : false);
+define('MOBILE_FLAG', preg_match(
+    '/(iPhone|iPod|Android|BlackBerry|Windows Phone)/',
+    USER_AGENT) ? true : false);
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
 
 // データベースデバッグ用表示カウンタ

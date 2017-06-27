@@ -3,7 +3,7 @@
  * タワー　例外処理やショートカットなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.1.1
  * @package  device
  * 
  */
@@ -113,12 +113,12 @@ set_error_handler(
             default: $type = 'エラー番号 ' . $no; break;
         }
         
-        if (!preg_match('/\.library/', $file)) {
+        if (ENV <= 1 and !preg_match('/\.library/', $file)) {
             $info = new ErrorInfo;
             $info->set($type . ': ' . $message, $file, $line);
         }
         
-        if ($no !== E_NOTICE and $no !== E_DEPRECATED) {
+        if (ENV <= 1 and $no !== E_NOTICE and $no !== E_DEPRECATED) {
             throw new \Error('エラーハンドラからエラーをスローします', 10);
         }
     }

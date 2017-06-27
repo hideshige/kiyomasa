@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.3
+ * @version  1.0.3.0
  * @package  device
  * 
  */
@@ -31,53 +31,72 @@ class Turret
             }
             require_once($file);
             $class_name = NAME_SPACE . '\Model\\' . trim(
-                str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
-            );
-            $model = new $class_name;
-            $res = $model->logic();
-            if ($res === false) {
-                throw new \Error($pagename . ' logic notice', 10);
-            }
+                str_replace(' ', '', ucwords(str_replace(
+                ['_', '/'], [' ', '\\'], $folder . $pagename))));
             
-            // デバッグにセッションの動作を表示するため事前にセッションを閉じる
-            session_write_close();
-            
-            if (!S::$jflag) {
-                if (isset($model->tpl) and count($model->tpl)) {
-                    foreach ($model->tpl as $tk => $tv) {
-                        echo View::template($tv,
-                            isset(S::$disp[$tk]) ? S::$disp[$tk] : []);
-                    }
-                }
-                echo $this->dispDebug();
-            } else if (is_array($res)) {
-                $json = $res;
-                $this->jsonDebug($json);
-                echo json_encode($json);
-            }
+            $this->dispSet($class_name);
         } catch (\Error $e) {
-            if ($e->getCode() != 10) {
-                $info = new ErrorInfo;
-                $info->set($e->getMessage(), $e->getFile(), $e->getLine());
-            }
-            
-            // エラーページの表示
-            if (!S::$jflag) {
-                if (!$this->error_flag) {
-                    // 循環防止のフラグ
-                    $this->error_flag = true;
-                    // エラー画面モデルの読み込み
-                    $this->disp('error_page', 'content/');
-                } else {
-                    echo '循環エラー';
-                }
-            } else {
-                $json = ['alert' => 'エラー'];
-                echo json_encode($json);
-            }
+            $this->dispError($e);
         }
     }
+    
+    /**
+     * モデルの実行
+     * @param string $class_name
+     * @throws \Error
+     */
+    private function dispSet(string $class_name): void
+    {
+        $model = new $class_name;
+        $res = $model->logic();
+        if ($res === false) {
+            throw new \Error($class_name . ' logic notice', 10);
+        }
+        
+        // デバッグにセッションの動作を表示するため事前にセッションを閉じる
+        session_write_close();
+        
+        if (!S::$jflag and isset($model->tpl) and count($model->tpl)) {
+            foreach ($model->tpl as $tk => $tv) {
+                echo View::template($tv,
+                    isset(S::$disp[$tk]) ? S::$disp[$tk] : []);
+            }
+        } else if (!S::$jflag) {
+            echo $this->dispDebug();
+        } else if (is_array($res)) {
+            $json = $res;
+            $this->jsonDebug($json);
+            echo json_encode($json);
+        }
+    }
+    
+    /**
+     * モデル実行例外エラー
+     * @param object $e
+     */
+    private function dispError($e): void
+    {
+        if ($e->getCode() != 10) {
+            $info = new ErrorInfo;
+            $info->set($e->getMessage(), $e->getFile(), $e->getLine());
+        }
 
+        // エラーページの表示
+        if (!S::$jflag) {
+            if (!$this->error_flag) {
+                // 循環防止のフラグ
+                $this->error_flag = true;
+                // エラー画面モデルの読み込み
+                $this->disp('error_page', 'content/');
+            } else {
+                echo '循環エラー';
+            }
+        } else {
+            $json = ['alert' => 'エラー'];
+            echo json_encode($json);
+        }
+    }
+    
     /**
      * JSON用デバッグの表示
      * @global string $dump DUMPデータ
