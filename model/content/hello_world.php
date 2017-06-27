@@ -4,7 +4,7 @@
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  content
+ * @package  model/content
  */
 
 namespace Yourname\Yourproject\Model\Content;
