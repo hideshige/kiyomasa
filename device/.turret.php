@@ -24,19 +24,19 @@ class Turret
     {
         try {
             // modelファイルの読み込み
-//            $file = SERVER_PATH . 'model/' . $folder . $pagename . '.php';
-//            if (!file_exists($file)) {
-//                throw new \Error($file . ' not found: '
-//                    . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
-//            }
-//            require_once($file);
+            $file = SERVER_PATH . 'model/' . $folder . $pagename . '.php';
+            if (!file_exists($file)) {
+                throw new \Error($file . ' not found: '
+                    . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
+            }
+            require_once($file);
             $class_name = NAME_SPACE . '\Model\\' . trim(
                 str_replace(' ', '', ucwords(str_replace(
                 ['_', '/'], [' ', '\\'], $folder . $pagename))));
             
-            $this->dispSet($class_name);
+            $this->model($class_name);
         } catch (\Error $e) {
-            $this->dispError($e);
+            $this->modelError($e);
         }
     }
     
@@ -45,7 +45,7 @@ class Turret
      * @param string $class_name
      * @throws \Error
      */
-    private function dispSet(string $class_name): void
+    private function model(string $class_name): void
     {
         $model = new $class_name;
         $res = $model->logic();
@@ -73,9 +73,9 @@ class Turret
     
     /**
      * モデル実行例外エラー
-     * @param object $e
+     * @param \Error $e
      */
-    private function dispError($e): void
+    private function modelError(\Error $e): void
     {
         if ($e->getCode() != 10) {
             $info = new ErrorInfo;
