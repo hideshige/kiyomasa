@@ -17,9 +17,9 @@ class Crypt
 {
     /**
      * 暗号化・復合して結果データを取得
-     * @param mixed(array|string) $data 暗号化・復合するデータ
+     * @param mixed $data 暗号化・復合するデータ(array|string)
      * @param bool $encode_flag 暗号化・復合の選択指定 暗号化はTRUE 復号はFALSE
-     * @return mixed(array|string|null) 暗号化・復合された結果データ
+     * @return mixed 暗号化・復合された結果データ(array|string|null)
      * @throws \Error
      */
     private static function open($data, bool $encode_flag = true)
@@ -36,9 +36,9 @@ class Crypt
     
     /**
      * 暗号化モジュール開始
-     * @param mixed(array|string) $data 暗号化・復合するデータ
+     * @param mixed $data 暗号化・復合するデータ(array|string)
      * @param bool $encode_flag 暗号化・復合の選択指定 暗号化はTRUE 復号はFALSE
-     * @return mixed(array|string|null) 暗号化・復合された結果データ
+     * @return mixed 暗号化・復合された結果データ(array|string|null)
      * @throws \Error
      */
     private static function exec($data, bool $encode_flag)
@@ -65,8 +65,8 @@ class Crypt
 
     /**
      * 暗号化
-     * @param mixed(array|string) $data
-     * @return mixed(array|string|null)
+     * @param mixed $data (array|string)
+     * @return mixed (array|string|null)
      */
     public static function encrypt($data)
     {
@@ -75,8 +75,8 @@ class Crypt
     
     /**
      * 復号
-     * @param mixed(array|string) $data
-     * @return mixed(array|string|null)
+     * @param mixed $data (array|string)
+     * @return mixed (array|string|null)
      */
     public static function decrypt($data)
     {
