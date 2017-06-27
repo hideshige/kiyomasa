@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.0
+ * @version  1.0.3.1
  * @package  device
  * 
  */
@@ -24,12 +24,12 @@ class Turret
     {
         try {
             // modelファイルの読み込み
-            $file = SERVER_PATH . 'model/' . $folder . $pagename . '.php';
-            if (!file_exists($file)) {
-                throw new \Error($file . ' not found: '
-                    . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
-            }
-            require_once($file);
+//            $file = SERVER_PATH . 'model/' . $folder . $pagename . '.php';
+//            if (!file_exists($file)) {
+//                throw new \Error($file . ' not found: '
+//                    . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
+//            }
+//            require_once($file);
             $class_name = NAME_SPACE . '\Model\\' . trim(
                 str_replace(' ', '', ucwords(str_replace(
                 ['_', '/'], [' ', '\\'], $folder . $pagename))));
@@ -61,7 +61,8 @@ class Turret
                 echo View::template($tv,
                     isset(S::$disp[$tk]) ? S::$disp[$tk] : []);
             }
-        } else if (!S::$jflag) {
+        }
+        if (!S::$jflag) {
             echo $this->dispDebug();
         } else if (is_array($res)) {
             $json = $res;
