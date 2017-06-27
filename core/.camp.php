@@ -23,8 +23,8 @@ use Php\Framework\Device\Log;
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
 require_once(__DIR__ . '/config.php');
-require_once(__DIR__ . '/../device/.tower.php');
 require_once(__DIR__ . '/../device/.rampart.php');
+require_once(__DIR__ . '/../device/.tower.php');
 
 new Camp;
 
@@ -61,6 +61,7 @@ class Camp
     /**
      * モデルを実行する
      * @param string $pagename 実行するモデルの名前
+     * @return void
      * @throws \Error
      */
     private function exec(string $pagename): void
