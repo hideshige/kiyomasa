@@ -16,6 +16,10 @@ class HelloWorld extends E\BaseModel // クラス名はファイル名に合わ�
 {
     public $tpl = ['part/header', 'content/hello_world', 'part/footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
 
+    /**
+     * 実行
+     * @return void
+     */
     protected function execute(): void
     {
         D\S::$disp[0]['REPLACE']['title'] = 'ハローワールド';
@@ -35,6 +39,11 @@ class HelloWorld extends E\BaseModel // クラス名はファイル名に合わ�
         //throw new \Error('TEST222');
     }
     
+    /**
+     * 例外処理
+     * @param string $mes
+     * @return bool
+     */
     protected function throwCatch(string $mes): bool
     {
         unset(D\S::$disp[1]['MESSAGE_AREA']);

@@ -9,11 +9,15 @@
 
 namespace Yourname\Yourproject\Shell;
 
-use Php\Framework\Devic as D;
 use Yourname\Yourproject\Extention as E;
 
 class Sample extends E\BaseShell
 {
+    /**
+     * 実行
+     * @global array $argv
+     * @return void
+     */
     protected function execute(): void
     {
         global $argv;

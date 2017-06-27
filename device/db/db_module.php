@@ -65,6 +65,7 @@ class DbModule
 
     /**
      * 実行時間の測定開始
+     * @return void
      */
     protected function before(): void
     {
@@ -96,6 +97,7 @@ class DbModule
     /**
      * エラーメッセージの成型
      * @param string $error
+     * @return void
      * @throws \Error
      */
     protected function dbLog(string $class_name, string $error): void
@@ -114,6 +116,7 @@ class DbModule
     /**
      * 抽出されたデータをデバッグに表示
      * @param array $rows
+     * @return void
      */
     protected function dbSelectDump(array $rows): void
     {
@@ -136,6 +139,7 @@ class DbModule
     /**
      * 抽出されたデータの詳細
      * @param array|object $rows
+     * @return void
      */
     protected function dbSelectDumpDetail($rows): void
     {
@@ -184,6 +188,7 @@ class DbModule
      * @global int $g_counter
      * @param string $statement_id
      * @param float $qt
+     * @return void
      */
     private function queryDebug(string $statement_id, float $qt): void
     {
@@ -202,6 +207,7 @@ class DbModule
      * テーブル排他ロック
      * （ロック中のテーブルは別の人は更新できない）
      * @params string $tables ロックするテーブル（カンマ区切り）
+     * @return void
      */
     public function lock(string $tables): void
     {
@@ -217,6 +223,7 @@ class DbModule
 
     /**
      * テーブル排他ロック解除
+     * @return void
      */
     public function unlock(): void
     {
@@ -256,6 +263,7 @@ class DbModule
      * @param string $type
      * @param array $params
      * @param string $statement_id
+     * @return void
      */
     protected function addTimeColumn(
         string $type,

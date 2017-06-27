@@ -17,6 +17,7 @@ class Log
     /**
      * システム上のエラーログを記録する
      * @param string|array $log 吐き出すログ
+     * @return void
      */
     public static function error($log): void
     {
@@ -32,6 +33,7 @@ class Log
     /**
      * アクセス経過ログなどを記録する
      * @param string|array $log 吐き出すログ
+     * @return void
      */
     public static function access($log): void
     {
@@ -48,6 +50,7 @@ class Log
      * ファイルにログを吐き出す
      * @param string|array $log 吐き出すログ
      * @param string $file ファイルパス
+     * @return void
      */
     private static function printLog($log, string $file): void
     {

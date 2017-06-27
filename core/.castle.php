@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.2.4
+ * @version  1.4.2.5
  * @package  core
  * 
  */
@@ -25,6 +25,9 @@ class Castle
 {
     private $debug; // デバッグモード
 
+    /**
+     * コンストラクタ
+     */
     public function __construct()
     {
         try {
@@ -57,9 +60,10 @@ class Castle
     
     /**
      * エラー処理
-     * @param object $e
+     * @param \Error $e
+     * @return void
      */
-    private function error($e): void
+    private function error(\Error $e): void
     {
         $error = sprintf(
             '%s(%s) %s',
@@ -81,6 +85,7 @@ class Castle
      * 開く
      * @global array $g_folder
      * @param object $turret
+     * @return void
      */
     private function open(turret &$turret): void
     {
@@ -114,6 +119,7 @@ class Castle
     
     /**
      * メンテナンスモードの判定
+     * @return bool
      */
     private function mainteCheck(): bool
     {

@@ -54,6 +54,7 @@ class DbStatement extends DbModule
      * (通常は使用しなくても問題がないが必要な時があれば利用する)
      * @param bool $name_flag プレースホルダが:nameならTRUE,?ならFALSE
      * @param string $statement_id プリペアドステートメントID
+     * @return void
      */
     public function nameFlag(
         bool $name_flag,
@@ -98,6 +99,7 @@ class DbStatement extends DbModule
      * バインドの値をセット
      * @param array $params
      * @param string $statement_id
+     * @return void
      */
     private function bindValueSet(array $params, string $statement_id): void
     {
@@ -127,6 +129,7 @@ class DbStatement extends DbModule
      * @global int $g_counter
      * @param string|int $name
      * @param string|int|null $value
+     * @return void
      */
     private function bindDebug($name, $value): void
     {
@@ -155,6 +158,7 @@ class DbStatement extends DbModule
      * @global int $g_counter
      * @param string $statement_id
      * @param int $count
+     * @return void
      */
     private function executeDebug(
         string $statement_id,
@@ -260,6 +264,7 @@ class DbStatement extends DbModule
      * プリペアドステートメントの解放
      * @global int $g_counter
      * @param string $statement_id プリペアドステートメントID
+     * @return void
      * @throws \Error
      */
     public function stmtClose(string $statement_id = 'stmt'): void

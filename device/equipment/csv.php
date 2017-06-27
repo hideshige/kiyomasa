@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.3.2
+ * @version  1.2.3.3
  * @package  device/equipment
  */
 
@@ -71,15 +71,9 @@ class Csv
         $itemcnt = 0;
         while (!$eof) {
             $this_line = fgets($handle);
-            $itemcnt += preg_match_all(
-                '/' . $e . '/',
-                preg_replace(
-                    '/' . $e . $d . '(.*?)' . $e . '/',
-                    '',
-                    $this_line
-                ),
-                $dummy
-            );
+            $itemcnt += preg_match_all('/' . $e . '/',
+                preg_replace('/' . $e . $d . '(.*?)' . $e . '/',
+                '', $this_line), $dummy);
             if ($itemcnt % 2 == 0) {
                 $eof = true;
             }
@@ -92,17 +86,11 @@ class Csv
         $csv_data = $csv_matches[1];
         for ($csv_i = 0; $csv_i < count($csv_data); $csv_i ++) {
             // 囲み文字を消す
-            $csv_data[$csv_i] = preg_replace(
-                '/^' . $e . '(.*)' . $e . '$/s',
-                '$1',
-                $csv_data[$csv_i]
-            );
+            $csv_data[$csv_i] = preg_replace( '/^' . $e . '(.*)' . $e . '$/s',
+                '$1', $csv_data[$csv_i]);
             // エスケープを解除
-            $csv_data[$csv_i] = preg_replace(
-                '/' . $e . $e . '/',
-                $e,
-                $csv_data[$csv_i]
-            );
+            $csv_data[$csv_i] = preg_replace('/' . $e . $e . '/',
+                $e, $csv_data[$csv_i]);
         }
         $res = empty($line) ? false : $csv_data;
         return $res;

@@ -17,7 +17,7 @@ class Mail
      * @param string $to 送信先メールアドレス
      * @param string $subject 件名
      * @param string $body 本文
-     * @return true
+     * @return bool
      * @throws \Error
      */
     public static function sendMail(
@@ -27,30 +27,16 @@ class Mail
     ): bool {
         $to2 = str_replace(array ("\n", "\r"), '', $to);
         mb_internal_encoding('ISO-2022-JP');
-        $from_name = mb_encode_mimeheader(
-            mb_convert_encoding(
-                FROM_NAME,
-                'ISO-2022-JP',
-                DEFAULT_CHARSET
-            ),
-            'ISO-2022-JP',
-            'B'
-        );
+        $from_name = mb_encode_mimeheader(mb_convert_encoding(FROM_NAME,
+            'ISO-2022-JP', DEFAULT_CHARSET), 'ISO-2022-JP', 'B');
         mb_internal_encoding(DEFAULT_CHARSET);
 
         $subject2 = Chara::hDecode($subject);
-        $subject3 = mb_convert_encoding(
-            $subject2,
-            'ISO-2022-JP',
-            DEFAULT_CHARSET
-        );
+        $subject3 = mb_convert_encoding($subject2, 'ISO-2022-JP',
+            DEFAULT_CHARSET);
         $subject4 = '=?iso-2022-jp?B?' . base64_encode($subject3) . '?=';
         $body2 = Chara::hDecode($body);
-        $body3 = mb_convert_encoding(
-            $body2,
-            'ISO-2022-JP',
-            DEFAULT_CHARSET
-        );
+        $body3 = mb_convert_encoding($body2, 'ISO-2022-JP', DEFAULT_CHARSET);
         $headers = "MIME-Version: 1.0 \n";
         $headers .= sprintf("From: %s<%s> \n", $from_name, FROM_EMAIL);
         $headers .= sprintf("Reply-To: %s<%s> \n", $from_name, FROM_EMAIL);

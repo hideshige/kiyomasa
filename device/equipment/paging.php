@@ -98,16 +98,14 @@ class Paging
             //左矢印
             if ($page_arr['maxleft_flag']) {
                 $paging_tag .= sprintf(
-                    '<li class="arrowList off"><a href="%spage=1">&lt;&lt;</a></li>',
-                    $url
-                );
+                    '<li class="arrowList off">'
+                    . '<a href="%spage=1">&lt;&lt;</a></li>',
+                    $url);
             }
             if ($page_arr['left']) {
                 $paging_tag .= sprintf(
                     '<li class="arrowList"><a href="%spage=%d">&lt;</a></li>',
-                    $url,
-                    $page_arr['left']
-                );
+                    $url, $page_arr['left']);
             }
 
             //ページリングを10個に絞り込み、現在のページを中央に置く
@@ -131,13 +129,8 @@ class Paging
             $p = $start_page;
             for ($i = 1; $i <= $link_count; $i ++) {
                 $aclass = ($p == $page_arr['page']) ? ' class="on"' : '';
-                $paging_tag .= sprintf(
-                    '<li%s><a href="%spage=%d">%s</a></li>',
-                    $aclass,
-                    $url,
-                    $p,
-                    $p
-                );
+                $paging_tag .= sprintf('<li%s><a href="%spage=%d">%s</a></li>',
+                    $aclass, $url, $p, $p);
                 $p ++;
             }
 
@@ -145,24 +138,19 @@ class Paging
             if ($page_arr['right']) {
                 $paging_tag .= sprintf(
                     '<li class="arrowList"><a href="%spage=%d">&gt;</a></li>',
-                    $url,
-                    $page_arr['right']
-                );
+                    $url, $page_arr['right']);
             }
             if ($page_arr['maxright_flag']) {
                 $paging_tag .= sprintf(
-                    '<li class="arrowList"><a href="%spage=%d">&gt;&gt;</a></li>',
-                    $url,
-                    $page_arr['num']
-                );
+                    '<li class="arrowList">'
+                    . '<a href="%spage=%d">&gt;&gt;</a></li>',
+                    $url, $page_arr['num']);
             }
         }
 
         if ($paging_tag) {
-            $paging_tag = sprintf(
-                '<ul class="pagingList">%s</ul>',
-                $paging_tag
-            );
+            $paging_tag =
+                sprintf('<ul class="pagingList">%s</ul>', $paging_tag);
         }
 
         return $paging_tag;

@@ -19,6 +19,7 @@ class Turret
      * モデルを実行し、ビューにデータを渡す
      * @param string $pagename 実行するモデルの名前
      * @param string $folder モデルのフォルダ名
+     * @return void
      */
     public function disp(string $pagename, string $folder = ''): void
     {
@@ -43,6 +44,7 @@ class Turret
     /**
      * モデルの実行
      * @param string $class_name
+     * @return void
      * @throws \Error
      */
     private function model(string $class_name): void
@@ -74,6 +76,7 @@ class Turret
     /**
      * モデル実行例外エラー
      * @param \Error $e
+     * @return void
      */
     private function modelError(\Error $e): void
     {
@@ -102,6 +105,7 @@ class Turret
      * JSON用デバッグの表示
      * @global string $dump DUMPデータ
      * @param array $json JSON参照渡し
+     * @return void
      */
     private function jsonDebug(array &$json): void
     {

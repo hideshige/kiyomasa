@@ -132,7 +132,7 @@ class Form
      * 入力フォームの内容を検証する
      * @param array $params 検証ルール
      * @param array $data 検証するデータ
-     * return array (検証結果を格納した配列を返す)
+     * @return array (検証結果を格納した配列を返す)
      */
     public static function validation(
         array $params,
@@ -203,6 +203,7 @@ class Form
      * @param array $error_data 検証結果
      * @param array $form フォームオブジェクト
      * @param array $error_customize ユーザー定義エラー array ('must' => '入力されていません') の形でエラーメッセージを追加できる
+     * @return void
      */
     public static function getMessage(
         array $error_data,
@@ -260,6 +261,7 @@ class Form
      * @param array|null $form フォームオブジェクト
      * @param array $post ポストデータ
      * @param bool $br_flag チェックボックスとラジオボタンに改行を入れるかどうか
+     * @return void
      */
     public static function formArr(
         array $params,
@@ -350,6 +352,7 @@ class Form
      * @param string $data 受け取ったデータ
      * @param array $form フォームオブジェクト
      * @param string $tag_add タグに付加する文字
+     * @return void
      */
     private static function selectForm(
         string $name,
@@ -381,6 +384,7 @@ class Form
      * @param array $form フォームオブジェクト
      * @param string $tag_add タグに付加する文字
      * @param bool $br_flag 改行を入れるか否か
+     * @return void
      */
     private static function radioForm(
         string $name,
@@ -412,6 +416,7 @@ class Form
      * @param array $form フォームオブジェクト
      * @param string $tag_add タグに付加する文字
      * @param bool $br_flag 改行を入れるか否か
+     * @return void
      */
     private static function checkForm(
         string $name,
@@ -444,6 +449,7 @@ class Form
      * @param array $form フォームオブジェクト
      * @param array $question 問題の入った配列
      * @param array $answer 回答の入った配列
+     * @return void
      */
     public static function dispConfirm(
         array &$form,
@@ -489,6 +495,7 @@ class Form
      * @param array $form フォームオブジェクト
      * @param array $question 問題の入った配列
      * @param array $answer 回答の入った配列
+     * @return void
      */
     public static function makeData(
         array &$form,

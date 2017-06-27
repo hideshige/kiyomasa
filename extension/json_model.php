@@ -16,6 +16,7 @@ abstract class JsonModel implements D\AjaxProp
 {
     /**
      * プログラムを実行する
+     * @return void
      */
     abstract protected function execute(): void;
     
@@ -27,6 +28,7 @@ abstract class JsonModel implements D\AjaxProp
     
     /**
      * 最後に実行するプログラム
+     * @return void
      */
     abstract protected function finalLogic(): void;
 

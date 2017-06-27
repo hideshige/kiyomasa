@@ -1,6 +1,6 @@
 <?php
 /**
- * error モデル
+ * メンテ モデル
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
@@ -16,6 +16,10 @@ class Mainte implements D\HtmlProp
 {
     public $tpl = ['part/header', 'mainte', 'part/footer'];
 
+    /**
+     * ロジック
+     * @return bool
+     */
     public function logic(): bool
     {
         if (D\S::$url[0] == 'mainte') {

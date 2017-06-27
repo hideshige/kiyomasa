@@ -21,6 +21,7 @@ class Citadel
      * @param string $title
      * @param bool $login_flag ログインしていないユーザーをログイン画面に飛ばす場合TRUE
      * @param bool $token_update_flag トークンを強制的にアップデートしない場合FALSE
+     * @return void
      */
     public static function set(
         string $title = '',
@@ -38,6 +39,7 @@ class Citadel
     /**
      * タイトルのセット
      * @param string $title
+     * @return void
      */
     public static function titleSet(string $title): void
     {

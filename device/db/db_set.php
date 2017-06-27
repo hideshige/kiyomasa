@@ -18,6 +18,7 @@ class DbSet
     /**
      * データベースの接続
      * @param bool $debug
+     * @return void
      */
     public function dbConnect(bool $debug): void
     {

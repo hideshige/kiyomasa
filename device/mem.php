@@ -174,6 +174,7 @@ class Mem
     /**
      * データベースから削除
      * @param string $key
+     * @return void
      */
     private function dbDelete(string $key): void
     {

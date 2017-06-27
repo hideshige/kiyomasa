@@ -53,6 +53,7 @@ class Session
 
     /**
      * セッションIDの値を変えてCOOKIEを更新
+     * @return void
      */
     public static function sessionIdChange(): void
     {

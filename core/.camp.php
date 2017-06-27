@@ -3,7 +3,7 @@
  * キャンプ　シェルコントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.5
+ * @version  1.1.4.6
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -32,6 +32,10 @@ class Camp
 {
     private $debug = false; // デバッグモード
 
+    /**
+     * コンストラクタ
+     * @global array $argv
+     */
     public function __construct()
     {
         try {

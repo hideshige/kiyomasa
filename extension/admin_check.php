@@ -12,6 +12,10 @@ namespace Yourname\Yourproject\Extension;
 
 class AdminCheck
 {
+    /**
+     * コンストラクタ
+     * @global bool $g_admin_flag
+     */
     public function __construct()
     {
         global $g_admin_flag;

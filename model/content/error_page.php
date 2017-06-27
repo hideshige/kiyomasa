@@ -16,6 +16,10 @@ class ErrorPage implements D\HtmlProp
 {
     public $tpl = ['part/header', 'content/error_page', 'part/footer'];
 
+    /**
+     * ロジック
+     * @return bool
+     */
     public function logic(): bool
     {
         $title = 'エラー';

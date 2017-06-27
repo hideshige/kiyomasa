@@ -16,6 +16,7 @@ abstract class BaseShell implements D\ShellProp
 {
     /**
      * プログラムを実行する
+     * @return void
      */
     abstract protected function execute(): void;
     

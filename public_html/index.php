@@ -41,9 +41,10 @@ new Php\Framework\Core\Castle();
  * ダンプをバッファに保存してデバッグに表示する
  * "dump(ダンプしたい変数)"の形で利用する
  * @global string $dump ダンプ用バッファ
+ * @return string
  */
 $dump = '';
-function dump()
+function dump(): string
 {
     global $dump;
     $bt = debug_backtrace();
@@ -59,4 +60,3 @@ function dump()
     $dump .= ob_get_clean();
     return $dump;
 }
-

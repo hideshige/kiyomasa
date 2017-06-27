@@ -98,19 +98,15 @@ class PagingAjax
         if ($page_arr['num'] > 1) {
             //左矢印
             if ($page_arr['maxleft_flag']) {
-                $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', 1, false);">&lt;&lt;</li>',
-                    $url
-                );
+                $paging_tag .= sprintf('<li class="hover_on" onclick="'
+                    . 'loadList(\'%s\', 1, false);">&lt;&lt;</li>', $url);
             } else {
                 $paging_tag .= '<li class="hover_off">&lt;&lt;</li>';
             }
             if ($page_arr['left']) {
-                $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&lt;</li>',
-                    $url,
-                    $page_arr['left']
-                );
+                $paging_tag .= sprintf('<li class="hover_on" onclick="'
+                    . 'loadList(\'%s\', %d, false);">&lt;</li>', $url,
+                    $page_arr['left']);
             } else {
                 $paging_tag .= '<li class="hover_off">&lt;</li>';
             }
@@ -136,42 +132,32 @@ class PagingAjax
             $p = $start_page;
             for ($i = 1; $i <= $link_count; $i ++) {
                 $aclass = ($p == $page_arr['page']) ? ' page_on' : '';
-                $paging_tag .= sprintf(
-                    '<li class="hover_on%s" onclick="loadList(\'%s\', %d, false);">%s</li>',
-                    $aclass,
-                    $url,
-                    $p,
-                    $p
-                );
+                $paging_tag .= sprintf('<li class="hover_on%s" onclick="'
+                    . 'loadList(\'%s\', %d, false);">%s</li>',
+                    $aclass, $url, $p, $p);
                 $p ++;
             }
 
             //右矢印
             if ($page_arr['right']) {
-                $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&gt;</li>',
-                    $url,
-                    $page_arr['right']
-                );
+                $paging_tag .= sprintf('<li class="hover_on" onclick="'
+                    . 'loadList(\'%s\', %d, false);">&gt;</li>',
+                    $url, $page_arr['right']);
             } else {
                 $paging_tag .= '<li class="hover_off">&gt;</li>';
             }
             if ($page_arr['maxright_flag']) {
-                $paging_tag .= sprintf(
-                    '<li class="hover_on" onclick="loadList(\'%s\', %d, false);">&gt;&gt;</li>',
-                    $url,
-                    $page_arr['num']
-                );
+                $paging_tag .= sprintf('<li class="hover_on" onclick="'
+                    . 'loadList(\'%s\', %d, false);">&gt;&gt;</li>',
+                    $url, $page_arr['num']);
             } else {
                 $paging_tag .= '<li class="hover_off">&gt;&gt;</li>';
             }
         }
 
         if ($paging_tag) {
-            $paging_tag = sprintf(
-                '<ul class="paging_list noprint">%s</ul>',
-                $paging_tag
-            );
+            $paging_tag =
+                sprintf('<ul class="paging_list noprint">%s</ul>', $paging_tag);
         }
 
         return $paging_tag;

@@ -25,6 +25,7 @@ class ErrorInfo
      * @param string $message
      * @param string $file
      * @param int $line
+     * @return void
      */
     public function set(string $message, string $file, int $line): void
     {
@@ -100,6 +101,7 @@ set_error_handler(
      * @param string $message
      * @param string $file
      * @param int $line
+     * @return void
      * @throws \Error
      */
     function (int $no, string $message, string $file, int $line): void

@@ -15,7 +15,7 @@
  * <!-- ELEMENT *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.4.0
+ * @version  1.1.5.0
  * @package  device
  * 
  */
@@ -74,13 +74,9 @@ class View
         if ($element_match[1]) {
             $element_match[1] = array_unique($element_match[1]);
             foreach ($element_match[1] as $ek => $element_name) {
-                $element = self::open($element_name);
-                $element = str_replace("\n", '=br=', $element);
-                $content = str_replace(
-                    $element_match[0][$ek],
-                    $element,
-                    $content
-                );
+                $element = str_replace("\n", '=br=', self::open($element_name));
+                $content = str_replace($element_match[0][$ek],
+                    $element, $content);
             }
             $content = self::elementMatch($content);
         }
@@ -122,11 +118,8 @@ class View
                         } else {
                             $change_data = '';
                         }
-                        $tag_data = str_replace(
-                            '{' . $data . '}',
-                            $change_data,
-                            $tag_data
-                        );
+                        $tag_data = str_replace('{' . $data . '}',
+                            $change_data, $tag_data);
                     }
                     $all_tag .= $tag_data;
                     $tag_data = $original;
@@ -134,16 +127,10 @@ class View
                 $original = '<!-- BEGIN ' . $name . ' -->' . $original;
                 $original .= '<!-- END ' . $name . ' -->';
                 $content = str_replace($original, $all_tag, $content);
-                $content = str_replace(
-                    '<!-- BEGIN ' . $name . ' -->',
-                    '',
-                    $content
-                );
-                $content = str_replace(
-                    '<!-- END ' . $name . ' -->',
-                    '',
-                    $content
-                );
+                $content = str_replace('<!-- BEGIN ' . $name . ' -->',
+                    '', $content);
+                $content = str_replace('<!-- END ' . $name . ' -->',
+                    '', $content);
             } else if (isset($match1[0][0])) {
                 $content = str_replace($match1[0][0], '', $content);
             }
@@ -156,7 +143,7 @@ class View
      * テンプレートの読み込み
      * @param string $tpl テンプレートファイル名
      * @return string 読み込んだコンテンツ
-     * @throws ViewError
+     * @throws \Error
      */
     private static function open(
         string $tpl

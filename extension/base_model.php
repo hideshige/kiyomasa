@@ -16,6 +16,7 @@ abstract class BaseModel implements D\HtmlProp
 {
     /**
      * プログラムを実行する
+     * @return void
      */
     abstract protected function execute(): void;
     

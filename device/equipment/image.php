@@ -3,12 +3,14 @@
  * 画像 モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.2
+ * @version  1.1.4.3
  * @package  device/equipment
  * 
  */
 
 namespace Php\Framework\Device\Equipment;
+
+use Php\Framework\Device as D;
 
 class Image
 {
@@ -26,7 +28,7 @@ class Image
      * @param array $p 画像をリサイズした場合の背景色RGB
      * @param int $limit 制限サイズ
      * @return string 保存したファイル名
-     * @throws UserException
+     * @throws D\UserException
      * @throws \Error
      */
     public static function thumbnail(
@@ -43,28 +45,42 @@ class Image
         int $limit = 104857600
     ): string {
         //ウィルススキャン
-//        if ($scan_flag) {
-//            self::virusScan($file);
-//        }
+        if ($scan_flag) {
+            //self::virusScan($file);
+        }
 
         //サイズとファイル形式のチェック
         self::sizeCheck($file, $limit);
         $itype = self::fileType($file, $file_type);
 
         switch ($itype) {
-            case 'gif': $img = imagecreatefromgif($file); break;
-            case 'jpg': $img = imagecreatefromjpeg($file); break;
-            case 'png': $img = imagecreatefrompng($file); $comp = 9; break;
-            default: throw new UserException('使えるのはGIF,JPEG,PNGのみです');
+            case 'gif':
+                $img = imagecreatefromgif($file);
+                break;
+            case 'jpg':
+                $img = imagecreatefromjpeg($file);
+                break;
+            case 'png':
+                $img = imagecreatefrompng($file);
+                $comp = 9;
+                break;
+            default:
+                throw new D\UserException('使えるのはGIF,JPEG,PNGのみです');
         }
 
         //画像の向きを修正
         $exif = @exif_read_data($file);
         if (isset ($exif['Orientation'])) {
             switch ($exif['Orientation']) {
-                case 3: $img = imagerotate($img, 180, 0); break;
-                case 6: $img = imagerotate($img, 270, 0); break;
-                case 8: $img = imagerotate($img, 90, 0); break;
+                case 3:
+                    $img = imagerotate($img, 180, 0);
+                    break;
+                case 6:
+                    $img = imagerotate($img, 270, 0);
+                    break;
+                case 8:
+                    $img = imagerotate($img, 90, 0);
+                    break;
             }
         }
 
@@ -87,11 +103,13 @@ class Image
         }
 
         $paint_color = imagecolorallocate($img2, $p[0], $p[1], $p[2]);
-        $paint = imagefill($img2, 0, 0, $paint_color);
+        //$paint = imagefill($img2, 0, 0, $paint_color);
         if ($width > $width_max or $height > $height_max) {
-            $img_res = imagecopyresampled($img2, $img, 0, 0, 0, 0, $width_max, $height_max, $width, $height);
+            $img_res = imagecopyresampled($img2, $img, 0, 0, 0, 0,
+                $width_max, $height_max, $width, $height);
         } else {
-            $img_res = imagecopyresampled($img2, $img, 0, 0, 0, 0, $width, $height, $width, $height);
+            $img_res = imagecopyresampled($img2, $img, 0, 0, 0, 0,
+                $width, $height, $width, $height);
         }
 
         if (!$img_res) {
@@ -103,9 +121,15 @@ class Image
         $save_file = SERVER_PATH . 'public_html/img/' . $folder_name . $name;
 
         switch ($itype) {
-            case 'gif': $save = imagegif($img2, $save_file, $comp); break;
-            case 'jpg': $save = imagejpeg($img2, $save_file, $comp); break;
-            case 'png': $save = imagepng($img2, $save_file, $comp); break;
+            case 'gif':
+                $save = imagegif($img2, $save_file, $comp);
+                break;
+            case 'jpg':
+                $save = imagejpeg($img2, $save_file, $comp);
+                break;
+            case 'png':
+                $save = imagepng($img2, $save_file, $comp);
+                break;
         }
 
         if (!$save) {
@@ -125,6 +149,7 @@ class Image
      * @param string $file_type ファイルの形式
      * @param int $limit 制限サイズ
      * @param bool $scan_flag ウィルススキャンするかどうか
+     * @return void
      * @throws \Error
      */
     public static function upFile(
@@ -134,9 +159,9 @@ class Image
         int $limit = 104857600,
         bool $scan_flag = true
     ): void {
-        //if ($scan_flag) {
-        //    self::virusScan($file);
-        //}
+        if ($scan_flag) {
+            //self::virusScan($file);
+        }
         self::sizeCheck($file, $limit);
         $itype = self::fileType($file, $file_type);
         if (!$file_type) {
@@ -151,22 +176,17 @@ class Image
     /**
      * ウィルススキャン
      * @param string $file ウィルススキャンするファイル
+     * @return void
      */
     public static function virusScan(string $file): void
     {
         //ウィルスチェック（ウィルスだった場合ファイルを削除する）
-        $do = sprintf(
-            'clamdscan "%s" --remove --log=%slogs/antivirus_%s.log',
-            $file,
-            SERVER_PATH,
-            date('Ymd')
-        );
+        $do = sprintf('clamdscan "%s" --remove --log=%slogs/antivirus_%s.log',
+            $file, SERVER_PATH, date('Ymd'));
         $debug = '';
         exec($do, $debug);
-        chmod(
-            sprintf('%slogs/antivirus_%s.log', SERVER_PATH, date('Ymd')),
-            0644
-        );
+        chmod(sprintf(
+            '%slogs/antivirus_%s.log', SERVER_PATH, date('Ymd')), 0644);
     }
 
     /**
@@ -174,6 +194,7 @@ class Image
      * @param string $file ファイルデータのパス
      * @param string $file_type ファイルの形式
      * @return string
+     * @throws D\UserException
      */
     private static function fileType(string $file, string $file_type): string
     {
@@ -192,7 +213,7 @@ class Image
         } else if (preg_match('/(png|PNG)/', $file_type)) {
             $itype = 'png';
         } else {
-            throw new UserException('画像タイプ不正 '
+            throw new D\UserException('画像タイプ不正 '
                 . $file . ' ' . $file_type);
         }
         return $itype;
@@ -202,13 +223,14 @@ class Image
      * サイズの確認
      * @param string $file ファイルデータのパス
      * @param int $limit 制限サイズ
-     * @throws UserException
+     * @return void
+     * @throws D\UserException
      */
     private static function sizeCheck(string $file, int $limit): void
     {
         $file_byte = filesize($file);
         if ($file_byte > $limit) {
-            throw new UserException('ファイルサイズが大きすぎます');
+            throw new D\UserException('ファイルサイズが大きすぎます');
         }
     }
 }
