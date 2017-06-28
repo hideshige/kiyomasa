@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.3
+ * @version  1.0.3.4
  * @package  device/db
  *
  */
@@ -53,8 +53,7 @@ class DbModule
                 [\PDO::ATTR_PERSISTENT => false,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->query(sprintf("SET NAMES '%s'", DEFAULT_CHARSET));
-            $query = $this->query("SET sql_mode = 'STRICT_TRANS_TABLES, "
-                . "NO_ZERO_IN_DATE, NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'");
+            //$this->query("SET sql_mode = 'STRICT_TRANS_TABLES, NO_ZERO_IN_DATE'");
         } catch (\PDOException $e) {
             Log::error($e->getMessage());
             $res = false;
