@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.1
+ * @version  1.0.3.2
  * @package  device
  * 
  */
@@ -300,6 +300,12 @@ class Turret
         $text = preg_replace(
             '/{{BR}}/',
             '<br />',
+            $text
+        );
+        $text = preg_replace(
+            '/(LEFT JOIN|INNER JOIN|RIGHT JOIN|WHERE |SELECT |'
+            . 'ORDER |LIMIT |UPDATE |INSERT |REPLACE |DELETE |VALUES )/',
+            '<br />$1',
             $text
         );
         return $text;
