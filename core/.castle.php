@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.3.0
+ * @version  1.4.3.1
  * @package  core
  * 
  */
@@ -112,6 +112,7 @@ class Castle
      */
     private function setPagename(): array
     {
+        $folder = '';
         global $g_folder;
         if ($g_folder) {
             foreach ($g_folder as $v) {
@@ -126,7 +127,8 @@ class Castle
             preg_replace('<^/' . $folder . '>', '', S::$get['url']));
         unset(S::$get['url']);
         S::$url += $url;
-        return [$url[0], $folder];
+        $pagename = (isset($url[0]) and $url[0]) ? $url[0] : '';
+        return [$pagename, $folder];
     }
     
     /**
