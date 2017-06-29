@@ -52,7 +52,7 @@ class DbModule
             $this->connect = new \PDO($dsn, $db_user, $db_password,
                 [\PDO::ATTR_PERSISTENT => false,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-            $this->query(sprintf("SET NAMES '%s'", DEFAULT_CHARSET));
+            $this->query("SET NAMES 'utf8mb4'");
             //$this->query("SET sql_mode = 'STRICT_TRANS_TABLES, NO_ZERO_IN_DATE'");
         } catch (\PDOException $e) {
             Log::error($e->getMessage());

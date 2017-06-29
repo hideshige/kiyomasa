@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.2.5
+ * @version  1.4.3.0
  * @package  core
  * 
  */
@@ -91,30 +91,42 @@ class Castle
     {
         // URLの指定がなければトップページを指定
         $folder = '';
+        $pagename = '';
+        S::$url['folder'] = '';
         if (isset(S::$get['url'])) {
-            global $g_folder;
-            if ($g_folder) {
-                foreach ($g_folder as $v) {
-                    if (preg_match('<^/' . $v . '>', S::$get['url'])) {
-                        $folder = $v . '/';
-                        break;
-                    }
-                }
-            }
-            S::$url = explode('/', 
-                preg_replace('<^/' . $folder . '>', '', S::$get['url']));
-            unset(S::$get['url']);
-            $pagename = S::$url[0];
+            list($pagename, $folder) = $this->setPagename();
         }
-        if (!isset($pagename) or !$pagename) {
+        if (!$pagename) {
             $pagename = 'index';
         }
-        
         if ($this->mainteCheck() and !$this->debug) {
             $pagename = 'mainte';
             $folder = '';
         }
         $turret->disp($pagename, $folder);
+    }
+    
+    /**
+     * ページ名のセット
+     * @return array
+     */
+    private function setPagename(): array
+    {
+        global $g_folder;
+        if ($g_folder) {
+            foreach ($g_folder as $v) {
+                if (preg_match('<^/' . $v . '>', S::$get['url'])) {
+                    $folder = $v . '/';
+                    break;
+                }
+            }
+        }
+        S::$url['folder'] = $folder;
+        $url = explode('/',
+            preg_replace('<^/' . $folder . '>', '', S::$get['url']));
+        unset(S::$get['url']);
+        S::$url += $url;
+        return [$url[0], $folder];
     }
     
     /**
