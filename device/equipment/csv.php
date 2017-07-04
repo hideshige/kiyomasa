@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.3.3
+ * @version  1.2.3.4
  * @package  device/equipment
  */
 
@@ -122,7 +122,9 @@ class Csv
                 $tmp = array_keys($v);
                 $csv_arr[] = '"' . implode('","', $tmp) . '"';
             }
-            $csv_arr[] = '"' . (is_array($v) ? implode('","', $v) : '') . '"';
+            if (is_array($v)) {
+                $csv_arr[] = '"' . implode('","', $v) . '"';
+            }
         }
         $csv = Chara::hDecode(
             // 区切り文字がずれないように"をエスケープする
@@ -160,7 +162,9 @@ class Csv
                 $tmp = array_keys($v);
                 $tsv_arr[] = implode("\t", $tmp) ;
             }
-            $tsv_arr[] = implode("\t", $v);
+            if (is_array($v)) {
+                $tsv_arr[] = implode("\t", $v);
+            }
         }
         $tsv = Chara::hDecode(implode("\n", $tsv_arr));
         if ($mojicode != $encode) {

@@ -123,7 +123,7 @@ function openJson(objJson, url_address) {
  */
 function postFormObject(objJson, formObject, url_address) {
   //ブラウザによってはキャッシュを見ることがあるためURLにタイムスタンプを付けてキャッシュを無視させる
-  objJson.open('POST', domain_name + url_address + '?ver=' + new Date(), true);
+  objJson.open('POST', url_root + url_address + '?ver=' + encodeURIComponent(new Date()), true);
   objJson.onreadystatechange = function(){ajaxOpen(objJson)};
   objJson.setRequestHeader('enctype', 'multipart/form-data');
   objJson.send(formObject);

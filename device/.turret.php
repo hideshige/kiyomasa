@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.2
+ * @version  1.0.3.3
  * @package  device
  * 
  */
@@ -176,6 +176,7 @@ class Turret
                 'memory2' => number_format($peak_memory - $first_memory),
                 'memory3' => number_format($peak_memory),
                 'ip' => IP_ADDRESS,
+                'user_agent' => USER_AGENT,
                 'timestamp' => TIMESTAMP,
                 'time' => time(),
                 'db_slave' => $this->modDebugSql(S::$dbs->disp_sql),

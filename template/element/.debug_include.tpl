@@ -34,6 +34,7 @@
         <h4>【OS】</h4>
         <p>
             {os}<br />
+            {user_agent}<br />
             PHP　{php_ver}<br />
             メモリ　{memory1} KB (固定分)
             + {memory2} KB (追加分) = {memory3} KB<br />
