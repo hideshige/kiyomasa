@@ -3,7 +3,7 @@
  * 画像 モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.3
+ * @version  1.1.5.0
  * @package  device/equipment
  * 
  */
@@ -12,13 +12,12 @@ namespace Php\Framework\Device\Equipment;
 
 use Php\Framework\Device as D;
 
-class Image
+class Image extends Files
 {
     /**
      * サムネイル作成
      * @param string $file ファイルデータのパス
      * @param string $folder_name 保存先のパス
-     * @param bool $scan_flag ウィルススキャンするかどうか
      * @param int $width_max 大画像の最大幅（これを超えるとリサイズする）
      * @param int $height_max 大画像の最大高さ
      * @param int $comp 画像の圧縮率(画像がPNGの場合には無視する)
@@ -34,7 +33,6 @@ class Image
     public static function thumbnail(
         string $file,
         string $folder_name,
-        bool $scan_flag = true,
         int $width_max = 160,
         int $height_max = 160,
         int $comp = 98,
@@ -44,14 +42,9 @@ class Image
         array $p = ['255', '255', '255'],
         int $limit = 104857600
     ): string {
-        //ウィルススキャン
-        if ($scan_flag) {
-            //self::virusScan($file);
-        }
-
         //サイズとファイル形式のチェック
         self::sizeCheck($file, $limit);
-        $itype = self::fileType($file, $file_type);
+        $itype = self::checkImageType($file, $file_type);
 
         switch ($itype) {
             case 'gif':
@@ -70,7 +63,7 @@ class Image
 
         //画像の向きを修正
         $exif = @exif_read_data($file);
-        if (isset ($exif['Orientation'])) {
+        if (isset($exif['Orientation'])) {
             switch ($exif['Orientation']) {
                 case 3:
                     $img = imagerotate($img, 180, 0);
@@ -118,7 +111,7 @@ class Image
 
         $name = $set_name ? ($file_type ? $set_name . '.' . $itype : $set_name)
             : md5(TIMESTAMP . S::$user['user_id']) . $file_no . '.' . $itype;
-        $save_file = SERVER_PATH . 'public_html/img/' . $folder_name . $name;
+        $save_file = SERVER_PATH . $folder_name . $name;
 
         switch ($itype) {
             case 'gif':
@@ -141,54 +134,7 @@ class Image
         chmod($save_file, 0644);
         return $name;
     }
-
-    /**
-     * イメージの保存
-     * @param string $file ファイルデータのパス
-     * @param string $save_folder_file 保存先のフォルダとファイル名
-     * @param string $file_type ファイルの形式
-     * @param int $limit 制限サイズ
-     * @param bool $scan_flag ウィルススキャンするかどうか
-     * @return void
-     * @throws \Error
-     */
-    public static function upFile(
-        string $file,
-        string $save_folder_file,
-        string $file_type = '',
-        int $limit = 104857600,
-        bool $scan_flag = true
-    ): void {
-        if ($scan_flag) {
-            //self::virusScan($file);
-        }
-        self::sizeCheck($file, $limit);
-        $itype = self::fileType($file, $file_type);
-        if (!$file_type) {
-            $save_folder_file .= '.' .  $itype;
-        }
-        $res = move_uploaded_file($file, $save_folder_file);
-        if (!$res) {
-            throw new \Error('file move error');
-        }
-    }
-
-    /**
-     * ウィルススキャン
-     * @param string $file ウィルススキャンするファイル
-     * @return void
-     */
-    public static function virusScan(string $file): void
-    {
-        //ウィルスチェック（ウィルスだった場合ファイルを削除する）
-        $do = sprintf('clamdscan "%s" --remove --log=%slogs/antivirus_%s.log',
-            $file, SERVER_PATH, date('Ymd'));
-        $debug = '';
-        exec($do, $debug);
-        chmod(sprintf(
-            '%slogs/antivirus_%s.log', SERVER_PATH, date('Ymd')), 0644);
-    }
-
+    
     /**
      * ファイルタイプの確認
      * @param string $file ファイルデータのパス
@@ -196,14 +142,12 @@ class Image
      * @return string
      * @throws D\UserException
      */
-    private static function fileType(string $file, string $file_type): string
-    {
+    private static function checkImageType(
+        string $file,
+        string $file_type
+    ): string {
         if (!$file_type) {
-            //MIMEタイプを調べる
-            $data = file_get_contents($file);
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_buffer($finfo, $data);
-            finfo_close($finfo);
+            $file_type = self::checkMime($file);
         }
         //画像のタイプにより処理が異なるので切り分ける
         if (preg_match('/(gif|GIF)/', $file_type)) {
@@ -217,20 +161,5 @@ class Image
                 . $file . ' ' . $file_type);
         }
         return $itype;
-    }
-
-    /**
-     * サイズの確認
-     * @param string $file ファイルデータのパス
-     * @param int $limit 制限サイズ
-     * @return void
-     * @throws D\UserException
-     */
-    private static function sizeCheck(string $file, int $limit): void
-    {
-        $file_byte = filesize($file);
-        if ($file_byte > $limit) {
-            throw new D\UserException('ファイルサイズが大きすぎます');
-        }
     }
 }
