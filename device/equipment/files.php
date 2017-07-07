@@ -3,7 +3,7 @@
  * ファイル モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.0.1
  * @package  device/equipment
  * 
  */
@@ -60,7 +60,7 @@ class Files
     {
         $mime = '';
         if (file_exists($file)) {
-            if (extension_loaded('finfo')) {
+            if (extension_loaded('fileinfo')) {
                 $data = file_get_contents($file);
                 $finfo = finfo_open(FILEINFO_MIME_TYPE);
                 $mime = finfo_buffer($finfo, $data);
