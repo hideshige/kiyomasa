@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.3
+ * @version  1.0.4.0
  * @package  device
  * 
  */
@@ -227,11 +227,11 @@ class Turret
     private function modDebugSql($text): string
     {
         $text = htmlspecialchars((string)$text);
-        preg_match_all("/{{STRING}}'(.*?)'/", $text, $match);
+        preg_match_all("/{{STRING}}'(.*?)'/s", $text, $match);
         if (isset($match[1])) {
             foreach ($match[1] as $v) {
                 $text = preg_replace(
-                    "/{{STRING}}'" . preg_quote($v, '/') . "'/",
+                    "/{{STRING}}'" . preg_quote($v, '/') . "'/s",
                     '&apos;<span class="fw_debug_bold fw_debug_str">'
                     // 文字列として使用されているコロンを置換しておく
                     . preg_replace('/:/', '{{COLON}}', $v)
@@ -240,17 +240,12 @@ class Turret
                 );
             }
         }
-        $text = preg_replace(
-            '/\n/',
-            '{{BR}}',
-            $text
-        );
-        preg_match_all('/═══ BEGIN ROW ═══(.*?)═══ END ROW ═══/', $text, $match);
+        preg_match_all('/═══ BEGIN ROW ═══(.*?)═══ END ROW ═══/s', $text, $match);
         if (isset($match[1])) {
             foreach ($match[1] as $v) {
                 $text = preg_replace(
                     '/═══ BEGIN ROW ═══' . preg_quote($v, '/')
-                    . '═══ END ROW ═══/',
+                    . '═══ END ROW ═══/s',
                     '<span name="fw_debug_process" '
                     . 'class="fw_debug_bold fw_debug_db_select">'
                     // 文字列として使用されているコロンを置換しておく
@@ -299,17 +294,12 @@ class Turret
             $text
         );
         $text = preg_replace(
-            '/{{BR}}/',
-            '<br />',
-            $text
-        );
-        $text = preg_replace(
             '/(LEFT JOIN|INNER JOIN|RIGHT JOIN|WHERE |SELECT |'
             . 'ORDER |LIMIT |UPDATE |INSERT |REPLACE |DELETE |VALUES )/',
             '<br />$1',
             $text
         );
-        return $text;
+        return nl2br($text);
     }
     
     /**
@@ -329,11 +319,6 @@ class Turret
         $text = preg_replace(
             '/{{ERROR_INFO}}(.*)/',
             '<span class="fw_debug_bold fw_debug_str">$1</span>',
-            $text
-        );
-        $text = preg_replace(
-            '/\n/',
-            '{{BR}}',
             $text
         );
         $text = preg_replace(
@@ -357,11 +342,6 @@ class Turret
             '<span class="fw_debug_int">'
             . 'int(<span class="fw_debug_bold">$1</span>)'
             . '</span>',
-            $text
-        );
-        $text = preg_replace(
-            '/{{BR}}/',
-            "\n",
             $text
         );
         return $text;
