@@ -3,7 +3,7 @@
  * 画像 モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.5.2
+ * @version  1.1.5.3
  * @package  device/equipment
  * 
  */
@@ -92,7 +92,7 @@ class Image extends Files
                     'サムネイルを作成できるのはJPEG,GIF,PNGのみです');
         }
         
-        if (extension_loaded('exif')) {
+        if (extension_loaded('exif') and $file_type === 'jpg') {
             $img = self::rotate($img, $original);
         }
         return $img;
