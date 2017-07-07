@@ -3,7 +3,7 @@
  * 画像 モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.5.3
+ * @version  1.1.5.5
  * @package  device/equipment
  * 
  */
@@ -56,8 +56,13 @@ class Image extends Files
         $size = self::imageSize($space);
         $img2 = self::resizeImage();
         
-        if ($space) {
+        if ($space or $file_type === 'gif') {
+            // 塗りつぶし
             self::paintImage($img2, $p);
+        } else {
+            // 透過
+            imagealphablending($img2, false);
+            imagesavealpha($img2, true);
         }
         
         self::resampleImage($img, $img2, $size);
@@ -71,13 +76,13 @@ class Image extends Files
     /**
      * 型チェックと画像の作成
      * @param string $original 元ファイルデータのパス
-     * @param string $file_type ファイルの型(jpg, gif, png)
+     * @param string $file_type ファイルの型(jpg, gif, png) 参照渡し
      * @return void
      * @throws D\UserException
      */
     private static function createImage(
         string $original,
-        string $file_type
+        string &$file_type
     ) {
         if (!$file_type) {
             $file_type = self::checkMime($original);
