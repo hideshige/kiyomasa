@@ -3,12 +3,14 @@
  * ページングモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.1
+ * @version  1.0.5.0
  * @package  device/equipment
  *
  */
 
 namespace Php\Framework\Device\Equipment;
+
+use Php\Framework\Device as D;
 
 class Paging
 {
@@ -20,6 +22,7 @@ class Paging
      * @param array $get GETで取得した配列
      * @param int $disp_num 1ページあたりの件数
      * @return array page:現在のページ num:ページ数 left:左矢印ボタン right:右矢印ボタン tag:ページングタグ
+     * @throws D\UserException
      */
     public static function set(
         int $counts,
@@ -28,8 +31,14 @@ class Paging
         array $get,
         int $disp_num = 20
     ): array {
-        if (!$disp_num) {
-            $disp_num = 20;
+        // 38ページ目移行を読み込もうとした場合
+        if ($page >= 38) {
+            throw new D\UserException('これ以降のページは除外されています。'
+                . '検索結果をすべて表示するには再検索してください。 ');
+        }
+        
+        if ($counts > 38 * $disp_num) {
+            $counts = 38 * $disp_num;
         }
 
         $page_arr = [];
@@ -37,7 +46,7 @@ class Paging
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
-            throw new UserException('ページがありません');
+            throw new D\UserException('ページがありません');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page

@@ -3,12 +3,14 @@
  * ページングモジュール(Ajax用)
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.2
+ * @version  1.0.5.0
  * @package  device/equipment
  * 
  */
 
 namespace Php\Framework\Device\Equipment;
+
+use Php\Framework\Device as D;
 
 class PagingAjax
 {
@@ -19,27 +21,32 @@ class PagingAjax
      * @param int $page  ページ番号
      * @param array $get GETで取得した配列
      * @param int $disp_num 1ページあたりの件数
-     * @param bool $max 最初のページ、最後のページへのリンクを表示する場合TRUE
      * @return array page:現在のページ num:ページ数 left:左矢印ボタン right:右矢印ボタン tag:ページングタグ
+     * @throws D\UserException
      */
     public static function set(
         int $counts,
         string $url,
         int $page,
         array $get,
-        int $disp_num = 20,
-        bool $max = false
+        int $disp_num = 20
     ): array {
-        if (!$disp_num) {
-           $disp_num = 20;
+        // 38ページ目移行を読み込もうとした場合
+        if ($page >= 38) {
+            throw new D\UserException('これ以降のページは除外されています。'
+                . '検索結果をすべて表示するには再検索してください。 ');
         }
-
+        
+        if ($counts > 38 * $disp_num) {
+            $counts = 38 * $disp_num;
+        }
+        
         $page_arr = [];
         $page_arr['num'] = ceil($counts / $disp_num);
 
-        //指定のページがない場合
+        // 指定のページがない場合
         if ($page_arr['num'] < $page) {
-            throw new UserException('ページがありません');
+            throw new D\UserException('ページがありません');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page 
@@ -49,11 +56,6 @@ class PagingAjax
             ? null : $page_arr['page'] - 1;
         $page_arr['right'] = ($page_arr['num'] == $page_arr['page'] or !$counts)
             ? null : $page_arr['page'] + 1;
-
-        $page_arr['maxleft_flag'] = $max and
-            $page_arr['page'] != 1 ? true : false;
-        $page_arr['maxright_flag'] = $max and
-            $page_arr['num'] != $page_arr['page'] ? true : false;
 
         $q = self::makeGet($get);
         $page_arr['tag'] = self::pagingTag($page_arr, sprintf('%s%s', $url, $q));
@@ -97,15 +99,9 @@ class PagingAjax
         $paging_tag = '';
         if ($page_arr['num'] > 1) {
             //左矢印
-            if ($page_arr['maxleft_flag']) {
-                $paging_tag .= sprintf('<li class="hover_on" onclick="'
-                    . 'loadList(\'%s\', 1, false);">&lt;&lt;</li>', $url);
-            } else {
-                $paging_tag .= '<li class="hover_off">&lt;&lt;</li>';
-            }
             if ($page_arr['left']) {
                 $paging_tag .= sprintf('<li class="hover_on" onclick="'
-                    . 'loadList(\'%s\', %d, false);">&lt;</li>', $url,
+                    . 'loadList(%d, false);">&lt;</li>',
                     $page_arr['left']);
             } else {
                 $paging_tag .= '<li class="hover_off">&lt;</li>';
@@ -133,25 +129,17 @@ class PagingAjax
             for ($i = 1; $i <= $link_count; $i ++) {
                 $aclass = ($p == $page_arr['page']) ? ' page_on' : '';
                 $paging_tag .= sprintf('<li class="hover_on%s" onclick="'
-                    . 'loadList(\'%s\', %d, false);">%s</li>',
-                    $aclass, $url, $p, $p);
+                    . 'loadList(%d, false);">%s</li>',
+                    $aclass, $p, $p);
                 $p ++;
             }
 
             //右矢印
             if ($page_arr['right']) {
                 $paging_tag .= sprintf('<li class="hover_on" onclick="'
-                    . 'loadList(\'%s\', %d, false);">&gt;</li>',
-                    $url, $page_arr['right']);
+                    . 'loadList(%d, false);">&gt;</li>', $page_arr['right']);
             } else {
                 $paging_tag .= '<li class="hover_off">&gt;</li>';
-            }
-            if ($page_arr['maxright_flag']) {
-                $paging_tag .= sprintf('<li class="hover_on" onclick="'
-                    . 'loadList(\'%s\', %d, false);">&gt;&gt;</li>',
-                    $url, $page_arr['num']);
-            } else {
-                $paging_tag .= '<li class="hover_off">&gt;&gt;</li>';
             }
         }
 
