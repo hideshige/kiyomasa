@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.4
+ * @version  1.0.3.5
  * @package  device/db
  *
  */
@@ -51,6 +51,7 @@ class DbModule
                 $db_soft, $db_server, $db_name);
             $this->connect = new \PDO($dsn, $db_user, $db_password,
                 [\PDO::ATTR_PERSISTENT => false,
+                \PDO::ATTR_EMULATE_PREPARES => false,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->query("SET NAMES 'utf8mb4'");
             //$this->query("SET sql_mode = 'STRICT_TRANS_TABLES, NO_ZERO_IN_DATE'");
