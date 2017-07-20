@@ -3,7 +3,7 @@
  * キャンプ　シェルコントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.6
+ * @version  1.1.4.7
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -71,9 +71,8 @@ class Camp
     private function exec(string $pagename): void
     {
         try {
-            $class_name = NAME_SPACE . '\Shell\\' . trim(
-                str_replace(' ', '', ucwords(str_replace('_', ' ', $pagename)))
-            );
+            $class_name = NAME_SPACE . '\Shell\\' . trim(str_replace(
+                ' ', '', ucwords(str_replace('_', ' ', $pagename))));
             
             $model = new $class_name();
             $res = $model->logic();
