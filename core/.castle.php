@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.3.1
+ * @version  1.4.3.2
  * @package  core
  * 
  */
@@ -96,10 +96,10 @@ class Castle
         if (isset(S::$get['url'])) {
             list($pagename, $folder) = $this->setPagename();
         }
-        if (!$pagename) {
+        if ($pagename === '') {
             $pagename = 'index';
         }
-        if ($this->mainteCheck() and !$this->debug) {
+        if ($this->mainteCheck() and $this->debug === false) {
             $pagename = 'mainte';
             $folder = '';
         }

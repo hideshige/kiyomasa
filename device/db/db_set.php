@@ -26,14 +26,14 @@ class DbSet
         $res_dbm = S::$dbm->connect(
             DB_MASTER_SERVER, DB_MASTER_USER, DB_MASTER_PASSWORD, DB_MASTER_NAME
         );
-        if (!$res_dbm) {
+        if ($res_dbm === false) {
             throw new \Error('DB_MASTER Connect Error');
         }
         S::$dbs = new DbCrud();
         $res_dbs = S::$dbs->connect(
             DB_SLAVE_SERVER, DB_SLAVE_USER, DB_SLAVE_PASSWORD, DB_SLAVE_NAME
         );
-        if (!$res_dbs) {
+        if ($res_dbs === false) {
             Log::error(
                 'DB_SLAVE Connect Error ---> DB_MASTER Connect Change'
             );

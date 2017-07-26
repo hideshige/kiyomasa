@@ -154,41 +154,41 @@ class Form
                 $str = '';
             }
             foreach ($val as $k => $v) {
-                if ($k === 'must' and preg_replace('/^[　 \r\n]+|[　 \r\n]+$/u', '', $str) == '') {
+                if ($k === 'must' and preg_replace('/^[　 \r\n]+|[　 \r\n]+$/u', '', $str) === '') {
                     $res[$key][$k] = true;
-                } else if ($k === 'must_select' and !$str) {
+                } else if ($k === 'must_select' and $str === '') {
                     $res[$key][$k] = true;
-                } else if ($k === 'max' and $str != '' and mb_strlen($str) > $v) {
+                } else if ($k === 'max' and $str !== '' and mb_strlen($str) > $v) {
                     $res[$key][$k] = mb_strlen($str);
-                } else if ($k === 'min' and $str != '' and mb_strlen($str) < $v) {
+                } else if ($k === 'min' and $str !== '' and mb_strlen($str) < $v) {
                     $res[$key][$k] = mb_strlen($str);
-                } else if ($k === 'fill' and $str != '' and mb_strlen($str) != $v) {
+                } else if ($k === 'fill' and $str !== '' and mb_strlen($str) !== $v) {
                     $res[$key][$k] = mb_strlen($str);
-                } else if ($k === 'int' and $str != '' and !preg_match('/^[\d,]+$/', $str)) {
+                } else if ($k === 'int' and $str !== '' and !preg_match('/^[\d,]+$/', $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'eng' and $str != '' and !preg_match("/^[\w.',=-]+$/", $str)) {
+                } else if ($k === 'eng' and $str !== '' and !preg_match("/^[\w.',=-]+$/", $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'char' and $str != '' and strlen($str) != mb_strlen($str)) {
+                } else if ($k === 'char' and $str !== '' and strlen($str) !== mb_strlen($str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'char2' and $str != '' and mb_convert_kana($str, 'R') != $str) {
+                } else if ($k === 'char2' and $str !== '' and mb_convert_kana($str, 'R') !== $str) {
                     $res[$key][$k] = true;
-                } else if ($k === 'hiragana' and $str != '' and !preg_match('/^[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょっぁぃぅぇぉーゐゑゝゞ・　 ]+$/u', $str)) {
+                } else if ($k === 'hiragana' and $str !== '' and !preg_match('/^[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょっぁぃぅぇぉーゐゑゝゞ・　 ]+$/u', $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'katakana' and $str != '' and !preg_match('/^[アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンヴガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポャュョッァィゥェォヶーヰヱヽヾ・　 ]+$/u', $str)) {
+                } else if ($k === 'katakana' and $str !== '' and !preg_match('/^[アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンヴガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポャュョッァィゥェォヶーヰヱヽヾ・　 ]+$/u', $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'count' and $str != '' and count($str) > $v) {
+                } else if ($k === 'count' and $str !== '' and count($str) > $v) {
                     $tani = $v < 10 ? 'つ' : '';
                     $res[$key][$k] = $v . $tani;
-                } else if ($k === 'match_count' and count($str) != $v) {
+                } else if ($k === 'match_count' and count($str) !== $v) {
                     $tani = $v < 10 ? 'つ' : '';
                     $res[$key][$k] = $v . $tani;
-                } else if ($k === 'email' and $str != '' and (!preg_match('/^.+@.+\..+$/', $str) or !preg_match('/^[0-9a-zA-Z@\-_\.\+]+$/u', $str))) {
+                } else if ($k === 'email' and $str !== '' and (!preg_match('/^.+@.+\..+$/', $str) or !preg_match('/^[0-9a-zA-Z@\-_\.\+]+$/u', $str))) {
                     $res[$key][$k] = true;
-                } else if ($k === 'select' and $str != '' and !is_array($str) and !isset($v[$str])) {//ラジオ、セレクト値送信の不正チェック
+                } else if ($k === 'select' and $str !== '' and !is_array($str) and !isset($v[$str])) {//ラジオ、セレクト値送信の不正チェック
                     $res[$key]['select_error'] = true;
-                } else if ($k === 'select' and $str != '' and is_array($str)) {//チェックボックス値送信の不正チェック
+                } else if ($k === 'select' and $str !== '' and is_array($str)) {//チェックボックス値送信の不正チェック
                     foreach ($str as $strv) {
-                        if (!$v[$strv]) {
+                        if ($v[$strv] === '') {
                             $res[$key]['select_error'] = true;
                         }
                     }
@@ -367,7 +367,8 @@ class Form
         }
         $form[$key] .= sprintf('<select name="%s"%s>', $name, $tag_add);
         foreach ($val as $k => $v) {
-            $select = (isset($data) and $data == $k) ? ' selected="selected"' : '';
+            $select = (isset($data) and $data === $k)
+                ? ' selected="selected"' : '';
             $t = '<option value="%s"%s>%s</option>';
             $form[$key] .= sprintf($t, $k, $select, $v);
         }
@@ -399,7 +400,8 @@ class Form
             $form[$key] = '';
         }
         foreach ($val as $k => $v) {
-            $check = (isset($data) and $data == $k) ? ' checked="checked"' : '';
+            $check = (isset($data) and $data === $k)
+                ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
             $t = '<label><input type="radio" name="%s" value="%s"%s%s /> %s </label>%s';
             $form[$key] .= sprintf($t, $name, $k, $check, $tag_add, $v, $br);

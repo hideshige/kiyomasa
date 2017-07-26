@@ -84,7 +84,7 @@ class DbStatement extends DbModule
             $this->bindValueSet($params, $statement_id);
 
             $res = $this->stmt[$statement_id]->execute();
-            if (!$res) {
+            if ($res === false) {
                 throw new \Error('Bind Error');
             }
             $count = $this->stmt[$statement_id]->rowCount();

@@ -36,9 +36,9 @@ class Curl
         curl_close($ch);
 
         if ($data['content']) {
-            if ($type == 1) {
+            if ($type === 1) {
                 $data['content'] = simplexml_load_string($data['content']);
-            } else if ($type == 2) {
+            } else if ($type === 2) {
                 $data['content'] = json_decode($data['content']);
             }
         }

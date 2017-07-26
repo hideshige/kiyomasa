@@ -52,9 +52,10 @@ class PagingAjax
         $page_arr['page'] = $page_arr['num'] < $page 
             ? $page_arr['num'] : $page;
 
-        $page_arr['left'] = ($page_arr['page'] == 1 or !$counts)
+        $page_arr['left'] = ($page_arr['page'] === 1 or $counts === 0)
             ? null : $page_arr['page'] - 1;
-        $page_arr['right'] = ($page_arr['num'] == $page_arr['page'] or !$counts)
+        $page_arr['right'] =
+            ($page_arr['num'] === $page_arr['page'] or $counts === 0)
             ? null : $page_arr['page'] + 1;
 
         $q = self::makeGet($get);
@@ -127,7 +128,7 @@ class PagingAjax
             //ページリンク
             $p = $start_page;
             for ($i = 1; $i <= $link_count; $i ++) {
-                $aclass = ($p == $page_arr['page']) ? ' page_on' : '';
+                $aclass = ($p === $page_arr['page']) ? ' page_on' : '';
                 $paging_tag .= sprintf('<li class="hover_on%s" onclick="'
                     . 'loadList(%d, false);">%s</li>',
                     $aclass, $p, $p);

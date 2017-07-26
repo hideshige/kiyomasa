@@ -277,7 +277,7 @@ class DbModule
         }
         if (($type === 'insert' or $type === 'update') and
             AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
-            if (!$bind_flag or $type === 'insert') {
+            if ($bind_flag === false or $type === 'insert') {
                 $this->column_count[$statement_id] = count($params);
                 $params['updated_at'] = TIMESTAMP;
             } else {

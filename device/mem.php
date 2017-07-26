@@ -43,7 +43,7 @@ class Mem
 
             // 主がNGの場合は副を使用
             $this->active = $this->memcached_1->addServer(MEMCACHED_SERVER, 11211);
-            if (!$this->active) {
+            if ($this->active === false) {
                 // Memcachedがダウンしている
                 Log::error('Memcached down');
                 $this->disp_mem .= "Memcached is down. Execute it using DB.\n";
@@ -71,7 +71,7 @@ class Mem
         }
 
         // memcachedが有効でない場合か有効期限の指定がない場合DBに値を保存
-        if (!$this->active or !$expire) {
+        if ($this->active === false or $expire === 0) {
             $res = $this->dbSet($key, $var, $expire);
         }
         return $res;
@@ -137,8 +137,8 @@ class Mem
         S::$dbs->select('memcached', '*', $where, 'memcached');
         S::$dbs->bind($param, 'memcached');
         $res = S::$dbs->fetch('\stdClass', 'memcached');
-        if (!(!$res or ($res->temp_flag and 
-            strtotime($res->expire) < time()))) {
+        if (($res === false or ($res->temp_flag and 
+            strtotime($res->expire) < time())) === false) {
             $var = unserialize($res->memcached_value);
             $expire = $res->temp_flag ? time() + COOKIE_LIFETIME : 0;
             if ($this->active) {

@@ -211,10 +211,7 @@ class sessionHandlerMem
     public function read(string $ses_id): string
     {
         $res = S::$mem->get($ses_id);
-        if (!$res) {
-            $res = '';
-        }
-        return $res;
+        return (string)$res;
     }
 
     /**

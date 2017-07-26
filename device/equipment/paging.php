@@ -52,14 +52,15 @@ class Paging
         $page_arr['page'] = $page_arr['num'] < $page
             ? $page_arr['num'] : $page;
 
-        $page_arr['left'] = ($page_arr['page'] == 1 or !$counts)
+        $page_arr['left'] = ($page_arr['page'] === 1 or $counts === 0)
             ? null : $page_arr['page'] - 1;
-        $page_arr['right'] = ($page_arr['num'] == $page_arr['page'] or !$counts)
+        $page_arr['right'] =
+            ($page_arr['num'] === $page_arr['page'] or $counts === 0)
             ? null : $page_arr['page'] + 1;
 
-        $page_arr['maxleft_flag'] = $page_arr['page'] != 1
+        $page_arr['maxleft_flag'] = $page_arr['page'] !== 1
             ? true : false;
-        $page_arr['maxright_flag'] = $page_arr['num'] != $page_arr['page']
+        $page_arr['maxright_flag'] = $page_arr['num'] !== $page_arr['page']
             ? true : false;
 
         $q = self::makeGet($get);
@@ -137,7 +138,7 @@ class Paging
             //ページリンク
             $p = $start_page;
             for ($i = 1; $i <= $link_count; $i ++) {
-                $aclass = ($p == $page_arr['page']) ? ' class="on"' : '';
+                $aclass = ($p === $page_arr['page']) ? ' class="on"' : '';
                 $paging_tag .= sprintf('<li%s><a href="%spage=%d">%s</a></li>',
                     $aclass, $url, $p, $p);
                 $p ++;

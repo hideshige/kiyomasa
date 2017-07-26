@@ -64,14 +64,14 @@ class View
         $tpl_folder = (MOBILE_FLAG and !isset($_SESSION['mobile_pc_flag']))
             ? 'template_mobile/' : 'template/';
         $fname = SERVER_PATH . $tpl_folder . $tpl . $add;
-        if ($tpl_folder == 'template_mobile/' and !file_exists($fname)) {
+        if ($tpl_folder === 'template_mobile/' and !file_exists($fname)) {
               $fname = SERVER_PATH . 'template/' . $tpl . $add;
         }
         if (!file_exists($fname)) {
             throw new \Error('No Template ' . $fname);
         }
         $fh = fopen($fname, 'r');
-        if (!$fh) {
+        if ($fh === false) {
             throw new \Error('Template Open Error');
         } else {
             $content = fread($fh, max(1, filesize($fname)));
@@ -173,7 +173,7 @@ class View
             if (isset($disp[$name][$i])) {
                 $tag_data = self::match($disp[$name][$i], $tag_data);
             }
-            if (isset($match2[1]) and isset($disp[$name][$i])) {
+            if (isset($match2[1], $disp[$name][$i])) {
                 self::matchSetParam($match2[1], $disp[$name][$i], $tag_data);
             }
             $all_tag .= $tag_data;

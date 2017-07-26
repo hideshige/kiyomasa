@@ -28,7 +28,7 @@ class Csv
         if (file_exists($file)) {
             //ファイルの取得
             $contents = file_get_contents($file);
-            if ($encode != $mojicode) {
+            if ($encode !== $mojicode) {
                 //文字コードの変換
                 $contents = mb_convert_encoding($contents, $encode, $mojicode);
             }
@@ -69,12 +69,12 @@ class Csv
         $csv_matches = [];
         $eof = false;
         $itemcnt = 0;
-        while (!$eof) {
+        while ($eof === false) {
             $this_line = fgets($handle);
             $itemcnt += preg_match_all('/' . $e . '/',
                 preg_replace('/' . $e . $d . '(.*?)' . $e . '/',
                 '', $this_line), $dummy);
-            if ($itemcnt % 2 == 0) {
+            if ($itemcnt % 2 === 0) {
                 $eof = true;
             }
             $line  .= $this_line;
@@ -118,7 +118,7 @@ class Csv
         $csv_arr = [];
 
         foreach ($get_data as $k => $v) {
-            if (!$k and $header) {
+            if ($k === 0 and $header) {
                 $tmp = array_keys($v);
                 $csv_arr[] = '"' . implode('","', $tmp) . '"';
             }
@@ -130,7 +130,7 @@ class Csv
             // 区切り文字がずれないように"をエスケープする
             str_replace('&quot;', '""', implode("\n", $csv_arr))
         );
-        if ($mojicode != $encode) {
+        if ($mojicode !== $encode) {
             $csv = mb_convert_encoding($csv, $mojicode, $encode);
         }
         return $csv;
@@ -158,7 +158,7 @@ class Csv
         $tsv_arr = [];
 
         foreach ($get_data as $k => $v) {
-            if (!$k and $header) {
+            if ($k === 0 and $header) {
                 $tmp = array_keys($v);
                 $tsv_arr[] = implode("\t", $tmp) ;
             }
@@ -167,7 +167,7 @@ class Csv
             }
         }
         $tsv = Chara::hDecode(implode("\n", $tsv_arr));
-        if ($mojicode != $encode) {
+        if ($mojicode !== $encode) {
             $tsv = mb_convert_encoding($tsv, $mojicode, $encode);
         }
         return $tsv;

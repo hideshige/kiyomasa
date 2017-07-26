@@ -27,13 +27,13 @@ class NgWord
         $box = [];
 
         // 4バイト文字を許可しない場合
-        if (preg_match('/[\xF0-\xF4]/', $word) and !$mb4_flag) {
+        if (preg_match('/[\xF0-\xF4]/', $word) and $mb4_flag === false) {
             $box[] = '(4バイト文字)';
         }
 
         // 文字コードをUTF-8にする
         $code = mb_detect_encoding($word);
-        if ($code != 'UTF-8') {
+        if ($code !== 'UTF-8') {
             $word = mb_convert_encoding($word, 'UTF-8', $code);
         }
 

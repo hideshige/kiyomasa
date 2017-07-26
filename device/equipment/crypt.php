@@ -52,7 +52,7 @@ class Crypt
             throw new \Error('暗号化エラー');
         }
         // dataを暗号化または復号
-        if (!$encode_flag) {
+        if ($encode_flag === false) {
             $data = unserialize(mdecrypt_generic($td, base64_decode($data)));
         } else {
             $data = base64_encode(mcrypt_generic($td, serialize($data)));

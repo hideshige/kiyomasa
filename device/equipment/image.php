@@ -84,7 +84,7 @@ class Image extends Files
         string $original,
         string &$file_type
     ) {
-        if (!$file_type) {
+        if ($file_type === '') {
             $file_type = self::checkMime($original);
         }
 
@@ -120,7 +120,7 @@ class Image extends Files
                 case 8: $img = imagerotate($img, 90, 0); break;
             }
         }
-        if (!$img) {
+        if ($img === false) {
             throw new \Error('IMAGE ROTATE ERROR');
         }
         return $img;
@@ -133,7 +133,7 @@ class Image extends Files
      */
     private static function resizeImage() {
         $img = imagecreatetruecolor(self::$new_width, self::$new_height);
-        if (!$img) {
+        if ($img === false) {
             throw new \Error('IMAGE CREATE ERROR');
         }
         return $img;
@@ -160,7 +160,7 @@ class Image extends Files
             $width = self::$width;
             $height = self::$height;
         }
-        if (!$space) {
+        if ($space === false) {
             // 書き出しサイズを変更する
             self::$new_width = $width;
             self::$new_height = $height;
@@ -197,7 +197,7 @@ class Image extends Files
         $res = imagecopyresampled($img2, $img, $dst_x, $dst_y, 0, 0,
             $size['width'], $size['height'], self::$width, self::$height);
 
-        if (!$res) {
+        if ($res === false) {
             throw new \Error('THUMBNAIL RESAMPLE ERROR');
         }
     }
@@ -223,7 +223,7 @@ class Image extends Files
             default: $save = false;
         }
 
-        if (!$save) {
+        if ($save === false) {
             throw new \Error('THUMBNAIL SAVE ERROR');
         }
     }

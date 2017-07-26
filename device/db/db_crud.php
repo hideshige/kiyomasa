@@ -149,7 +149,7 @@ class DbCrud extends DbStatement
     {
         try {
             $res = $this->connect->lastInsertId();
-            if (!$res) {
+            if ($res === false) {
                 throw new \Error('GET ID ERROR');
             }
             return $res;
@@ -167,13 +167,13 @@ class DbCrud extends DbStatement
     {
         try {
             $res = false;
-            if ($this->debug and !$this->transaction_flag) {
+            if ($this->debug and $this->transaction_flag === false) {
                 global $g_counter;
                 $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
                     . "START TRANSACTION;\n";
                 $g_counter ++;
             }
-            if (!$this->transaction_flag) {
+            if ($this->transaction_flag === false) {
                 $this->transaction_flag = true;
                 $res = $this->connect->beginTransaction();
             }

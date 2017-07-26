@@ -58,13 +58,13 @@ class Turret
         // デバッグにセッションの動作を表示するため事前にセッションを閉じる
         session_write_close();
         
-        if (!S::$jflag and isset($model->tpl) and count($model->tpl)) {
+        if (S::$jflag === false and isset($model->tpl) and count($model->tpl)) {
             foreach ($model->tpl as $tk => $tv) {
                 echo View::template($tv,
                     isset(S::$disp[$tk]) ? S::$disp[$tk] : []);
             }
         }
-        if (!S::$jflag) {
+        if (S::$jflag === false) {
             echo $this->dispDebug();
         } else if (is_array($res)) {
             $json = $res;
@@ -80,14 +80,14 @@ class Turret
      */
     private function modelError(\Error $e): void
     {
-        if ($e->getCode() != 10) {
+        if ($e->getCode() !== 10) {
             $info = new ErrorInfo;
             $info->set($e->getMessage(), $e->getFile(), $e->getLine());
         }
 
         // エラーページの表示
-        if (!S::$jflag) {
-            if (!$this->error_flag) {
+        if (S::$jflag === false) {
+            if ($this->error_flag === false) {
                 // 循環防止のフラグ
                 $this->error_flag = true;
                 // エラー画面モデルの読み込み
