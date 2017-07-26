@@ -140,7 +140,7 @@ class Mem
         if (($res === false or ($res->temp_flag and 
             strtotime($res->expire) < time())) === false) {
             $var = unserialize($res->memcached_value);
-            $expire = $res->temp_flag ? time() + COOKIE_LIFETIME : 0;
+            $expire = $res->temp_flag === 1 ? time() + COOKIE_LIFETIME : 0;
             if ($this->active) {
                 //データベースの値をmemcachedに保存
                 $this->memcached_1->set($key, $var, false, $expire);
@@ -158,12 +158,12 @@ class Mem
      */
     private function dbSet(string $key, $var, int $expire)
     {
-        $temp_flag = $expire ? 1 : 0;
+        $temp_flag = $expire !== 0 ? 1 : 0;
         $params = [];
         $params['memcached_key'] = $key;
         $params['memcached_value'] = serialize($var);
         $params['temp_flag'] = $temp_flag;
-        $params['expire'] = $expire
+        $params['expire'] = $expire !== 0
             ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
         $params['created_at'] = TIMESTAMP;
         S::$dbm->insert('memcached', $params, true, 'memcached');

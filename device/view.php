@@ -60,7 +60,7 @@ class View
     private static function open(string $tpl): string
     {
         $content = '';
-        $add = preg_match('<\.>', $tpl) ? '' : '.tpl';
+        $add = strpos($tpl, '.') !== false ? '' : '.tpl';
         $tpl_folder = (MOBILE_FLAG and !isset($_SESSION['mobile_pc_flag']))
             ? 'template_mobile/' : 'template/';
         $fname = SERVER_PATH . $tpl_folder . $tpl . $add;

@@ -127,7 +127,7 @@ class Castle
             preg_replace('<^/' . $folder . '>', '', S::$get['url']));
         unset(S::$get['url']);
         S::$url += $url;
-        $pagename = (isset($url[0]) and $url[0]) ? $url[0] : '';
+        $pagename = (isset($url[0]) and $url[0] !== '') ? $url[0] : '';
         return [$pagename, $folder];
     }
     

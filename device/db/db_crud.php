@@ -67,7 +67,7 @@ class DbCrud extends DbStatement
         
         // プレースホルダが?か:nameかを判定
         $this->name[$statement_id] =
-            preg_match('/\?/', $where) ? false : true;
+            strpos($where, '?') !== false ? false : true;
 
         $this->sql = sprintf('SELECT %s FROM %s %s', $params, $table, $where);
         $res = $this->prepare($statement_id);
@@ -93,7 +93,7 @@ class DbCrud extends DbStatement
         
         // プレースホルダが?か:nameかを判定
         $this->name[$statement_id] =
-            preg_match('/\?/', $where) ? false : true;
+            strpos($where, '?') !== false ? false : true;
 
         if (is_array($params)) {
             $this->addTimeColumn('update', $params, $statement_id, false);
@@ -133,7 +133,7 @@ class DbCrud extends DbStatement
         
         // プレースホルダが?か:nameかを判定
         $this->name[$statement_id] =
-            preg_match('/\?/', $where) ? false : true;
+            strpos($where, '?') !== false ? false : true;
         
         $this->sql = sprintf('DELETE FROM %s %s', $table, $where);
 

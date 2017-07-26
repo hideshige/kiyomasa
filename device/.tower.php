@@ -115,7 +115,7 @@ set_error_handler(
             default: $type = 'エラー番号 ' . $no; break;
         }
         
-        if (ENV <= 1 and !preg_match('/\.library/', $file)) {
+        if (ENV <= 1 and strpos($file, '.library') === false) {
             $info = new ErrorInfo;
             $info->set($type . ': ' . $message, $file, $line);
         }
