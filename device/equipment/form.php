@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.0
+ * @version  1.3.5.1
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -258,14 +258,14 @@ class Form
     /**
      * 選択フォームの一括生成
      * @param array $params 検証ルール
-     * @param array|null $form フォームオブジェクト
+     * @param array $form フォームオブジェクト
      * @param array $post ポストデータ
      * @param bool $br_flag チェックボックスとラジオボタンに改行を入れるかどうか
      * @return void
      */
     public static function formArr(
         array $params,
-        &$form,
+        array &$form,
         array $post,
         bool $br_flag = false
     ): void {
@@ -367,7 +367,7 @@ class Form
         }
         $form[$key] .= sprintf('<select name="%s"%s>', $name, $tag_add);
         foreach ($val as $k => $v) {
-            $select = (isset($data) and $data === $k)
+            $select = (isset($data) and $data == $k)
                 ? ' selected="selected"' : '';
             $t = '<option value="%s"%s>%s</option>';
             $form[$key] .= sprintf($t, $k, $select, $v);
@@ -400,7 +400,7 @@ class Form
             $form[$key] = '';
         }
         foreach ($val as $k => $v) {
-            $check = (isset($data) and $data === $k)
+            $check = (isset($data) and $data == $k)
                 ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
             $t = '<label><input type="radio" name="%s" value="%s"%s%s /> %s </label>%s';
@@ -429,7 +429,9 @@ class Form
         string $tag_add = '',
         bool $br_flag = false
     ): void {
-        if (!isset($form[$key])) $form[$key] = '';
+        if (!isset($form[$key])) {
+            $form[$key] = '';
+        }
         foreach ($val as $k => $v) {
             if (!isset($data)) {
                 $data = [];
