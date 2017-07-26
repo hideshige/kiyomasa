@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.1
+ * @version  1.3.5.2
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -403,7 +403,8 @@ class Form
             $check = (isset($data) and $data == $k)
                 ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
-            $t = '<label><input type="radio" name="%s" value="%s"%s%s /> %s </label>%s';
+            $t = '<label><input type="radio" name="%s" value="%s"%s%s />'
+                . ' %s </label>%s';
             $form[$key] .= sprintf($t, $name, $k, $check, $tag_add, $v, $br);
         }
     }
@@ -414,7 +415,7 @@ class Form
      * @param string $name チェックボックスの名前
      * @param string $key チェックボックスのキー
      * @param array $val チェックボックスの内容
-     * @param array|string $data 受け取ったデータの値
+     * @param mixed array|string $data 受け取ったデータの値
      * @param array $form フォームオブジェクト
      * @param string $tag_add タグに付加する文字
      * @param bool $br_flag 改行を入れるか否か
@@ -443,7 +444,8 @@ class Form
             $check = (array_search($k, $data, false) !== false)
                 ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
-            $t = '<label><input type="checkbox" name="%s[]" value="%s"%s%s /> %s </label>%s';
+            $t = '<label><input type="checkbox" name="%s[]" value="%s"%s%s />'
+                . ' %s </label>%s';
             $form[$key] .= sprintf($t, $name, $k, $check, $tag_add, $v, $br);
         }
     }
@@ -511,16 +513,29 @@ class Form
             $form[$k]['answer_type'] = $v['answer_type'];
             $form[$k]['question'] = $v['question'];
             if ($v['answer_type'] === 4) {
-                //チェックボックス
-                if (count($answer[$v['question_id']])) {
-                    $word = implode('],[', $answer[$v['question_id']]);
-                    $form[$k]['answer'] = sprintf('[%s]', $word);
-                } else {
-                    $form[$k]['answer'] = '';
-                }
+                $form[$k]['answer']
+                    = self::makeDataCheckbox($answer, $v['question_id']);
             } else {
                 $form[$k]['answer'] = $answer[$v['question_id']];
             }
         }
+    }
+    
+    /**
+     * データ作成(チェックボックス)
+     * @param array $answer 回答の入った配列
+     * @param string $question_id 問題のID
+     * @return string
+     */
+    private static function makeDataCheckbox(
+        array $answer,
+        string $question_id
+    ): string {
+        $res = '';
+        if (!empty($answer[$question_id])) {
+            $word = implode('],[', $answer[$question_id]);
+            $res = sprintf('[%s]', $word);
+        }
+        return $res;
     }
 }
