@@ -60,14 +60,14 @@ function moreContent(tagId, content, nodeId, classId, addType, tagType) {
         if (classId) { node.className = classId; }
         node.innerHTML = content;
         node.style['opacity'] = '0.1';
-        if (addType == 2) {
+        if (addType === 2) {
             parentBox.insertBefore(node, parentBox.firstChild);
         } else {
             parentBox.appendChild(node);
         }
         setTimeout(function(){
             node.style['opacity'] = '1';
-            if (addType == 3) {
+            if (addType === 3) {
                 //コンテンツの最下部へスクロール
                 var contentsHeight = parentBox.offsetTop + parentBox.clientHeight;
                 window.scroll(0,contentsHeight);
@@ -139,7 +139,7 @@ function postFormObject(objJson, formObject, url_address) {
  * object objJson AJAXオブジェクト
  */
 function ajaxOpen(objJson) {
-    if (objJson.readyState == 4 && objJson.status == 200) {
+    if (objJson.readyState === 4 && objJson.status === 200) {
         try {
             var jsonData = JSON.parse(objJson.responseText);
         } catch (e) {
@@ -151,39 +151,39 @@ function ajaxOpen(objJson) {
         }
         if (jsonData) {
             for (var i in jsonData) {
-                if (i == 'debug' || i == 'dump') {
+                if (i === 'debug' || i === 'dump') {
                     console.log(jsonData[i]);
-                } else if (i == 'jump') {
+                } else if (i === 'jump') {
                     location.href = jsonData['jump'];
                     return false;
-                } else if (i == 'eval') {
+                } else if (i === 'eval') {
                     eval(jsonData[i]);
-                } else if (i == 'window_open') {
+                } else if (i === 'window_open') {
                     window.open(jsonData[i], '_blank');
                     return false;
-                } else if (i == 'alert') {
+                } else if (i === 'alert') {
                     window.alert(jsonData[i]);
-                } else if (i == 'clear') {
+                } else if (i === 'clear') {
                     for (var ci in jsonData[i]) {
                         document.getElementById(ci).innerHTML = '';
                     }
-                } else if (i == 'style') {
+                } else if (i === 'style') {
                     for (var si in jsonData[i]['key']) {
                         if (document.getElementById(si)) {
                             document.getElementById(si).style[jsonData[i]['key'][si]] = jsonData[i]['value'][si];
                         }
                     }
-                } else if (i == 'value') {
+                } else if (i === 'value') {
                     for (var vi in jsonData[i]) {
                         if (document.getElementById(vi)) {
                             document.getElementById(vi).value = jsonData[i][vi];
                         }
                     }
-                } else if (i == 'clear_value') {
+                } else if (i === 'clear_value') {
                     for (var cvi in jsonData[i]) {
                         document.getElementById(cvi).value = '';
                     }
-                } else if (i == 'name') {
+                } else if (i === 'name') {
                     for (var cli in jsonData[i]) {
                         if (document.getElementsByName(cli)[0]) {
                             for (var fi=0; fi<document.getElementsByName(cli).length; fi++){
@@ -191,8 +191,8 @@ function ajaxOpen(objJson) {
                             }
                         }
                     }
-                } else if (typeof(document.getElementById(i)) != 'undefined') {
-                    if (typeof(jsonData[i]) != 'object') {
+                } else if (typeof(document.getElementById(i)) !== 'undefined') {
+                    if (typeof(jsonData[i]) !== 'object') {
                         if (document.getElementById(i)) {
                             document.getElementById(i).innerHTML = jsonData[i];
                         }
