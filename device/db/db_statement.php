@@ -3,9 +3,8 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.4
+ * @version  1.4.5.5
  * @package  device/db
- *
  */
 
 namespace Php\Framework\Device\Db;
@@ -33,8 +32,6 @@ class DbStatement extends DbModule
                 $this->sql = $sql;
             }
 
-            $this->stmt[$statement_id] = $this->connect->prepare($this->sql);
-
             if ($this->debug) {
                 $this->disp_sql .= sprintf(
                     "{{COUNTER %d}}PREPARE {{STATEMENT}}%s FROM '%s';\n",
@@ -42,6 +39,8 @@ class DbStatement extends DbModule
                     preg_replace("/'/", "\\'", $this->sql));
                 $g_counter ++;
             }
+            
+            $this->stmt[$statement_id] = $this->connect->prepare($this->sql);
 
             return $this->stmt[$statement_id];
         } catch (\PDOException $e) {
@@ -83,12 +82,13 @@ class DbStatement extends DbModule
 
             $this->bindValueSet($params, $statement_id);
 
+            $this->executeDebug($statement_id);
             $res = $this->stmt[$statement_id]->execute();
             if ($res === false) {
                 throw new \Error('Bind Error');
             }
             $count = $this->stmt[$statement_id]->rowCount();
-            $this->executeDebug($statement_id, $count);
+            $this->executeDebugCount($count);
             return $count;
         } catch (\PDOException $e) {
             $this->dbLog('bind', $e->getMessage());
@@ -157,25 +157,29 @@ class DbStatement extends DbModule
      * 処理実行のデバッグ表示
      * @global int $g_counter
      * @param string $statement_id
-     * @param int $count
      * @return void
      */
-    private function executeDebug(
-        string $statement_id,
-        int $count
-    ): void {
+    private function executeDebug(string $statement_id): void
+    {
         if ($this->debug) {
             global $g_counter;
             $this->disp_sql .= sprintf(
-                "{{COUNTER %d}}EXECUTE {{STATEMENT}}%s %s;"
-                . " {{TIME}} (%s秒) [行数 %d]\n",
-                $g_counter,
-                $statement_id,
-                $this->debugUsing(),
-                $this->after(),
-                $count
-            );
+                "{{COUNTER %d}}EXECUTE {{STATEMENT}}%s %s;\n",
+                $g_counter, $statement_id, $this->debugUsing());
             $g_counter ++;
+        }
+    }
+    
+    /**
+     * 処理実行の時間と件数
+     * @param int $count
+     * @return void
+     */
+    private function executeDebugCount(int $count): void
+    {
+        if ($this->debug) {
+            $this->disp_sql .= sprintf("{{TIME}} (%s秒) [行数 %d]\n",
+                $this->after(), $count);
         }
     }
     

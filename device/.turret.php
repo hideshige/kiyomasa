@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.0
+ * @version  1.0.4.1
  * @package  device
  * 
  */
@@ -289,8 +289,8 @@ class Turret
             $text
         );
         $text = preg_replace(
-            "/; {{TIME}}(.*?\])/",
-            '; <span name="fw_debug_process" class="fw_debug_time">$1</span>',
+            "/{{TIME}}(.*?\])/",
+            '<span name="fw_debug_process" class="fw_debug_time">$1</span>',
             $text
         );
         $text = preg_replace(
