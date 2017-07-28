@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.1
+ * @version  1.0.4.2
  * @package  device
  * 
  */
@@ -332,7 +332,7 @@ class Turret
             $text
         );
         $text = preg_replace(
-            '/string\((\d*)\) &quot;(.*?)&quot;/',
+            '/string\((\d*)\) &quot;(.*?)&quot;/s',
             'string($1) &quot;<span class="fw_debug_bold fw_debug_str">'
             . '$2</span>&quot;',
             $text
