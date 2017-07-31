@@ -3,14 +3,13 @@
  * キャンプ　シェルコントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.7
+ * @version  1.1.4.8
  * @package  core
  *
  * ターミナルから以下のように実行する
  * php core/.camp.php モデル名 パラメーター
  * cron 設定例
  * 00 5 * * * php /var/www/html/yoursite/core/.camp.php sample test 1>> /var/www/html/yoursite/log/batch/test_$(date +\%y\%m\%d).log 2>&1
- * cronを実行できるように環境にあわせてchdir()の値を変えること
  *
  */
 
