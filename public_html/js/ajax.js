@@ -2,12 +2,12 @@
  * Ajax モデル
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.0.1
  * @package  js
  */
 
-var mainJson = newXMLHttp();//メイン
-var subJson = newXMLHttp();//サブ
+var mainJson = newXMLHttp(); // メイン
+var subJson = newXMLHttp(); // サブ
 
 var commonObj = new Object();
 commonObj.url = '';
@@ -24,15 +24,24 @@ setInterval("doubleClickCancel()", 500);
  * ---------------------------------------------------------------------------
  */
 function newXMLHttp() {
-    if (window.XMLHttpRequest){
+    if (window.XMLHttpRequest)
+    {
         return new XMLHttpRequest();
-    } else if(window.ActiveXObject) {
-        try {
+    }
+    else if(window.ActiveXObject)
+    {
+        try
+        {
             return new ActiveXObject("MXSML2.XMLHTTP");
-        } catch(e) {
-            try {
+        }
+        catch(e)
+        {
+            try
+            {
                 return new ActiveXObject("Microsoft.XMLHTTP");
-            } catch(e) {
+            }
+            catch(e)
+            {
                 return null;
             }
         }
@@ -51,28 +60,35 @@ function newXMLHttp() {
  * int addType 1:末尾に追加 2:先頭に追加 3:末尾に追加したあとスクロール
  * string tagType 追加するHTMLタグの種類
  */
-function moreContent(tagId, content, nodeId, classId, addType, tagType) {
+function moreContent(tagId, content, nodeId, classId, addType, tagType)
+{
     var tagTypes = tagType || 'li';
     var parentBox = document.getElementById(tagId);
-    if (parentBox) {
+    if (parentBox)
+    {
         var node = document.createElement(tagTypes);
         node.id = nodeId;
         if (classId) { node.className = classId; }
         node.innerHTML = content;
         node.style['opacity'] = '0.1';
-        if (addType === 2) {
+        if (addType === 2)
+        {
             parentBox.insertBefore(node, parentBox.firstChild);
         } else {
             parentBox.appendChild(node);
         }
-        setTimeout(function(){
+        setTimeout(function()
+        {
             node.style['opacity'] = '1';
-            if (addType === 3) {
+            if (addType === 3)
+            {
                 //コンテンツの最下部へスクロール
-                var contentsHeight = parentBox.offsetTop + parentBox.clientHeight;
+                var contentsHeight
+                    = parentBox.offsetTop + parentBox.clientHeight;
                 window.scroll(0,contentsHeight);
             }
-        },100);
+        }
+        ,100);
     }
     return true;
 }
@@ -84,12 +100,18 @@ function moreContent(tagId, content, nodeId, classId, addType, tagType) {
  * string tagId HTMLタグID
  * string nodeId HTMLタグノードID
  */
-function deleteContent(tagId, nodeId) {
+function deleteContent(tagId, nodeId)
+{
     var parentBox = document.getElementById(tagId);
     var deleteBox = document.getElementById(nodeId);
-    if (deleteBox) {
+    if (deleteBox)
+    {
         deleteBox.style['opacity'] = '0';
-        setTimeout(function(){parentBox.removeChild(deleteBox)},300);
+        setTimeout(function()
+        {
+            parentBox.removeChild(deleteBox);
+        }
+        ,300);
     }
     return true;
 }
@@ -101,15 +123,24 @@ function deleteContent(tagId, nodeId) {
  * object objJson AJAXオブジェクト
  * string url_address 開くURL
  */
-function openJson(objJson, url_address) {
-    if (doubleClickCheck) return false;
+function openJson(objJson, url_address)
+{
+    if (doubleClickCheck)
+    {
+        return false;
+    }
     doubleClickCheck = true;
-    if (document.getElementById('token')) {
+    if (document.getElementById('token'))
+    {
         commonObj.url += '&token=' + document.getElementById('token').innerHTML;
     }
     objJson.open('POST', url_root + url_address, true);
-    objJson.onreadystatechange = function(){ajaxOpen(objJson)};
-    objJson.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    objJson.onreadystatechange = function()
+    {
+        ajaxOpen(objJson);
+    };
+    objJson.setRequestHeader('Content-Type',
+        'application/x-www-form-urlencoded; charset=UTF-8');
     objJson.send(commonObj.url);
     commonObj.url = '';
     return true;
@@ -123,10 +154,16 @@ function openJson(objJson, url_address) {
  * object formJson フォームオブジェクト
  * string url_address 開くURL
  */
-function postFormObject(objJson, formObject, url_address) {
+function postFormObject(objJson, formObject, url_address)
+{
     //ブラウザによってはキャッシュを見ることがあるためURLにタイムスタンプを付けてキャッシュを無視させる
-    objJson.open('POST', url_root + url_address + '?ver=' + encodeURIComponent(new Date()), true);
-    objJson.onreadystatechange = function(){ajaxOpen(objJson)};
+    objJson.open('POST',
+        url_root + url_address + '?ver=' + encodeURIComponent(new Date()),
+        true);
+    objJson.onreadystatechange = function()
+    {
+        ajaxOpen(objJson);
+    };
     objJson.setRequestHeader('enctype', 'multipart/form-data');
     objJson.send(formObject);
     return true;
@@ -138,69 +175,124 @@ function postFormObject(objJson, formObject, url_address) {
  * ---------------------------------------------------------------------------
  * object objJson AJAXオブジェクト
  */
-function ajaxOpen(objJson) {
-    if (objJson.readyState === 4 && objJson.status === 200) {
-        try {
+function ajaxOpen(objJson)
+{
+    if (objJson.readyState === 4 && objJson.status === 200)
+    {
+        try
+        {
             var jsonData = JSON.parse(objJson.responseText);
-        } catch (e) {
-            try {
+        }
+        catch (e)
+        {
+            try
+            {
                 var jsonData = eval('('+objJson.responseText+')');
-            } catch (e) {
+            }
+            catch (e)
+            {
                 //エラー
             }
         }
-        if (jsonData) {
-            for (var i in jsonData) {
-                if (i === 'debug' || i === 'dump') {
+        if (jsonData)
+        {
+            for (var i in jsonData)
+            {
+                if (i === 'debug' || i === 'dump')
+                {
                     console.log(jsonData[i]);
-                } else if (i === 'jump') {
+                }
+                else if (i === 'jump')
+                {
                     location.href = jsonData['jump'];
                     return false;
-                } else if (i === 'eval') {
+                }
+                else if (i === 'eval')
+                {
                     eval(jsonData[i]);
-                } else if (i === 'window_open') {
+                }
+                else if (i === 'window_open')
+                {
                     window.open(jsonData[i], '_blank');
                     return false;
-                } else if (i === 'alert') {
+                }
+                else if (i === 'alert')
+                {
                     window.alert(jsonData[i]);
-                } else if (i === 'clear') {
-                    for (var ci in jsonData[i]) {
+                }
+                else if (i === 'clear')
+                {
+                    for (var ci in jsonData[i])
+                    {
                         document.getElementById(ci).innerHTML = '';
                     }
-                } else if (i === 'style') {
-                    for (var si in jsonData[i]['key']) {
-                        if (document.getElementById(si)) {
+                }
+                else if (i === 'style')
+                {
+                    for (var si in jsonData[i]['key'])
+                    {
+                        if (document.getElementById(si))
+                        {
                             document.getElementById(si).style[jsonData[i]['key'][si]] = jsonData[i]['value'][si];
                         }
                     }
-                } else if (i === 'value') {
-                    for (var vi in jsonData[i]) {
-                        if (document.getElementById(vi)) {
+                }
+                else if (i === 'value')
+                {
+                    for (var vi in jsonData[i])
+                    {
+                        if (document.getElementById(vi))
+                        {
                             document.getElementById(vi).value = jsonData[i][vi];
                         }
                     }
-                } else if (i === 'clear_value') {
-                    for (var cvi in jsonData[i]) {
+                }
+                else if (i === 'clear_value')
+                {
+                    for (var cvi in jsonData[i])
+                    {
                         document.getElementById(cvi).value = '';
                     }
-                } else if (i === 'name') {
-                    for (var cli in jsonData[i]) {
-                        if (document.getElementsByName(cli)[0]) {
-                            for (var fi=0; fi<document.getElementsByName(cli).length; fi++){
-                                document.getElementsByName(cli)[fi].innerHTML = jsonData[i][cli];
+                }
+                else if (i === 'name')
+                {
+                    for (var cli in jsonData[i])
+                    {
+                        if (document.getElementsByName(cli)[0])
+                        {
+                            for (var fi = 0;
+                                fi < document.getElementsByName(cli).length;
+                                fi++)
+                            {
+                                document.getElementsByName(cli)[fi].innerHTML
+                                    = jsonData[i][cli];
                             }
                         }
                     }
-                } else if (typeof(document.getElementById(i)) !== 'undefined') {
-                    if (typeof(jsonData[i]) !== 'object') {
-                        if (document.getElementById(i)) {
+                }
+                else if (typeof(document.getElementById(i)) !== 'undefined')
+                {
+                    if (typeof(jsonData[i]) !== 'object')
+                    {
+                        if (document.getElementById(i))
+                        {
                             document.getElementById(i).innerHTML = jsonData[i];
                         }
-                    } else {
-                        for (var ni in jsonData[i]) {
-                            if (jsonData[i][ni]['node_add']) {
-                                moreContent(i, jsonData[i][ni]['node'], jsonData[i][ni]['node_id'], jsonData[i][ni]['node_class'], jsonData[i][ni]['node_add'], jsonData[i][ni]['node_tag']);
-                            } else {
+                    }
+                    else
+                    {
+                        for (var ni in jsonData[i])
+                        {
+                            if (jsonData[i][ni]['node_add'])
+                            {
+                                moreContent(i, jsonData[i][ni]['node'], 
+                                    jsonData[i][ni]['node_id'],
+                                    jsonData[i][ni]['node_class'],
+                                    jsonData[i][ni]['node_add'],
+                                    jsonData[i][ni]['node_tag']);
+                            }
+                            else
+                            {
                                 deleteContent(i, jsonData[i][ni]['node_id']);
                             }
                         }
@@ -219,6 +311,7 @@ function ajaxOpen(objJson) {
  * ダブルクリック制御の解除
  * ---------------------------------------------------------------------------
  */
-function doubleClickCancel() {
+function doubleClickCancel()
+{
     doubleClickCheck = false;
 }
