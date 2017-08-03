@@ -251,11 +251,8 @@ class DbModule
     ): bool {
         try {
             $params = implode(', ', $param);
-            $res = $this->query(
-                sprintf('CALL %s(%s)', $name, $params),
-                null,
-                $statement_id
-            );
+            $res = $this->query(sprintf('CALL %s(%s)', $name, $params),
+                null, $statement_id);
             return $res;
         } catch (\PDOException $e) {
             $this->dbLog('call', $e->getMessage());
