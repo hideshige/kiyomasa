@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.5
+ * @version  1.0.4.0
  * @package  device/db
  *
  */
@@ -14,19 +14,19 @@ use Php\Framework\Device\Log;
 
 class DbModule
 {
-    protected $connect; // データベースオブジェクト
-    protected $stmt = []; // ステートメント
-    protected $do = []; // ステートメントで実行中の動作メモを格納
-    protected $name = []; // プレースホルダが名前の場合TRUE
-    protected $column_count = []; // 更新するカラムの数
-    protected $bind_params = []; // バインドする値（デバッグ表示およびログ用）
-    protected $time; // ステートメント開始時間
-    public $sql = ''; // 実行するSQL
-    public $debug; // デバッグフラグ
-    public $disp_sql = ''; // デバッグ表示用に成型したSQL
-    public $transaction_flag = false; // トランザクション実行中の場合TRUE
-    public $lock_flag = false; // テーブル排他ロック中の場合TRUE
-    public $qt_sum = 0; // 実行時間合計
+    use DbCrud;
+    use DbStatement;
+    
+    private $connect; // データベースオブジェクト
+    private $column_count = []; // 更新するカラムの数
+    private $bind_params = []; // バインドする値（デバッグ表示およびログ用）
+    private $time; // ステートメント開始時間
+    private $debug; // デバッグフラグ
+    private $sql = ''; // 実行するSQL
+    private $disp_sql = ''; // デバッグ表示用に成型したSQL
+    private $transaction_flag = false; // トランザクション実行中の場合TRUE
+    private $lock_flag = false; // テーブル排他ロック中の場合TRUE
+    private $qt_sum = 0; // 実行時間合計
 
     /**
      * 接続
@@ -35,6 +35,7 @@ class DbModule
      * @param string $db_password ユーザーのパスワード
      * @param string $db_name データベースの名前
      * @param string $db_soft 使用するDBソフト
+     * @param bool $debug デバッグを行う場合TRUE
      * @return bool 成否
      * @throws \PDOException
      */
@@ -43,7 +44,8 @@ class DbModule
         string $db_user, 
         string $db_password, 
         string $db_name, 
-        string $db_soft = 'mysql'
+        string $db_soft,
+        bool $debug
     ): bool {
         try {
             $res = true;
@@ -55,6 +57,8 @@ class DbModule
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->query("SET NAMES 'utf8mb4'");
             //$this->query("SET sql_mode = 'STRICT_TRANS_TABLES, NO_ZERO_IN_DATE'");
+            
+            $this->debug = $debug;
         } catch (\PDOException $e) {
             Log::error($e->getMessage());
             $res = false;
@@ -67,7 +71,7 @@ class DbModule
      * 実行時間の測定開始
      * @return void
      */
-    protected function before(): void
+    private function before(): void
     {
         if ($this->debug) {
             $this->time = microtime(true);
@@ -78,7 +82,7 @@ class DbModule
      * 実行時間の取得
      * @return float 実行時間
      */
-    protected function after(): float
+    private function after(): float
     {
         $qt = 0;
         if ($this->debug) {
@@ -100,7 +104,7 @@ class DbModule
      * @return void
      * @throws \Error
      */
-    protected function dbLog(string $class_name, string $error): void
+    private function dbLog(string $class_name, string $error): void
     {
         $bind = [];
         if ($this->bind_params) {
@@ -118,7 +122,7 @@ class DbModule
      * @param array $rows
      * @return void
      */
-    protected function dbSelectDump(array $rows): void
+    private function dbSelectDump(array $rows): void
     {
         if ($rows and $this->debug) {
             $this->disp_sql .= '═══ BEGIN ROW ═══';
@@ -265,7 +269,7 @@ class DbModule
      * @param string $statement_id
      * @return void
      */
-    protected function addTimeColumn(
+    private function addTimeColumn(
         string $type,
         array &$params,
         string $statement_id,
@@ -285,5 +289,15 @@ class DbModule
                     0, [TIMESTAMP]);
             }
         }
+    }
+    
+    /**
+     * 実行したSQLログを取得
+     * @param bool $debug_flag
+     * @return string
+     */
+    public function getSql(bool $debug_flag): string
+    {
+        return $debug_flag ? $this->disp_sql : $this->sql;
     }
 }

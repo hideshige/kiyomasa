@@ -53,8 +53,8 @@ class Camp
             $this->exec($argv[1]);
 
             if ($this->debug) {
-                echo "<DBS>\n" . S::$dbs->sql . "\n";
-                echo "<DBM>\n" . S::$dbm->sql . "\n";
+                echo "<DBS>\n" . S::$dbs->getSql(false) . "\n";
+                echo "<DBM>\n" . S::$dbm->getSql(false) . "\n";
             }
         } catch (\Error $e) {
             echo $e->getMessage();

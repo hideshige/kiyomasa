@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.8.1
+ * @version  1.0.9.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -26,13 +26,14 @@ class Mem
 {
     private $memcached_1;//memcachedオブジェクト
     private $active;//memcachedが起動しているかどうかのフラグ
-    public $disp_mem = '';//debug情報
-    public $debug;//debugかどうかのフラグ
+    private $disp_mem = '';//debug情報
+    private $debug;//debugかどうかのフラグ
 
     /**
      * 接続
+     * @param bool $debug
      */
-    public function __construct()
+    public function __construct(bool $debug)
     {
         if (!extension_loaded('memcached')) {
             // Memcachedがインストールされていない
@@ -49,6 +50,7 @@ class Mem
                 $this->disp_mem .= "Memcached is down. Execute it using DB.\n";
             }
         }
+        $this->debug = $debug;
     }
 
     /**
@@ -182,5 +184,14 @@ class Mem
         $where = 'WHERE memcached_key = ?';
         S::$dbm->delete('memcached', $where, 'memcached');
         S::$dbm->bind($param, 'memcached');
+    }
+    
+    /**
+     * デバッグ表示用文字列の取得
+     * @return string
+     */
+    public function getDispMem(): string
+    {
+        return $this->disp_mem;
     }
 }

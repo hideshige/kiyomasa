@@ -3,13 +3,13 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.5
+ * @version  1.4.5.6
  * @package  device/db
  */
 
 namespace Php\Framework\Device\Db;
 
-class DbStatement extends DbModule
+trait DbStatement
 {
     /**
      * ステートメントの準備

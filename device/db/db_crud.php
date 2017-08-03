@@ -3,15 +3,19 @@
  * データベース（CRUD、トランザクション関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.1
+ * @version  1.0.1.0
  * @package  device/db
  *
  */
 
 namespace Php\Framework\Device\Db;
 
-class DbCrud extends DbStatement
+trait DbCrud
 {
+    private $stmt = []; // ステートメント
+    private $do = []; // ステートメントで実行中の動作メモを格納
+    private $name = []; // プレースホルダが名前の場合TRUE
+    
     /**
      * 作成
      * @param string $table テーブル名
@@ -25,13 +29,11 @@ class DbCrud extends DbStatement
         array $params,
         bool $replace = false,
         string $statement_id = 'stmt'
-    ) {
+    ): void {
         $this->do[$statement_id] = 'insert';
         $this->name[$statement_id] = true;
 
-        $res = false;
-
-        if ($params) {
+        if (!empty($params)) {
             $this->addTimeColumn('insert', $params, $statement_id, false);
             $params_keys = array_keys($params);
             foreach ($params_keys as $v) {
@@ -44,9 +46,8 @@ class DbCrud extends DbStatement
             $this->sql = sprintf('%s INTO %s (%s) VALUES (%s)',
                 $command, $table, $fields, $values);
 
-            $res = $this->prepare($statement_id);
+            $this->prepare($statement_id);
         }
-        return $res;
     }
 
     /**
@@ -55,14 +56,14 @@ class DbCrud extends DbStatement
      * @param string $params 取り出す値
      * @param string $where 取り出す条件
      * @param string $statement_id プリペアドステートメントID
-     * @return object|bool
+     * @return void
      */
     public function select(
         string $table,
         string $params = '*',
         string $where = '',
         string $statement_id = 'stmt'
-    ) {
+    ): void {
         $this->do[$statement_id] = 'select';
         
         // プレースホルダが?か:nameかを判定
@@ -70,8 +71,7 @@ class DbCrud extends DbStatement
             strpos($where, '?') !== false ? false : true;
 
         $this->sql = sprintf('SELECT %s FROM %s %s', $params, $table, $where);
-        $res = $this->prepare($statement_id);
-        return $res;
+        $this->prepare($statement_id);
     }
 
 
@@ -81,21 +81,21 @@ class DbCrud extends DbStatement
      * @param array $params 更新する値（配列からフィールド名とフィールド値を取り出す）
      * @param string $where 検索条件
      * @param string $statement_id プリペアドステートメントID
-     * @return object|bool|void
+     * @return void
      */
     public function update(
         string $table,
         array $params,
         string $where = '',
         string $statement_id = 'stmt'
-    ) {
+    ): void {
         $this->do[$statement_id] = 'update';
         
         // プレースホルダが?か:nameかを判定
         $this->name[$statement_id] =
             strpos($where, '?') !== false ? false : true;
 
-        if (is_array($params)) {
+        if (!empty($params)) {
             $this->addTimeColumn('update', $params, $statement_id, false);
             $values = [];
             $i = 0;
@@ -105,15 +105,11 @@ class DbCrud extends DbStatement
                 $values[$i] = sprintf('%s = %s', $key, $var);
                 $i ++;
             }
-            if (isset($values[1])) {
-                $value = implode(', ', $values);
-            } else {
-                $value = $values[0];
-            }
+            $value = implode(', ', $values);
 
             $this->sql = sprintf('UPDATE %s SET %s %s', $table, $value, $where);
 
-            return $this->prepare($statement_id);
+            $this->prepare($statement_id);
         }
     }
 
@@ -122,13 +118,13 @@ class DbCrud extends DbStatement
      * @param string $table テーブル名
      * @param string $where 検索条件
      * @param string $statement_id プリペアドステートメントID
-     * @return object|bool
+     * @return void
      */
     public function delete(
         string $table,
         string $where = '',
         string $statement_id = 'stmt'
-    ) {
+    ): void {
         $this->do[$statement_id] = 'delete';
         
         // プレースホルダが?か:nameかを判定
@@ -136,9 +132,7 @@ class DbCrud extends DbStatement
             strpos($where, '?') !== false ? false : true;
         
         $this->sql = sprintf('DELETE FROM %s %s', $table, $where);
-
-        $res = $this->prepare($statement_id);
-        return $res;
+        $this->prepare($statement_id);
     }
     
     /**
@@ -161,12 +155,11 @@ class DbCrud extends DbStatement
     /**
      * トランザクションの開始
      * @global int $g_counter
-     * @return bool
+     * @return void
      */
-    public function transaction(): bool
+    public function transaction(): void
     {
         try {
-            $res = false;
             if ($this->debug and $this->transaction_flag === false) {
                 global $g_counter;
                 $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
@@ -175,9 +168,8 @@ class DbCrud extends DbStatement
             }
             if ($this->transaction_flag === false) {
                 $this->transaction_flag = true;
-                $res = $this->connect->beginTransaction();
+                $this->connect->beginTransaction();
             }
-            return $res;
         } catch (\PDOException $e) {
             $this->dbLog('transaction', $e->getMessage());
         }
@@ -186,12 +178,11 @@ class DbCrud extends DbStatement
     /**
      * トランザクションの確定
      * @global int $g_counter
-     * @return bool
+     * @return void
      */
-    public function commit(): bool
+    public function commit(): void
     {
         try {
-            $res = false;
             if ($this->debug and $this->transaction_flag) {
                 global $g_counter;
                 $this->disp_sql .= "{{COUNTER " . $g_counter . "}}COMMIT;\n";
@@ -199,9 +190,8 @@ class DbCrud extends DbStatement
             }
             if ($this->transaction_flag) {
                 $this->transaction_flag = false;
-                $res = $this->connect->commit();
+                $this->connect->commit();
             }
-            return $res;
         } catch (\PDOException $e) {
             $this->dbLog('commit', $e->getMessage());
         }
@@ -210,12 +200,11 @@ class DbCrud extends DbStatement
     /**
      * トランザクションの復帰
      * @global int $g_counter
-     * @return bool
+     * @return void
      */
-    public function rollback(): bool
+    public function rollback(): void
     {
         try {
-            $res = false;
             if ($this->debug and $this->transaction_flag) {
                 global $g_counter;
                 $this->disp_sql .= "{{COUNTER " . $g_counter . "}}ROLLBACK;\n";
@@ -223,9 +212,8 @@ class DbCrud extends DbStatement
             }
             if ($this->transaction_flag) {
                 $this->transaction_flag = false;
-                $res = $this->connect->rollBack();
+                $this->connect->rollBack();
             }
-            return $res;
         } catch (\PDOException $e) {
             $this->dbLog('rollback', $e->getMessage());
         }

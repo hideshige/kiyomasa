@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.3.2
+ * @version  1.4.3.3
  * @package  core
  * 
  */
@@ -39,14 +39,12 @@ class Castle
             $db_set->dbConnect($this->debug);
             
             // memchached
-            S::$mem = new Mem();
-            S::$mem->debug = $this->debug;
+            S::$mem = new Mem($this->debug);
 
             // セッションのセット
             new Session();
 
-            $turret = new Turret();
-            $turret->debug = $this->debug;
+            $turret = new Turret($this->debug);
 
             // HTMLクエリのセット
             S::$post = $turret->h($_POST);

@@ -12,8 +12,17 @@ namespace Php\Framework\Device;
 
 class Turret
 {
-    public $debug = false; // デバッグモード
+    private $debug = false; // デバッグモード
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
+    
+    /**
+     * コンストラクタ
+     * @param bool $debug
+     */
+    public function __construct(bool $debug)
+    {
+        $this->debug = $debug;
+    }
     
     /**
      * モデルを実行し、ビューにデータを渡す
@@ -179,9 +188,9 @@ class Turret
                 'user_agent' => USER_AGENT,
                 'timestamp' => TIMESTAMP,
                 'time' => time(),
-                'db_slave' => $this->modDebugSql(S::$dbs->disp_sql),
-                'db_master' => $this->modDebugSql(S::$dbm->disp_sql),
-                'memcached' => nl2br(htmlspecialchars(S::$mem->disp_mem)),
+                'db_slave' => $this->modDebugSql(S::$dbs->getSql(true)),
+                'db_master' => $this->modDebugSql(S::$dbm->getSql(true)),
+                'memcached' => nl2br(htmlspecialchars(S::$mem->getDispMem())),
                 'post' => $this->modDebugDump($post),
                 'get' => $this->modDebugDump($get),
                 'url' => $this->modDebugDump($url),
