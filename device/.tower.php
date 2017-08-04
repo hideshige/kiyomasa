@@ -1,65 +1,14 @@
 <?php
 /**
- * タワー　例外処理やショートカットなど土台強化部
+ * タワー　オートロード、エラーハンドラなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.1
+ * @version  1.0.1.2
  * @package  device
  * 
  */
 
 namespace Php\Framework\Device;
-
-/**
- * ユーザー操作による例外
- */
-class UserException extends \Exception
-{
-}
-
-class ErrorInfo
-{
-    /**
-     * エラー情報のセット
-     * @global string $dump
-     * @param string $message
-     * @param string $file
-     * @param int $line
-     * @return void
-     */
-    public function set(string $message, string $file, int $line): void
-    {
-        S::$dbm->rollback();
-        S::$dbm->unlock();
-
-        // ログに記録し、開発環境の場合デバッグを表示
-        $short_file = str_replace(SERVER_PATH, '', $file);
-        $error = sprintf('%s(%d) %s', $short_file, $line, $message);
-        Log::error($error);
-
-        global $dump;
-        $dump .= sprintf("# %s {{DUMP_LINE}}%d\n{{ERROR_INFO}}%s\n",
-            $short_file, $line, $message);
-    }
-}
-
-/**
- * パラメータのショートカット用スタティックオブジェクト
- *
- */
-class S
-{
-    static $post; // 整形後のPOSTパラメータ
-    static $get; // 整形後のGETパラメータ
-    static $url; // URLパラメータ
-    static $dbm; // DBマスターモジュール
-    static $dbs; // DBスレーブモジュール
-    static $mem; // memcachedモジュール
-    static $disp; // テンプレートデータ
-    static $user; // セッション上のユーザーデータ
-    static $ouser; // ページに表示するユーザーデータ
-    static $jflag; // そのモデルがJSON形式かHTML形式か
-}
 
 // オートロード
 spl_autoload_register(

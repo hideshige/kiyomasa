@@ -11,8 +11,9 @@ namespace Yourname\Yourproject\Model\Content;
 
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Extension as E;
+use Yourname\Yourproject\Prop as P;
 
-class ErrorPage implements D\HtmlProp
+class ErrorPage implements P\Html
 {
     public $tpl = ['part/header', 'content/error_page', 'part/footer'];
 

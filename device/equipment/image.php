@@ -78,7 +78,7 @@ class Image extends Files
      * @param string $original 元ファイルデータのパス
      * @param string $file_type ファイルの型(jpg, gif, png) 参照渡し
      * @return void
-     * @throws D\UserException
+     * @throws D\UserEx
      */
     private static function createImage(
         string $original,
@@ -93,7 +93,7 @@ class Image extends Files
             case 'jpg': $img = imagecreatefromjpeg($original); break;
             case 'png': $img = imagecreatefrompng($original); break;
             default:
-                throw new D\UserException(
+                throw new D\UserEx(
                     'サムネイルを作成できるのはJPEG,GIF,PNGのみです');
         }
         

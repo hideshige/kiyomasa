@@ -11,8 +11,9 @@
 namespace Yourname\Yourproject\Extension;
 
 use Php\Framework\Device as D;
+use Yourname\Yourproject\Prop as P;
 
-abstract class BaseModel implements D\HtmlProp
+abstract class BaseModel implements P\Html
 {
     /**
      * プログラムを実行する

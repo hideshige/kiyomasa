@@ -10,9 +10,9 @@
 
 namespace Yourname\Yourproject\Extension;
 
-use Php\Framework\Device as D;
+use Yourname\Yourproject\Prop as P;
 
-abstract class BaseShell implements D\ShellProp
+abstract class BaseShell implements P\Shell
 {
     /**
      * プログラムを実行する

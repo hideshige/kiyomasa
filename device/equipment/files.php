@@ -78,13 +78,13 @@ class Files
      * @param string $file ファイルデータのパス
      * @param int $limit 制限サイズ
      * @return void
-     * @throws D\UserException
+     * @throws D\UserEx
      */
     public static function sizeCheck(string $file, int $limit): void
     {
         $file_byte = filesize($file);
         if ($file_byte > $limit) {
-            throw new D\UserException('ファイルサイズが大きすぎます');
+            throw new D\UserEx('ファイルサイズが大きすぎます');
         }
     }
 }

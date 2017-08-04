@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.3.3
+ * @version  1.4.3.4
  * @package  core
  * 
  */
@@ -17,7 +17,6 @@ use Php\Framework\Device\Turret;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
 
-require_once(__DIR__ . '/../device/.rampart.php');
 require_once(__DIR__ . '/../device/.turret.php');
 require_once(__DIR__ . '/../device/.tower.php');
 

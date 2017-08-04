@@ -11,8 +11,9 @@
 namespace Dh\Ai\Extension;
 
 use Php\Framework\Device as D;
+use Yourname\Yourproject\Prop as P;
 
-abstract class JsonModel implements D\AjaxProp
+abstract class JsonModel implements P\Ajax
 {
     /**
      * プログラムを実行する

@@ -22,7 +22,7 @@ class Paging
      * @param array $get GETで取得した配列
      * @param int $disp_num 1ページあたりの件数
      * @return array page:現在のページ num:ページ数 left:左矢印ボタン right:右矢印ボタン tag:ページングタグ
-     * @throws D\UserException
+     * @throws D\UserEx
      */
     public static function set(
         int $counts,
@@ -33,7 +33,7 @@ class Paging
     ): array {
         // 38ページ目移行を読み込もうとした場合
         if ($page >= 38) {
-            throw new D\UserException('これ以降のページは除外されています。'
+            throw new D\UserEx('これ以降のページは除外されています。'
                 . '検索結果をすべて表示するには再検索してください。 ');
         }
         
@@ -46,7 +46,7 @@ class Paging
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
-            throw new D\UserException('ページがありません');
+            throw new D\UserEx('ページがありません');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page

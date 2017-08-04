@@ -3,7 +3,7 @@
  * キャンプ　シェルコントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.8
+ * @version  1.1.4.9
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -22,7 +22,6 @@ use Php\Framework\Device\Log;
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
 require_once(__DIR__ . '/config.php');
-require_once(__DIR__ . '/../device/.rampart.php');
 require_once(__DIR__ . '/../device/.tower.php');
 
 new Camp;

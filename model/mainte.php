@@ -11,8 +11,9 @@ namespace Yourname\Yourproject\Model;
 
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Extension as E;
+use Yourname\Yourproject\Prop as P;
 
-class Mainte implements D\HtmlProp
+class Mainte implements P\Html
 {
     public $tpl = ['part/header', 'mainte', 'part/footer'];
 

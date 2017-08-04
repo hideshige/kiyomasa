@@ -103,7 +103,7 @@ class Csv
      * @param string $mojicode CSVファイルの文字コード
      * @param string $encode エンコード
      * @return string CSVデータ
-     * @throws D\UserException
+     * @throws D\UserEx
      */
     public static function arrayToCsv(
         array $get_data,
@@ -112,7 +112,7 @@ class Csv
         string $encode = DEFAULT_CHARSET
     ) {
         if (!$get_data or sizeof($get_data) > CSV_MAX) {
-            throw new D\UserException(CSV_MAX . '件以内に絞り込んでください');
+            throw new D\UserEx(CSV_MAX . '件以内に絞り込んでください');
         }
 
         $csv_arr = [];
@@ -143,7 +143,7 @@ class Csv
      * @param string $mojicode CSVファイルの文字コード
      * @param string $encode エンコード
      * @return string TSVデータ
-     * @throws D\UserException
+     * @throws D\UserEx
      */
     public static function arrayToTsv(
         $get_data,
@@ -152,7 +152,7 @@ class Csv
         $encode = DEFAULT_CHARSET
     ) {
         if (!$get_data or sizeof($get_data) > CSV_MAX) {
-            throw new D\UserException(CSV_MAX . '件以内に絞り込んでください');
+            throw new D\UserEx(CSV_MAX . '件以内に絞り込んでください');
         }
 
         $tsv_arr = [];
