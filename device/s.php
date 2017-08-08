@@ -1,9 +1,9 @@
 <?php
 /**
- * パラメータのショートカット用スタティックオブジェクト
+ * 静的グローバルショートカットエイリアス
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.0.1
  * @package  device
  * 
  */
