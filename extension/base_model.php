@@ -1,6 +1,6 @@
 <?php
 /**
- * HTML表示用 基本モデル
+ * HTML表示用 抽象クラス
  * 
  * @author   Sawada Hideshige
  * @version  1.0.0.0

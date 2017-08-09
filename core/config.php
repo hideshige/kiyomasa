@@ -16,6 +16,7 @@ if (ENV === 0) {
     define('SSL_LINK_DOMAIN_NAME', 'http://localhost:8000/');
 
     define('MEMCACHED_SERVER', 'localhost');
+    define('DB_SOFT', 'mysql');
     define('DB_MASTER_SERVER', 'localhost:3306');
     define('DB_MASTER_USER', 'kiyomasa');
     define('DB_MASTER_PASSWORD', 'password');
@@ -39,6 +40,7 @@ if (ENV === 0) {
     define('SSL_LINK_DOMAIN_NAME', 'https://yoursite/');
 
     define('MEMCACHED_SERVER', 'localhost');
+    define('DB_SOFT', 'mysql');
     define('DB_MASTER_SERVER', 'localhost');
     define('DB_MASTER_USER', '');
     define('DB_MASTER_PASSWORD', '');
@@ -62,6 +64,7 @@ if (ENV === 0) {
     define('SSL_LINK_DOMAIN_NAME', 'https://yoursite/');
 
     define('MEMCACHED_SERVER', 'localhost');
+    define('DB_SOFT', 'mysql');
     define('DB_MASTER_SERVER', 'localhost');
     define('DB_MASTER_USER', '');
     define('DB_MASTER_PASSWORD', '');

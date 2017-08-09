@@ -1,6 +1,6 @@
 <?php
 /**
- * シェル用 基本モデル
+ * シェル用 抽象クラス
  * 
  * @author   Sawada Hideshige
  * @version  1.0.0.0

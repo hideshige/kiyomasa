@@ -3,7 +3,7 @@
  * データベース(プリペアドステートメント関連)
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.6
+ * @version  1.4.6.0
  * @package  device/db
  */
 
@@ -23,6 +23,7 @@ trait DbStatement
         string $sql = ''
     ) {
         try {
+            $this->connectCheck();
             if (!isset($this->do[$statement_id])) {
                 $this->do[$statement_id] = 'prepare';
             }
@@ -122,85 +123,6 @@ trait DbStatement
                 is_int($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
             $i ++;
         }
-    }
-    
-    /**
-     * バインドのデバッグ表示
-     * @global int $g_counter
-     * @param string|int $name
-     * @param string|int|null $value
-     * @return void
-     */
-    private function bindDebug($name, $value): void
-    {
-        if ($this->debug) {
-            $d_v = (strlen($value) > 5000) ? '[longtext or binary]' : $value;
-            global $g_counter;
-            if ($d_v === null) {
-                $this->disp_sql .= sprintf(
-                    "{{COUNTER %d}}SET {{AT}}@%s = {{NULL}}NULL;\n",
-                    $g_counter, $name);
-            } else if (is_numeric($d_v)) {
-                $this->disp_sql .= sprintf(
-                    "{{COUNTER %d}}SET {{AT}}@%s = {{INT}}%d;\n",
-                    $g_counter, $name, $d_v);
-            } else {
-                $this->disp_sql .= sprintf(
-                    "{{COUNTER %d}}SET {{AT}}@%s = {{STRING}}'%s';\n",
-                    $g_counter, $name, $d_v);
-            }
-            $g_counter ++;
-        }
-    }
-    
-    /**
-     * 処理実行のデバッグ表示
-     * @global int $g_counter
-     * @param string $statement_id
-     * @return void
-     */
-    private function executeDebug(string $statement_id): void
-    {
-        if ($this->debug) {
-            global $g_counter;
-            $this->disp_sql .= sprintf(
-                "{{COUNTER %d}}EXECUTE {{STATEMENT}}%s %s;\n",
-                $g_counter, $statement_id, $this->debugUsing());
-            $g_counter ++;
-        }
-    }
-    
-    /**
-     * 処理実行の時間と件数
-     * @param int $count
-     * @return void
-     */
-    private function executeDebugCount(int $count): void
-    {
-        if ($this->debug) {
-            $this->disp_sql .= sprintf("{{TIME}} (%s秒) [行数 %d]\n",
-                $this->after(), $count);
-        }
-    }
-    
-    /**
-     * デバッグのUSING表示用
-     * @return string
-     */
-    private function debugUsing(): string
-    {
-        $using = '';
-        if (count($this->bind_params)) {
-            $using .= 'USING ';
-            $using_arr = [];
-            $bind_arr = array_keys($this->bind_params);
-            foreach ($bind_arr as $v) {
-                $using_arr[] = '{{AT}}@' . $v;
-            }
-            $using .= implode(', ', $using_arr);
-            $this->bind_params = [];
-        }
-        return $using;
     }
     
     /**

@@ -3,7 +3,7 @@
  * データベース（CRUD、トランザクション関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.2.0
  * @package  device/db
  *
  */
@@ -12,6 +12,8 @@ namespace Php\Framework\Device\Db;
 
 trait DbCrud
 {
+    private $column_count = []; // 更新するカラムの数
+    private $bind_params = []; // バインドする値（デバッグ表示およびログ用）
     private $stmt = []; // ステートメント
     private $do = []; // ステートメントで実行中の動作メモを格納
     private $name = []; // プレースホルダが名前の場合TRUE
@@ -30,6 +32,7 @@ trait DbCrud
         bool $replace = false,
         string $statement_id = 'stmt'
     ): void {
+        $this->connectCheck();
         $this->do[$statement_id] = 'insert';
         $this->name[$statement_id] = true;
 
@@ -64,6 +67,7 @@ trait DbCrud
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
+        $this->connectCheck();
         $this->do[$statement_id] = 'select';
         
         // プレースホルダが?か:nameかを判定
@@ -89,6 +93,7 @@ trait DbCrud
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
+        $this->connectCheck();
         $this->do[$statement_id] = 'update';
         
         // プレースホルダが?か:nameかを判定
@@ -125,6 +130,7 @@ trait DbCrud
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
+        $this->connectCheck();
         $this->do[$statement_id] = 'delete';
         
         // プレースホルダが?か:nameかを判定
@@ -160,6 +166,7 @@ trait DbCrud
     public function transaction(): void
     {
         try {
+            $this->connectCheck();
             if ($this->debug and $this->transaction_flag === false) {
                 global $g_counter;
                 $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
@@ -216,6 +223,35 @@ trait DbCrud
             }
         } catch (\PDOException $e) {
             $this->dbLog('rollback', $e->getMessage());
+        }
+    }
+    
+    /**
+     * 時刻のカラムに自動で登録
+     * @param string $type
+     * @param array $params
+     * @param string $statement_id
+     * @return void
+     */
+    private function addTimeColumn(
+        string $type,
+        array &$params,
+        string $statement_id,
+        bool $bind_flag
+    ): void {
+        if ($type === 'insert' and
+            AUTO_UPDATE_TIME and !isset($params['created_at'])) {
+            $params['created_at'] = TIMESTAMP;
+        }
+        if (($type === 'insert' or $type === 'update') and
+            AUTO_UPDATE_TIME and !isset($params['updated_at'])) {
+            if ($bind_flag === false or $type === 'insert') {
+                $this->column_count[$statement_id] = count($params);
+                $params['updated_at'] = TIMESTAMP;
+            } else {
+                array_splice($params, $this->column_count[$statement_id],
+                    0, [TIMESTAMP]);
+            }
         }
     }
 }

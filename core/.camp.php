@@ -3,7 +3,7 @@
  * キャンプ　シェルコントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.9
+ * @version  1.1.5.0
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -15,14 +15,14 @@
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\Db\DbSet;
+use Php\Framework\Device\Db\DbModule;
 use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
 
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
 require_once(__DIR__ . '/config.php');
-require_once(__DIR__ . '/../device/.tower.php');
+require_once(__DIR__ . '/.tower.php');
 
 new Camp;
 
@@ -45,9 +45,15 @@ class Camp
             
             $this->debug = ENV <= 1 ? true : false;
             
-            // データベースに接続
-            $db_set = new DbSet();
-            $db_set->dbConnect($this->debug);
+            // データベースオブジェクトの準備
+            S::$dbm = new DbModule(DB_MASTER_SERVER, DB_MASTER_USER,
+                DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_SOFT, $this->debug);
+            S::$dbs = new DbModule(DB_SLAVE_SERVER, DB_SLAVE_USER,
+                DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_SOFT, $this->debug);
+            if (!S::$dbs->connect()) {
+                // スレーブが使えない場合、マスターを使う
+                S::$dbs = S::$dbm;
+            }
             
             $this->exec($argv[1]);
 
