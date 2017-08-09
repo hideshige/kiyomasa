@@ -3,11 +3,13 @@
  * CSV モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.3.4
+ * @version  1.2.3.5
  * @package  device/equipment
  */
 
 namespace Php\Framework\Device\Equipment;
+
+use Php\Framework\Device as D;
 
 class Csv
 {
