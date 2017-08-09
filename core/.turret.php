@@ -313,7 +313,7 @@ class Turret
             $text
         );
         if ($text === '') {
-            $text = 'NO CONNECTED';
+            $text = 'Not Connected';
         }
         return nl2br($text);
     }
