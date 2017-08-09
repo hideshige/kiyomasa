@@ -10,13 +10,13 @@
         <h4><span title="dump()の結果がここに出ます">【DEBUG】</span></h4>
         <pre class="fw_debug_dump">{dump}</pre>
         <h4>
-            【DB SLAVE】
+            【DB MASTER】
             <input type="button" onclick="fwDebugCounter();" value="CHANGE" />
             <span name="fw_debug_mode" class="fw_debug_mode">Developper Mode</span>
         </h4>
-        <p>{db_slave}</p>
-        <h4>【DB MASTER】</h4>
         <p>{db_master}</p>
+        <h4>【DB SLAVE】</h4>
+        <p>{db_slave}</p>
         <h4>【MEMCACHED】</h4>
         <p>{memcached}</p>
         <h4>【POST】</h4>

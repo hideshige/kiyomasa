@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.3
+ * @version  1.0.4.4
  * @package  core
  * 
  */
@@ -312,6 +312,9 @@ class Turret
             '<br />$1',
             $text
         );
+        if ($text === '') {
+            $text = 'NO CONNECTED';
+        }
         return nl2br($text);
     }
     
