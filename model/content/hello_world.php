@@ -35,7 +35,7 @@ class HelloWorld extends E\BaseModel // クラス名はファイル名に合わ�
         */
         
         // throwの使い道は事前に二通り用意している。両方の動作を確認してみよう。
-        //throw new D\UserException('TEST111');
+        //throw new D\UserEx('TEST111');
         //throw new \Error('TEST222');
     }
     

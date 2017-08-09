@@ -37,7 +37,7 @@ abstract class BaseModel implements P\Html
         try {
             $check = true;
             $this->execute();
-        } catch (D\UserException $e) {
+        } catch (D\UserEx $e) {
             D\S::$dbm->rollback();
             $check = $this->throwCatch($e->getMessage());
         } catch (\Error $e) {

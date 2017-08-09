@@ -53,7 +53,7 @@ abstract class JsonModel implements P\Ajax
     {
         try {
             $this->execute();
-        } catch (D\UserException $e) {
+        } catch (D\UserEx $e) {
             D\S::$dbm->rollback();
             $this->throwCatch($e->getMessage());
         } catch (\Error $e) {
