@@ -27,13 +27,14 @@ class Test extends E\BaseModel
             throw new D\UserEx();
         }
         E\Citadel::set('test');
+
+        return;
         
         // 再帰関数の理解
-        $i = 0;
-        $this->recursive(2, 'B', 'E', 'W', $i);
+        $count = $this->recursive(3, '出発地', '目的地', '経由地');
+        echo '移動は' . $count . '回<br />';
         
-        //$this->benchmark();
-        return;
+        $this->benchmark();
     }
     
     /**
@@ -49,37 +50,37 @@ class Test extends E\BaseModel
     /**
      * ハノイの塔の攻略手順
      * @param int $n 円盤の数
-     * @param string $begin 開始ポール
-     * @param string $end 終了ポール
-     * @param string $work 作業ポール
-     * @param int $i 関数実行番号
-     * @return void
+     * @param string $begin 出発地
+     * @param string $end 目的地
+     * @param string $via 経由地
+     * @return int 移動回数
      */
     private function recursive(
         int $n,
         string $begin,
         string $end,
-        string $work,
-        int &$i
-    ): void {
+        string $via
+    ): int {
         // 円盤が2個の場合、動作は3回で済む
         // 2個以上の円盤をひとつの塊として考えると再帰呼び出しができる
         // すなわち、移動回数hanoi(n)は円盤の数をnとすると以下の式になる
-        // hanoi(n) = if (n > 1) {hanoi(n - 1) + 1 + hanoi(n - 1)} else {1}
+        // hanoi(n) = if (n >= 2) {hanoi(n - 1) + 1 + hanoi(n - 1)} else {1}
         
-        $i ++;
-        dump($i, $n);
-        if ($n > 1) {
-            // 上の一塊をいったん開始ポールから作業ポールへ移動させる
-            $this->recursive($n - 1, $begin, $work, $end, $i);
-            // 次に下の円盤を開始ポールから終了ポールへ移動させる
-            dump('(' . $n .')' . $begin . ' → ' . $end);
-            // 上の一塊を作業ポールから終了ポールへ移動させる
-            $this->recursive($n - 1, $work, $end, $begin, $i);
+        $count = 0;
+        if ($n >= 2) {
+            // 上の一塊をいったん出発地から経由地へ移動させる
+            $count += $this->recursive($n - 1, $begin, $via, $end);
+            // 次に下の円盤を出発地から目的地へ移動させる
+            $count ++;
+            echo $n . ' 番を ' . $begin . ' から ' . $end . ' へ<br />';
+            // 上の一塊を経由地から目的地へ移動させる
+            $count += $this->recursive($n - 1, $via, $end, $begin);
         } else {
-            // 1個だけのときは開始ポールから終了ポールへ1回移動するだけ
-            dump('[' . $n .']' . $begin . ' → ' . $end);
+            // 1個だけのときは出発地から目的地へ1回移動するだけ
+            $count ++;
+            echo $n . ' 番を ' . $begin . ' から ' . $end . ' へ<br />';
         }
+        return $count;
     }
     
     /**
