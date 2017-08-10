@@ -30,7 +30,7 @@ class Test extends E\BaseModel
         
         // 再帰関数の理解
         $i = 0;
-        $this->recursive(2, 'A', 'C', 'B', $i);
+        $this->recursive(4, 'B', 'E', 'W', $i);
         
         //$this->benchmark();
         return;
@@ -62,12 +62,21 @@ class Test extends E\BaseModel
         string $work,
         int &$i
     ): void {
+        // 移動回数hanoi(n)は円盤の数をnとすると以下の式になる
+        // hanoi(n) = if (n > 1) {2 * hanoi(n - 1) + 1} else {1}
+        
         $i ++;
         dump($i, $n);
-        if ($n > 0) {
+        if ($n > 1) {
+            // n-1個の一塊をいったん開始ポールから作業ポールへ移動させる
             $this->recursive($n - 1, $begin, $work, $end, $i);
+            // 次に一番下の円盤を開始ポールから終了ポールへ移動させる
             dump('(' . $n .')' . $begin . ' → ' . $end);
+            // n-1個の一塊を作業ポールから終了ポールへ移動させる
             $this->recursive($n - 1, $work, $end, $begin, $i);
+        } else {
+            // 1個だけのときは開始ポールから終了ポールへ1回移動するだけ
+            dump('[' . $n .']' . $begin . ' → ' . $end);
         }
     }
     
