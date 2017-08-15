@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.2
+ * @version  1.3.5.3
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -188,7 +188,7 @@ class Form
                     $res[$key]['select_error'] = true;
                 } else if ($k === 'select' and $str !== '' and is_array($str)) {//チェックボックス値送信の不正チェック
                     foreach ($str as $strv) {
-                        if ($v[$strv] === '') {
+                        if (!isset($v[$strv]) or $v[$strv] === '') {
                             $res[$key]['select_error'] = true;
                         }
                     }
