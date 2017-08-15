@@ -3,7 +3,7 @@
  * CSV モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.3.5
+ * @version  1.2.4.1
  * @package  device/equipment
  */
 
@@ -34,26 +34,41 @@ class Csv
                 //文字コードの変換
                 $contents = mb_convert_encoding($contents, $encode, $mojicode);
             }
-            //ダブルクォートを一旦退避させて無害化
-            $contents = preg_replace('/""/', ':::QUQU:::', $contents);
-            $contents = preg_replace('/"/', ':::QU:::', $contents);
-            $contents = preg_replace('/:::QUQU:::/', '"', $contents);
-            $contents = htmlspecialchars($contents, ENT_QUOTES);
-            $contents = preg_replace('/:::QU:::/', '"', $contents);
-            //一時ファイルに保存する
-            $f = tmpfile();
-            fwrite($f, $contents);
-            rewind($f);
-            $i = 0;
-            while ($array = self::fgetcsvReg($f)) {
-                $num = count($array);
-                for ($c = 0; $c < $num; $c ++) {
-                    $data[$i][$c] = $array[$c];
-                }
-            $i ++;
-            }
-            fclose($f);
+            //ダブルクォートを一旦予約語:::QUQU:::と:::QU:::に退避させて無害化
+            $data = self::putFile(str_replace(':::QU:::', '"', 
+                htmlspecialchars(str_replace(':::QUQU:::', '"',
+                    str_replace('"', ':::QU:::', str_replace(
+                        '""', ':::QUQU:::', $contents))
+                ), ENT_QUOTES)));
         }
+        return $data;
+    }
+    
+    /**
+     * 一時ファイルに保存してCSVファイルを配列に変換
+     * @param string $contents
+     * @return array
+     */
+    private static function putFile(string $contents): array
+    {
+        $data = [];
+        
+        $f = tmpfile();
+        fwrite($f, $contents);
+        rewind($f);
+        $i = 0;
+        while ($array = self::fgetcsvReg($f)) {
+            $num = count($array);
+            for ($c = 0; $c < $num; $c ++) {
+                // 空欄の意味の""も&quot;になってしまうため空欄に書き換える
+                $data[$i][$c] = $array[$c] === '&quot;' ? '' : $array[$c];
+            }
+            if (!empty($array)) {
+                $i ++;
+            }
+        }
+        fclose($f);
+        
         return $data;
     }
 
@@ -94,7 +109,7 @@ class Csv
             $csv_data[$csv_i] = preg_replace('/' . $e . $e . '/',
                 $e, $csv_data[$csv_i]);
         }
-        $res = empty($line) ? false : $csv_data;
+        $res = empty(trim($line)) ? false : $csv_data;
         return $res;
     }
 
@@ -129,7 +144,7 @@ class Csv
             }
         }
         $csv = Chara::hDecode(
-            // 区切り文字がずれないように"をエスケープする
+            // 区切り文字がずれないように事前に"をエスケープする
             str_replace('&quot;', '""', implode("\n", $csv_arr))
         );
         if ($mojicode !== $encode) {
