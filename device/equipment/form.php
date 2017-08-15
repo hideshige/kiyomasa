@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.3
+ * @version  1.3.5.4
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -102,7 +102,7 @@ namespace Php\Framework\Device\Equipment;
 class Form
 {
     private static $params;
-    private static $e = [
+    public static $e = [
         'must' => '入力してください。<br />',
         'must_select' => '選んでください。<br />',
         'max' => '文字数が%d文字を超えています。（現在%d文字）<br />',
