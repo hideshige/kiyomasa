@@ -1,10 +1,10 @@
 <!-- BEGIN DEBUG_INCLUDE -->
-<div id="fw_debug_area_{disp_type}" style="display:{debug_disp};">
-    <div id="fw_debug_{disp_type}">
+<div id="fw_debug_area_{disp_type}_{navi_id}" class="fw_debug_area" style="display: {debug_disp};">
+    <div class="fw_debug_{disp_type}">
         <p class="fw_debug_logo">Kiyomasa</p>
         <div class="fw_debug_header">
             {namespace}
-            <span class="fw_debug_exit_button" onclick="fwDebug('{disp_type}');">X</span>
+            <span class="fw_debug_exit_button" onclick="fwDebug('{disp_type}_{navi_id}', true);">X</span>
         </div>
         <h3>{request_url}</h3>
         <h4><span title="dump()の結果がここに出ます">【DEBUG】</span></h4>

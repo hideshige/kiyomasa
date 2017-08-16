@@ -58,7 +58,6 @@
 
 #fw_debug #fw_debug_guide
 {
-    width: 400px;
     position: fixed;
     top: 0;
     right: 0;
@@ -66,26 +65,27 @@
     opacity: 0.7;
 }
 
-#fw_debug #fw_debug_guide_html
+#fw_debug .fw_debug_guide_html
 {
     float: left;
     background: blue;
     color: white;
-    width: 230px;
+    width: 210px;
     text-align: right;
     
 }
 
-#fw_debug #fw_debug_guide_ajax
+#fw_debug .fw_debug_guide_ajax
 {
     float: left;
     background: brown;
     color: white;
-    width: 170px;
+    width: 130px;
     text-align: right;
+    margin-left: 1px;
 }
 
-#fw_debug #fw_debug_area_html
+#fw_debug .fw_debug_area
 {
     position: absolute;
     padding: 30px;
@@ -95,17 +95,7 @@
     z-index: 10001;
 }
 
-#fw_debug #fw_debug_area_ajax
-{
-    position: absolute;
-    padding: 25px;
-    font-size: 0.8em;
-    top: 0;
-    left: 0;
-    z-index: 10002;
-}
-
-#fw_debug #fw_debug_html
+#fw_debug .fw_debug_html
 {
     border: 1px solid #999;
     box-shadow: 5px 5px 10px;
@@ -115,11 +105,11 @@
     position:relative;
 }
 
-#fw_debug #fw_debug_ajax
+#fw_debug .fw_debug_ajax
 {
     border: 1px solid #999;
     box-shadow: 5px 5px 10px;
-    background: #eefefe;
+    background: #f7fee5;
     color: #333;
     padding: 10px;
     position:relative;
@@ -219,17 +209,13 @@
 
 <div id="fw_debug">
     <div id="fw_debug_guide">
-        <div id="fw_debug_guide_html">
+        <div class="fw_debug_guide_html">
             {env}　{process}秒
-            <input type="button" onclick="fwDebug('html');" value="HTML" />
-        </div>
-        <div id="fw_debug_guide_ajax">
-            <span id="fw_debug_guide_ajax_time">---</span>
-            <input type="button" onclick="fwDebug('ajax');" value="Ajax" />
+            <input type="button" onclick="fwDebug('html_{navi_id}', false);" value="HTML" />
         </div>
     </div>
 
-    <div id="fw_debug_include_html">    
+    <div id="fw_debug_include_html">
     <!-- ELEMENT element/.debug_include.tpl -->
     </div>
     <div id="fw_debug_include_ajax">
@@ -240,20 +226,21 @@
 /**
  * デバッグの表示
  * @param {string} tagId タグ識別ID
+ * @param {Boolean} exitFlag 閉じる場合TRUE
  */
-function fwDebug(tagId)
+function fwDebug(tagId, exitFlag)
 {
-    var otherTag = tagId === 'html' ? 'ajax' : 'html';
-    var myArea = document.getElementById('fw_debug_area_' + tagId);
-    var otherArea = document.getElementById('fw_debug_area_' + otherTag);
+    // いったんすべてのデバッグを非表示にする
+    var elements = document.getElementsByClassName('fw_debug_area');
+    for (var i = 0; elements.length > i; i ++) {
+        elements[i].style['display'] = 'none';
+    }
     
-    if (myArea && myArea.style['display'] === 'none') {
+    var myArea = document.getElementById('fw_debug_area_' + tagId);
+    if (myArea && exitFlag === false) {
         myArea.style['display'] = 'block';
         window.scrollTo(0, 0);
-        if (otherArea) {
-            otherArea.style['display'] = 'none';
-        }
-    } else if (myArea) {
+    } else if (myArea && exitFlag === true) {
         myArea.style['display'] = 'none';
     }
 }

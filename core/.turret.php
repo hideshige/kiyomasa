@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.4
+ * @version  1.0.5.0
  * @package  core
  * 
  */
@@ -124,8 +124,20 @@ class Turret
     {
         if ($this->debug) {
             $arr = $this->dispDebug();
-            $json['fw_debug_include_ajax'] = $arr['include'];
-            $json['fw_debug_guide_ajax_time'] = $arr['process'] . '秒';
+            $debug = [];
+            $debug['node'] = $arr['debug'];
+            $debug['node_id'] = 'fw_debug_area_ajax_box_' . $arr['navi_id'];
+            $debug['node_class'] = 'fw_debug_area_ajax_box';
+            $debug['node_add'] = 1;
+            $debug['node_tag'] = 'div';
+            $navi = [];
+            $navi['node'] = $arr['navi'];
+            $navi['node_id'] = 'fw_debug_guide_ajax_' . $arr['navi_id'];
+            $navi['node_class'] = 'fw_debug_guide_ajax';
+            $navi['node_add'] = 1;
+            $navi['node_tag'] = 'div';
+            $json['fw_debug_include_ajax'] = [$debug];
+            $json['fw_debug_guide'] = [$navi];
         }
     }
     
@@ -181,6 +193,8 @@ class Turret
             // ENV定数に対応
             $env = ['ローカル', '開発環境', '検証環境', '本番環境'];
             
+            $navi_id = microtime(true);
+            
             $debug = [
                 'request_url' => filter_input(INPUT_SERVER, 'REQUEST_URI'),
                 'os' => PHP_OS,
@@ -203,7 +217,8 @@ class Turret
                 'cookie' => $this->modDebugDump($cookie),
                 'namespace' => NAME_SPACE,
                 'dump' => $this->modDebugDump($dump),
-                'debug_disp' => $dump ? 'block' : 'none'
+                'debug_disp' => $dump ? 'block' : 'none',
+                'navi_id' => $navi_id
             ];
             
             $process = round($last_time - $first_time, 5);
@@ -213,12 +228,15 @@ class Turret
             if (S::$jflag) {
                 $debug['disp_type'] = 'ajax';
                 $view['DEBUG_INCLUDE'][0] = $debug;
+                $view2 = [];
+                $view2['AJAX_NAVI'][0]['process'] = $process;
+                $view2['AJAX_NAVI'][0]['navi_id'] = $navi_id;
                 $arr = [];
-                $arr['process'] = $process;
-                $arr['include'] = View::template(
-                    'element/.debug_include.tpl',
-                    $view
-                );
+                $arr['navi_id'] = $navi_id;
+                $arr['debug'] = View::template('element/.debug_include.tpl',
+                    $view);
+                $arr['navi'] = View::template('element/.debug_ajax_navi.tpl',
+                    $view2);
                 $disp = $arr;
             } else {
                 $debug['disp_type'] = 'html';
@@ -226,6 +244,7 @@ class Turret
                 $view['REPLACE']['env'] = isset($env[ENV])
                     ? $env[ENV] : 'ENV' . ENV;
                 $view['REPLACE']['process'] = $process;
+                $view['REPLACE']['navi_id'] = $navi_id;
                 $disp = View::template('.debug.tpl', $view);
             }
         }
@@ -377,8 +396,7 @@ class Turret
         } else {
             //  改行コード以外のコントロールコードを排除
             $data = preg_replace(
-                '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data
-            );
+                '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data);
             // UNICODE不可視文字トリム
             $invisible_utf8_codes = array(
                 '&#x00AD;',
@@ -406,8 +424,8 @@ class Turret
                 },
                 $invisible_utf8_codes
             );
-            $data = str_replace($invisible_strs, '', $data);
-            $data = htmlspecialchars($data, ENT_QUOTES);
+            $data = htmlspecialchars(
+                str_replace($invisible_strs, '', $data), ENT_QUOTES);
             global $g_change_chara;
             foreach ($g_change_chara as $ck => $cv) {
                 $data = str_replace($cv, $ck, $data);
