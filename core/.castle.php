@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.4.0
+ * @version  1.4.4.1
  * @package  core
  * 
  */
@@ -17,6 +17,7 @@ use Php\Framework\Device\S;
 use Php\Framework\Device\Log;
 
 require_once(__DIR__ . '/.tower.php');
+require_once(__DIR__ . '/.wall.php');
 require_once(__DIR__ . '/.turret.php');
 
 class Castle
