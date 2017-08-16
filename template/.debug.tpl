@@ -211,7 +211,7 @@
     <div id="fw_debug_guide">
         <div class="fw_debug_guide_html">
             {env}　{process}秒
-            <input type="button" onclick="fwDebug('html_{navi_id}', false);" value="HTML" />
+            <input type="button" onclick="FwDebugClass.fwDebug('html_{navi_id}', false);" value="HTML" />
         </div>
     </div>
 
@@ -223,61 +223,71 @@
 <div style="display: none;" id="fw_debug_counter_flag">1</div>
 </div>
 <script>
-/**
- * デバッグの表示
- * @param {string} tagId タグ識別ID
- * @param {Boolean} exitFlag 閉じる場合TRUE
- */
-function fwDebug(tagId, exitFlag)
-{
-    // いったんすべてのデバッグを非表示にする
-    var elements = document.getElementsByClassName('fw_debug_area');
-    for (var i = 0; elements.length > i; i ++) {
-        elements[i].style['display'] = 'none';
-    }
-    
-    var myArea = document.getElementById('fw_debug_area_' + tagId);
-    if (myArea && exitFlag === false) {
-        myArea.style['display'] = 'block';
-        window.scrollTo(0, 0);
-    } else if (myArea && exitFlag === true) {
-        myArea.style['display'] = 'none';
-    }
-}
-
-/**
- * カウンターの表示
- */
-function fwDebugCounter()
-{
-    var hiddenTag = document.getElementsByName('fw_debug_process');
-    var quTag = document.getElementsByName('fw_debug_process_qu');
-    var openFlag = document.getElementById('fw_debug_counter_flag');
-    var dispMode = document.getElementsByName('fw_debug_mode');
-    
-    if (dispMode[0]) {
-        for (var di in dispMode) {
-            dispMode[di].innerHTML = openFlag.innerHTML
-                === '1' ? 'True SQL Mode' : 'Developper Mode';
+var Js;
+(function (Js) {
+    "use strict";
+    var FwDebugClass = (function () {
+        function FwDebugClass() {
         }
-    }
-    if (quTag[0]) {
-        for (var qi in quTag) {
-            if (quTag[qi].style) {
-                quTag[qi].style['display'] = openFlag.innerHTML
-                    === '1' ? 'inline' : 'none';
+        /**
+         * デバッグの表示
+         * @param tagId タグ識別ID
+         * @param exitFlag 閉じる場合TRUE
+         */
+        FwDebugClass.prototype.fwDebug = function (tagId, exitFlag) {
+            // いったんすべてのデバッグを非表示にする
+            var elements = document.getElementsByClassName("fw_debug_area");
+            for (var i = 0; elements.length > i; i++) {
+                elements[i].style.display = "none";
             }
-        }
-    }
-    if (hiddenTag[0]) {
-        for (var hi in hiddenTag) {
-            if (hiddenTag[hi].style) {
-                hiddenTag[hi].style['display'] = openFlag.innerHTML
-                    === '1' ? 'none' : 'inline';
+            var myArea = document.getElementById("fw_debug_area_" + tagId);
+            if (myArea && exitFlag === false) {
+                myArea.style.display = "block";
+                window.scrollTo(0, 0);
             }
-        }
-        openFlag.innerHTML = openFlag.innerHTML === '1' ? '0' : '1';
-    }
-}
+            else if (myArea && exitFlag === true) {
+                myArea.style.display = "none";
+            }
+        };
+        /**
+         * カウンターの表示
+         */
+        FwDebugClass.prototype.fwDebugCounter = function () {
+            var openFlag = document.getElementById("fw_debug_counter_flag");
+            var hiddenTag = document.getElementsByName("fw_debug_process");
+            var quTag = document.getElementsByName("fw_debug_process_qu");
+            var dispMode = document.getElementsByName("fw_debug_mode");
+            if (dispMode[0]) {
+                for (var di in dispMode) {
+                    if (dispMode[di]) {
+                        dispMode[di].innerHTML = openFlag.innerHTML
+                            === "1" ? "True SQL Mode" : "Developper Mode";
+                    }
+                }
+            }
+            if (quTag[0]) {
+                for (var qi in quTag) {
+                    if (quTag[qi]) {
+                        quTag[qi].style.display = openFlag.innerHTML
+                            === "1" ? "inline" : "none";
+                    }
+                }
+            }
+            if (hiddenTag[0]) {
+                for (var hi in hiddenTag) {
+                    if (hiddenTag[hi].style) {
+                        hiddenTag[hi].style.display = openFlag.innerHTML
+                            === "1" ? "none" : "inline";
+                    }
+                }
+                openFlag.innerHTML = openFlag.innerHTML === "1" ? "0" : "1";
+            }
+        };
+        return FwDebugClass;
+    }());
+    Js.FwDebugClass = FwDebugClass;
+})(Js || (Js = {
+}));
+var FwDebugClass = new Js.FwDebugClass(); 
 </script>
 <!-- END DEBUG -->
