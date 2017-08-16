@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -41,20 +41,18 @@ new Php\Framework\Core\Castle();
  * ダンプをバッファに保存してデバッグに表示する
  * "dump(ダンプしたい変数)"の形で利用する
  * @global string $dump ダンプ用バッファ
+ * @param mixed $arguments 引数群（引数はカンマ区切りでいくつでも指定できる）
  * @return string
  */
 $dump = '';
-function dump(): string
+function dump(...$arguments): string
 {
     global $dump;
     $bt = debug_backtrace();
-    $dump .= sprintf(
-        "# %s {{DUMP_LINE}}%s\n",
-        str_replace(SERVER_PATH, '', $bt[0]['file']),
-        $bt[0]['line']
-    );
+    $dump .= sprintf("# %s {{DUMP_LINE}}%s\n",
+        str_replace(SERVER_PATH, '', $bt[0]['file']), $bt[0]['line']);
     ob_start();
-    foreach ($bt[0]['args'] as $v) {
+    foreach ($arguments as $v) {
         var_dump($v);
     }
     $dump .= ob_get_clean();
