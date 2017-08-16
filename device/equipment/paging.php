@@ -3,7 +3,7 @@
  * ページングモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.0
+ * @version  1.0.5.1
  * @package  device/equipment
  *
  */
@@ -42,7 +42,7 @@ class Paging
         }
 
         $page_arr = [];
-        $page_arr['num'] = ceil($counts / $disp_num);
+        $page_arr['num'] = (int)ceil($counts / $disp_num);
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
