@@ -61,7 +61,8 @@ root/                  ルートディレクトリはプロジェクト名に変
 ├ public_html/        WEBルートディレクトリ
 │ ├ css/             プロジェクトのスタイルシートを格納
 │ ├ js/              プロジェクトのJavaScriptを格納
-│ │ └ (ajax.js)     Ajax実行ファイル
+│ │ ├ (ajax/)       Ajax関連ファイル
+│ │ └ (base.js)     JavaScriptの基本ファイル
 │ ├ (.htaccess)      サーバ設定ファイル（WEBサーバがApacheの場合に限る）
 │ └ *index.php       最初にアクセスするファイル。変更不可
 ├ (session/)          セッションファイルを格納（Gitでは更新されない）
