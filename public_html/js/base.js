@@ -2,12 +2,10 @@
  * JavaScript ベース
  *
  * @author   Sawada Hideshige
- * @version  1.1.0.0
+ * @version  1.1.1.0
  * @package  js
  */
-
 "use strict";
-
 /**
  * 例外処理
  */
@@ -20,7 +18,9 @@ var JsError = (function () {
      * 例外メッセージ
      */
     JsError.prototype.toString = function () {
-        return this.name + ": " + this.message;
+        var message = this.name + ": " + this.message;
+        console.log(message);
+        return message;
     };
     return JsError;
 }());
@@ -36,7 +36,7 @@ var $ = (function () {
      */
     $.id = function (tagId) {
         if (!document.getElementById(tagId)) {
-            throw new JsError("タグが見つかりません");
+            return false;
         }
         else {
             return document.getElementById(tagId);
@@ -48,7 +48,7 @@ var $ = (function () {
      */
     $.nm = function (tagName) {
         if (!document.getElementsByName(tagName)[0]) {
-            throw new JsError("タグが見つかりません");
+            return false;
         }
         else {
             return document.getElementsByName(tagName);
@@ -60,7 +60,7 @@ var $ = (function () {
      */
     $.cls = function (tagName) {
         if (!document.getElementsByClassName(tagName)[0]) {
-            throw new JsError("タグが見つかりません");
+            return false;
         }
         else {
             return document.getElementsByClassName(tagName);
@@ -82,7 +82,6 @@ var $ = (function () {
     };
     return $;
 }());
-
 window.onload = function () {
     var ajax = new Js.Ajax.AjaxClass();
     setInterval(ajax.doubleClickCancel(), 500);

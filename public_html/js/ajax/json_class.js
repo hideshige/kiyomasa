@@ -2,7 +2,7 @@
  * JSONの展開
  *
  * @author   Sawada Hideshige
- * @version  1.1.0.0
+ * @version  1.1.1.0
  * @package  js
  */
 var Js;

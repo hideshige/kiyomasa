@@ -2,7 +2,7 @@
  * Ajax
  *
  * @author   Sawada Hideshige
- * @version  1.1.0.0
+ * @version  1.1.1.0
  * @package  js
  */
 var Js;
@@ -93,7 +93,7 @@ var Js;
                 if (document.getElementById("token")) {
                     this.commonParam += "&token=" + $.id("token").innerHTML;
                 }
-                objJson.open("GET", this.url_root + url_address, true);
+                objJson.open("POST", this.url_root + url_address, true);
                 objJson.onreadystatechange = function () {
                     json.ajaxOpen(objJson);
                 };
@@ -126,3 +126,4 @@ var Js;
     })(Ajax = Js.Ajax || (Js.Ajax = {}));
 })(Js || (Js = {}));
 var ajax = new Js.Ajax.AjaxClass();
+var json;
