@@ -3,18 +3,14 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.4.1
+ * @version  1.4.4.2
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\Db\DbModule;
-use Php\Framework\Device\Mem;
-use Php\Framework\Device\Session;
-use Php\Framework\Device\S;
-use Php\Framework\Device\Log;
+use Php\Framework\Device\{Db\DbModule, Mem, Session, S, Log};
 
 require_once(__DIR__ . '/.tower.php');
 require_once(__DIR__ . '/.wall.php');

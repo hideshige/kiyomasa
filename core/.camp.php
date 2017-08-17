@@ -3,7 +3,7 @@
  * キャンプ　シェルコントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.1.5.0
+ * @version  1.1.5.1
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -15,9 +15,7 @@
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\Db\DbModule;
-use Php\Framework\Device\S;
-use Php\Framework\Device\Log;
+use Php\Framework\Device\{Db\DbModule, S, Log};
 
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
