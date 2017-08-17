@@ -2,7 +2,7 @@
  * Ajax
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.1
+ * @version  1.1.1.2
  * @package  js
  */
 var Js;
@@ -14,8 +14,8 @@ var Js;
             function AjaxClass() {
                 this.mainJson = new XMLHttpRequest();
                 this.subJson = new XMLHttpRequest();
-                this.url_root = "/";
                 this.doubleClickCheck = false; // ダブルクリックによる二重投稿の防止
+                this.url_root = "/";
                 this.commonParam = "";
             }
             /**
@@ -108,7 +108,7 @@ var Js;
             /**
              * 指定のフォームオブジェクトを送信
              * @param {XMLHttpRequest} objJson AJAXオブジェクト
-             * @param {HTMLElement} formObject フォームオブジェクト
+             * @param {FormData} formObject フォームオブジェクト
              * @param {string} url_address 開くURL
              * @returns {boolean}
              */
@@ -129,3 +129,5 @@ var Js;
         Ajax.AjaxClass = AjaxClass;
     })(Ajax = Js.Ajax || (Js.Ajax = {}));
 })(Js || (Js = {}));
+var ajax = new Js.Ajax.AjaxClass();
+setInterval("ajax.doubleClickCancel()", 500);

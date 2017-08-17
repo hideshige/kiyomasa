@@ -5,9 +5,7 @@
  * @version  1.1.1.1
  * @package  js
  */
-
 "use strict";
-
 /**
  * 例外処理クラス
  */
@@ -94,12 +92,3 @@ var $ = (function () {
     };
     return $;
 }());
-
-/**
- * オンロード実行
- * @returns {void}
- */
-window.onload = function () {
-    var ajax = new Js.Ajax.AjaxClass();
-    setInterval(ajax.doubleClickCancel(), 500);
-};
