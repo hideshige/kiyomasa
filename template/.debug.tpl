@@ -236,11 +236,11 @@ var Js;
          */
         FwDebugClass.prototype.fwDebug = function (tagId, exitFlag) {
             // いったんすべてのデバッグを非表示にする
-            var elements = document.getElementsByClassName("fw_debug_area");
+            var elements = $.cls("fw_debug_area");
             for (var i = 0; elements.length > i; i++) {
                 elements[i].style.display = "none";
             }
-            var myArea = document.getElementById("fw_debug_area_" + tagId);
+            var myArea = $.id("fw_debug_area_" + tagId);
             if (myArea && exitFlag === false) {
                 myArea.style.display = "block";
                 window.scrollTo(0, 0);
@@ -253,10 +253,10 @@ var Js;
          * カウンターの表示
          */
         FwDebugClass.prototype.fwDebugCounter = function () {
-            var openFlag = document.getElementById("fw_debug_counter_flag");
-            var hiddenTag = document.getElementsByName("fw_debug_process");
-            var quTag = document.getElementsByName("fw_debug_process_qu");
-            var dispMode = document.getElementsByName("fw_debug_mode");
+            var openFlag = $.id("fw_debug_counter_flag");
+            var hiddenTag = $.nm("fw_debug_process");
+            var quTag = $.nm("fw_debug_process_qu");
+            var dispMode = $.nm("fw_debug_mode");
             if (dispMode[0]) {
                 for (var di in dispMode) {
                     if (dispMode[di]) {

@@ -1,8 +1,8 @@
-/**
+/*
  * JSONの展開
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.0
+ * @version  1.1.1.1
  * @package  js
  */
 var Js;
@@ -16,7 +16,7 @@ var Js;
             /**
              * AJAXの処理
              * @param {XMLHttpRequest} objJson
-             * @return {boolean}
+             * @returns {boolean}
              */
             JsonClass.prototype.ajaxOpen = function (objJson) {
                 try {
@@ -32,6 +32,7 @@ var Js;
                                     return false;
                                 }
                                 else if (i === "eval") {
+                                    // evalは非推奨のため今後対策を考える
                                     eval(jsonData[i]);
                                 }
                                 else if (i === "window_open") {
@@ -91,14 +92,14 @@ var Js;
                                         }
                                     }
                                     else {
-                                        var ajax_1 = new Js.Ajax.AjaxClass();
+                                        var ajax = new Js.Ajax.AjaxClass();
                                         var tagName = ["node", "node_id", "node_class", "node_add", "node_tag"];
                                         for (var ni in jsonData[i]) {
                                             if (jsonData[i][ni][tagName[3]]) {
-                                                ajax_1.moreContent(i, jsonData[i][ni][tagName[0]], jsonData[i][ni][tagName[1]], jsonData[i][ni][tagName[2]], jsonData[i][ni][tagName[3]], jsonData[i][ni][tagName[4]]);
+                                                ajax.moreContent(i, jsonData[i][ni][tagName[0]], jsonData[i][ni][tagName[1]], jsonData[i][ni][tagName[2]], jsonData[i][ni][tagName[3]], jsonData[i][ni][tagName[4]]);
                                             }
                                             else {
-                                                ajax_1.deleteContent(i, jsonData[i][ni][tagName[1]]);
+                                                ajax.deleteContent(i, jsonData[i][ni][tagName[1]]);
                                             }
                                         }
                                     }
@@ -120,4 +121,3 @@ var Js;
         Ajax.JsonClass = JsonClass;
     })(Ajax = Js.Ajax || (Js.Ajax = {}));
 })(Js || (Js = {}));
-var json = new Js.Ajax.JsonClass();

@@ -1,21 +1,28 @@
-/**
- * JavaScript ベース
+/*
+ * JavaScript 基本ファイル
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.0
+ * @version  1.1.1.1
  * @package  js
  */
+
 "use strict";
+
 /**
- * 例外処理
+ * 例外処理クラス
  */
 var JsError = (function () {
+    /**
+     * コンストラクタ
+     * @param {string} message
+     */
     function JsError(message) {
         this.message = message;
-        this.name = "エラー";
+        this.name = "JSエラー";
     }
     /**
      * 例外メッセージ
+     * @returns {string}
      */
     JsError.prototype.toString = function () {
         var message = this.name + ": " + this.message;
@@ -25,7 +32,7 @@ var JsError = (function () {
     return JsError;
 }());
 /**
- * エイリアス
+ * エイリアスクラス
  */
 var $ = (function () {
     function $() {
@@ -33,6 +40,7 @@ var $ = (function () {
     /**
      * ドキュメントオブジェクトをIDより取得
      * @param tagId
+     * @returns {boolean|HTMLElement}
      */
     $.id = function (tagId) {
         if (!document.getElementById(tagId)) {
@@ -45,6 +53,7 @@ var $ = (function () {
     /**
      * ドキュメントオブジェクトを名前より取得
      * @param tagName
+     * @returns {boolean|NodeListOf<Element>}
      */
     $.nm = function (tagName) {
         if (!document.getElementsByName(tagName)[0]) {
@@ -57,6 +66,7 @@ var $ = (function () {
     /**
      * ドキュメントオブジェクトをクラス名より取得
      * @param tagName
+     * @returns {boolean|NodeListOf<Element>}
      */
     $.cls = function (tagName) {
         if (!document.getElementsByClassName(tagName)[0]) {
@@ -68,20 +78,27 @@ var $ = (function () {
     };
     /**
      * ドキュメントオブジェクトの作成
-     * @param tagType
+     * @param {string} tagType
+     * @returns {HTMLElement}
      */
     $.create = function (tagType) {
         return document.createElement(tagType);
     };
     /**
      * URLエンコード
-     * @param tag
+     * @param {number|float|string} tag
+     * @returns {string}
      */
     $.encode = function (tag) {
         return encodeURIComponent(String(tag));
     };
     return $;
 }());
+
+/**
+ * オンロード実行
+ * @returns {void}
+ */
 window.onload = function () {
     var ajax = new Js.Ajax.AjaxClass();
     setInterval(ajax.doubleClickCancel(), 500);

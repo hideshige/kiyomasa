@@ -1,8 +1,8 @@
-/**
+/*
  * Ajax
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.0
+ * @version  1.1.1.1
  * @package  js
  */
 var Js;
@@ -20,7 +20,7 @@ var Js;
             }
             /**
              * ダブルクリックのキャンセル
-             * @return {void}
+             * @returns {void}
              */
             AjaxClass.prototype.doubleClickCancel = function () {
                 this.doubleClickCheck = false;
@@ -33,6 +33,7 @@ var Js;
              * @param {string} classId HTMLタグノードクラス
              * @param {number} addType 1:末尾に追加 2:先頭に追加 3:末尾に追加したあとスクロール
              * @param {string} tagType 追加するHTMLタグの種類
+             * @returns {boolean}
              */
             AjaxClass.prototype.moreContent = function (tagId, content, nodeId, classId, addType, tagType) {
                 var tagTypes = tagType || "li";
@@ -67,6 +68,7 @@ var Js;
              * @param {string} tagId HTMLタグID
              * @param {string} nodeId HTMLタグノードID
              * @return {boolean}
+             * @returns {boolean}
              */
             AjaxClass.prototype.deleteContent = function (tagId, nodeId) {
                 var parentBox = $.id(tagId);
@@ -83,7 +85,7 @@ var Js;
              * 指定のJsonを反映
              * @param {XMLHttpRequest} objJson AJAXオブジェクト
              * @param {string} url_address 開くURL
-             * @return {boolean}
+             * @returns {boolean}
              */
             AjaxClass.prototype.openJson = function (objJson, url_address) {
                 if (this.doubleClickCheck) {
@@ -95,6 +97,7 @@ var Js;
                 }
                 objJson.open("POST", this.url_root + url_address, true);
                 objJson.onreadystatechange = function () {
+                    var json = new Js.Ajax.JsonClass();
                     json.ajaxOpen(objJson);
                 };
                 objJson.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -107,13 +110,14 @@ var Js;
              * @param {XMLHttpRequest} objJson AJAXオブジェクト
              * @param {HTMLElement} formObject フォームオブジェクト
              * @param {string} url_address 開くURL
-             * @return {boolean}
+             * @returns {boolean}
              */
             AjaxClass.prototype.postFormObject = function (objJson, formObject, url_address) {
                 var date = new Date();
                 // ブラウザによってはキャッシュを見ることがあるためURLにタイムスタンプを付けてキャッシュを無視させる
                 objJson.open("POST", this.url_root + url_address + "?ver=" + $.encode(date), true);
                 objJson.onreadystatechange = function () {
+                    var json = new Js.Ajax.JsonClass();
                     json.ajaxOpen(objJson);
                 };
                 objJson.setRequestHeader("enctype", "multipart/form-data");
@@ -125,5 +129,3 @@ var Js;
         Ajax.AjaxClass = AjaxClass;
     })(Ajax = Js.Ajax || (Js.Ajax = {}));
 })(Js || (Js = {}));
-var ajax = new Js.Ajax.AjaxClass();
-var json;
