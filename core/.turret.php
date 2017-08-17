@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.1
+ * @version  1.0.5.2
  * @package  core
  * 
  */
@@ -89,11 +89,13 @@ class Turret
             throw new \Error($class_name . ' logic notice', 10);
         }
         
+        $tpl = $model->tpl ?? [];
+        
         // デバッグにセッションの動作を表示するため事前にセッションを閉じる
         session_write_close();
         
-        if (S::$jflag === false and isset($model->tpl) and count($model->tpl)) {
-            foreach ($model->tpl as $tk => $tv) {
+        if (S::$jflag === false and count($tpl)) {
+            foreach ($tpl as $tk => $tv) {
                 echo View::template($tv,
                     isset(S::$disp[$tk]) ? S::$disp[$tk] : []);
             }
