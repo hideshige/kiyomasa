@@ -2,7 +2,7 @@
  * JSONの展開
  *
  * @author   Sawada Hideshige
- * @version  1.1.3.0
+ * @version  1.1.3.2
  * @package  js
  */
 var Js;
@@ -23,83 +23,93 @@ var Js;
                     if (objJson.readyState === 4 && objJson.status === 200) {
                         var jsonData = JSON.parse(objJson.responseText);
                         if (jsonData) {
-                            for (var i in jsonData) {
-                                switch (i) {
-                                    case "debug":
-                                    case "dump":
-                                        console.log(jsonData[i]);
-                                        break;
-                                    case "jump":
-                                        location.href = jsonData[i];
-                                        return false;
-                                    case "call":
-                                        // サイト側のJSに記述
-                                        js.callFunc(jsonData[i]);
-                                        break;
-                                    case "window_open":
-                                        window.open(jsonData[i], "_blank");
-                                        return false;
-                                    case "alert":
-                                        window.alert(jsonData[i]);
-                                        break;
-                                    case "clear":
-                                        for (var ci in jsonData[i]) {
-                                            if ($.id(ci)) {
-                                                $.id(ci).innerHTML = "";
-                                            }
-                                        }
-                                        break;
-                                    case "style":
-                                        for (var si in jsonData[i].key) {
-                                            if ($.id(si)) {
-                                                $.id(si).style[jsonData[i].key[si]] = jsonData[i].value[si];
-                                            }
-                                        }
-                                        break;
-                                    case "value":
-                                        for (var vi in jsonData[i]) {
-                                            if ($.id(vi)) {
-                                                var vie = $.id(vi);
-                                                vie.value = jsonData[i][vi];
-                                            }
-                                        }
-                                        break;
-                                    case "clear_value":
-                                        for (var cvi in jsonData[i]) {
-                                            if ($.id(cvi)) {
-                                                var cvie = $.id(cvi);
-                                                cvie.value = "";
-                                            }
-                                        }
-                                        break;
-                                    case "name":
-                                        for (var cli in jsonData[i]) {
-                                            if ($.nm(cli)[0]) {
-                                                for (var fi = 0; fi < $.nm(cli).length; fi++) {
-                                                    $.nm(cli)[fi].innerHTML
-                                                        = jsonData[i][cli];
-                                                }
-                                            }
-                                        }
-                                        break;
-                                    default:
-                                        this.jsonNode(jsonData, i);
-                                        break;
-                                }
-                            }
+                            this.jsonDeploy(jsonData);
                         }
                         else {
-                            window.alert("JSエラー");
+                            window.alert("JSONエラー");
                         }
                     }
                     return true;
                 }
                 catch (e) {
+                    window.alert("エラーになりました");
                     console.log(e.name + ":" + e.message);
                 }
             };
             /**
-             * JSONをHTMLに展開
+             * JSONの展開
+             * @param {JSON} jsonData
+             * @returns {boolean}
+             */
+            JsonClass.prototype.jsonDeploy = function (jsonData) {
+                for (var i in jsonData) {
+                    switch (i) {
+                        case "debug":
+                        case "dump":
+                            console.log(jsonData[i]);
+                            break;
+                        case "call":
+                            js.callFunc(jsonData[i]);
+                            break;
+                        case "jump":
+                            location.href = jsonData[i];
+                            return true;
+                        case "window_open":
+                            window.open(jsonData[i], "_blank");
+                            return true;
+                        case "alert":
+                            window.alert(jsonData[i]);
+                            break;
+                        case "clear":
+                            for (var ci in jsonData[i]) {
+                                if ($.id(ci)) {
+                                    $.id(ci).innerHTML = "";
+                                }
+                            }
+                            break;
+                        case "style":
+                            for (var si in jsonData[i].key) {
+                                if ($.id(si)) {
+                                    $.id(si).style[jsonData[i].key[si]]
+                                        = jsonData[i].value[si];
+                                }
+                            }
+                            break;
+                        case "value":
+                            for (var vi in jsonData[i]) {
+                                if ($.id(vi)) {
+                                    var vie = $.id(vi);
+                                    vie.value = jsonData[i][vi];
+                                }
+                            }
+                            break;
+                        case "clear_value":
+                            for (var cvi in jsonData[i]) {
+                                if ($.id(cvi)) {
+                                    var cvie = $.id(cvi);
+                                    cvie.value = "";
+                                }
+                            }
+                            break;
+                        case "name":
+                            for (var cli in jsonData[i]) {
+                                if ($.nm(cli)[0]) {
+                                    for (var fi = 0; fi < $.nm(cli).length; fi++) {
+                                        $.nm(cli)[fi].innerHTML
+                                            = jsonData[i][cli];
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            this.jsonNode(jsonData, i);
+                            break;
+                    }
+                }
+                return true;
+            };
+            /**
+             * HTMLに組み込む
              * @param {JSON} jsonData
              * @param {string} i
              * @returns {void}
