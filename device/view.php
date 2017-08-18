@@ -17,7 +17,7 @@
  * 携帯の場合、$_SESSION['mobile_pc_flag']で携帯とPCの表示切り替えができる
  * 
  * @author   Sawada Hideshige
- * @version  1.1.6.1
+ * @version  1.1.6.2
  * @package  device
  * 
  */
@@ -38,9 +38,8 @@ class View
             $content = '';
             $open = self::open($tpl);
             if ($open) {
-                $content = self::elementMatch($open);
-                $content = self::replace($disp, $content);
-                $content = self::match($disp, $content);
+                $content = self::match(
+                    $disp, self::replace($disp, self::elementMatch($open)));
             }
         } catch (\Error $e) {
             $info = new ErrorInfo;
