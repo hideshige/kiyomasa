@@ -3,16 +3,14 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.2
+ * @version  1.0.5.3
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\ErrorInfo;
-use Php\Framework\Device\S;
-use Php\Framework\Device\View;
+use Php\Framework\Device\{ErrorInfo, S, View};
 
 class Turret
 {
@@ -96,8 +94,7 @@ class Turret
         
         if (S::$jflag === false and count($tpl)) {
             foreach ($tpl as $tk => $tv) {
-                echo View::template($tv,
-                    isset(S::$disp[$tk]) ? S::$disp[$tk] : []);
+                echo View::template($tv, S::$disp[$tk] ?? []);
             }
         }
         if (S::$jflag === false) {

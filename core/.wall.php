@@ -3,15 +3,14 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.0.1
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\S;
-use Php\Framework\Device\View;
+use Php\Framework\Device\{S, View};
 
 trait Wall
 {
@@ -114,8 +113,7 @@ trait Wall
             } else {
                 $debug['disp_type'] = 'html';
                 $view['DEBUG'][0]['DEBUG_INCLUDE'][0] = $debug;
-                $view['REPLACE']['env'] = isset($env[ENV])
-                    ? $env[ENV] : 'ENV' . ENV;
+                $view['REPLACE']['env'] = $env[ENV] ?? 'ENV' . ENV;
                 $view['REPLACE']['process'] = $process;
                 $view['REPLACE']['navi_id'] = $navi_id;
                 $disp = View::template('.debug.tpl', $view);
