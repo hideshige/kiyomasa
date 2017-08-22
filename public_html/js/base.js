@@ -2,7 +2,7 @@
  * JavaScript 基本ファイル
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.1
+ * @version  1.1.2.0
  * @package  js
  */
 "use strict";
@@ -54,7 +54,7 @@ var $ = (function () {
      * @returns {boolean|NodeListOf<Element>}
      */
     $.nm = function (tagName) {
-        if (!document.getElementsByName(tagName)[0]) {
+        if (!document.getElementsByName(tagName)) {
             return false;
         }
         else {
@@ -67,7 +67,7 @@ var $ = (function () {
      * @returns {boolean|NodeListOf<Element>}
      */
     $.cls = function (tagName) {
-        if (!document.getElementsByClassName(tagName)[0]) {
+        if (!document.getElementsByClassName(tagName)) {
             return false;
         }
         else {
