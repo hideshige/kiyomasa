@@ -2,7 +2,7 @@
  * JSONの展開
  *
  * @author   Sawada Hideshige
- * @version  1.1.3.2
+ * @version  1.1.3.3
  * @package  js
  */
 var Js;
@@ -95,7 +95,7 @@ var Js;
                             for (var cli in jsonData[i]) {
                                 if ($.nm(cli)[0]) {
                                     for (var fi = 0; fi < $.nm(cli).length; fi++) {
-                                        $.nm(cli)[fi].innerHTML
+                                        $.nm(cli).item(fi).innerHTML
                                             = jsonData[i][cli];
                                     }
                                 }
