@@ -3,7 +3,7 @@
  * キャッスル　コントローラ
  *
  * @author   Sawada Hideshige
- * @version  1.4.4.2
+ * @version  1.4.4.3
  * @package  core
  * 
  */
@@ -37,6 +37,7 @@ class Castle
             if (!S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
                 S::$dbs = S::$dbm;
+                S::$dbm->connectCheck();
             }
             
             // memchached

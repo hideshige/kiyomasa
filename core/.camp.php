@@ -51,6 +51,7 @@ class Camp
             if (!S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
                 S::$dbs = S::$dbm;
+                S::$dbm->connectCheck();
             }
             
             $this->exec($argv[1]);
