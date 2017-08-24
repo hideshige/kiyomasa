@@ -2,7 +2,7 @@
  * JSONの展開
  *
  * @author   Sawada Hideshige
- * @version  1.1.3.3
+ * @version  1.1.3.4
  * @package  js
  */
 var Js;
@@ -22,12 +22,10 @@ var Js;
                 try {
                     if (objJson.readyState === 4 && objJson.status === 200) {
                         var jsonData = JSON.parse(objJson.responseText);
-                        if (jsonData) {
-                            this.jsonDeploy(jsonData);
-                        }
-                        else {
-                            window.alert("JSONエラー");
-                        }
+                        this.jsonDeploy(jsonData);
+                    }
+                    else if (objJson.readyState === 4 && objJson.status === 504) {
+                        window.alert("タイムアウトエラー");
                     }
                     return true;
                 }
