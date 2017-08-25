@@ -260,7 +260,7 @@ var Js;
             if (dispMode[0]) {
                 for (var di in dispMode) {
                     if (dispMode.item(di)) {
-                        dispMode.item(di).innerHTML = openFlag.innerHTML
+                        dispMode.item(di).textContent = openFlag.textContent
                             === "1" ? "True SQL Mode" : "Developper Mode";
                     }
                 }
@@ -268,7 +268,7 @@ var Js;
             if (quTag[0]) {
                 for (var qi in quTag) {
                     if (quTag.item(qi)) {
-                        quTag.item(qi).style.display = openFlag.innerHTML
+                        quTag.item(qi).style.display = openFlag.textContent
                             === "1" ? "inline" : "none";
                     }
                 }
@@ -276,11 +276,11 @@ var Js;
             if (hiddenTag[0]) {
                 for (var hi in hiddenTag) {
                     if (hiddenTag.item(hi)) {
-                        hiddenTag.item(hi).style.display = openFlag.innerHTML
+                        hiddenTag.item(hi).style.display = openFlag.textContent
                             === "1" ? "none" : "inline";
                     }
                 }
-                openFlag.innerHTML = openFlag.innerHTML === "1" ? "0" : "1";
+                openFlag.textContent = openFlag.textContent === "1" ? "0" : "1";
             }
         };
         return FwDebugClass;

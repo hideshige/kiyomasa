@@ -2,7 +2,7 @@
  * JSONの展開
  *
  * @author   Sawada Hideshige
- * @version  1.1.3.4
+ * @version  1.1.4.0
  * @package  js
  */
 var Js;
@@ -61,7 +61,7 @@ var Js;
                         case "clear":
                             for (var ci in jsonData[i]) {
                                 if ($.id(ci)) {
-                                    $.id(ci).innerHTML = "";
+                                    $.id(ci).textContent = "";
                                 }
                             }
                             break;

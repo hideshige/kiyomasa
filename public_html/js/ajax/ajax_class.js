@@ -92,8 +92,8 @@ var Js;
                     return false;
                 }
                 this.doubleClickCheck = true;
-                if (document.getElementById("token")) {
-                    this.commonParam += "&token=" + $.id("token").innerHTML;
+                if ($.id("token")) {
+                    this.commonParam += "&token=" + $.id("token").textContent;
                 }
                 objJson.open("POST", this.url_root + url_address, true);
                 objJson.onreadystatechange = function () {
