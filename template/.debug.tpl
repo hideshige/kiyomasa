@@ -222,7 +222,7 @@
     </div>
 <div style="display: none;" id="fw_debug_counter_flag">1</div>
 </div>
-<script>
+<script type="text/javascript">
 var Js;
 (function (Js) {
     "use strict";
@@ -257,7 +257,7 @@ var Js;
             var hiddenTag = document.getElementsByName("fw_debug_process");
             var quTag = document.getElementsByName("fw_debug_process_qu");
             var dispMode = document.getElementsByName("fw_debug_mode");
-            if (dispMode[0]) {
+            if (dispMode) {
                 for (var di in dispMode) {
                     if (dispMode.item(di)) {
                         dispMode.item(di).textContent = openFlag.textContent
@@ -265,7 +265,7 @@ var Js;
                     }
                 }
             }
-            if (quTag[0]) {
+            if (quTag) {
                 for (var qi in quTag) {
                     if (quTag.item(qi)) {
                         quTag.item(qi).style.display = openFlag.textContent
@@ -273,7 +273,7 @@ var Js;
                     }
                 }
             }
-            if (hiddenTag[0]) {
+            if (hiddenTag) {
                 for (var hi in hiddenTag) {
                     if (hiddenTag.item(hi)) {
                         hiddenTag.item(hi).style.display = openFlag.textContent
