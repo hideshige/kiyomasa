@@ -27,6 +27,7 @@
     color: red;
     font-weight: bold;
     margin-bottom: 9px;
+    word-break: break-all;
 }
 
 #fw_debug h4
