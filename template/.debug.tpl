@@ -19,6 +19,7 @@
     border: 1px solid #eee;
     border-radius: 5px;
     background: #eef;
+    word-break: break-all;
 }
 
 #fw_debug h3
