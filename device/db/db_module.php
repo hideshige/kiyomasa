@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.0
+ * @version  1.0.6.0
  * @package  device/db
  *
  */
@@ -84,7 +84,7 @@ class DbModule
      * 接続の確認
      * @return void
      */
-    private function connectCheck(): void
+    public function connectCheck(): void
     {
         if ($this->connect_flag === false) {
             if ($this->connect() === false) {
@@ -102,8 +102,8 @@ class DbModule
      * @return object|bool
      */
     public function query(
-        string $sql = null,
-        string $dev_sql = null,
+        string $sql,
+        string $dev_sql = '',
         string $statement_id = 'stmt'
     ) {
         try {
@@ -163,20 +163,19 @@ class DbModule
     /**
      * ルーチンの呼び出し
      * @param string $name ルーチンの名前
-     * @param mixed $param パラメータ
+     * @param string $param パラメータ
      * @param string $statement_id ステートメントID
-     * @return bool
+     * @return object|bool
      */
     public function call(
         string $name,
-        array $param,
+        string $param,
         string $statement_id = 'stmt'
-    ): bool {
+    ) {
         try {
             $this->connectCheck();
-            $params = implode(', ', $param);
-            $res = $this->query(sprintf('CALL %s(%s)', $name, $params),
-                null, $statement_id);
+            $res = $this->query(sprintf('CALL %s(%s)', $name, $param),
+                '', $statement_id);
             return $res;
         } catch (\PDOException $e) {
             $this->dbLog('call', $e->getMessage());
