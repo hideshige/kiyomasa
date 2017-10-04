@@ -3,7 +3,7 @@
  * cURL(カール)　モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.2
+ * @version  1.0.5.3
  * @package  device/equipment
  */
 
@@ -15,7 +15,7 @@ class Curl
      * データを送信し結果XMLオブジェクトを取得
      *
      * @param string $url アクセスするURL
-     * @param int $type 1:XML 2:JSON 3:TEXT
+     * @param int $type 結果形式
      * @param string $post_data POSTするデータがある場合記入する
      * @param array $headers 送信するヘッダ
      * @param bool $disp_headers ヘッダを取得するか否か
@@ -23,7 +23,7 @@ class Curl
      */
     public static function getRes(
         string $url,
-        int $type = 1,
+        int $type = CURL_TYPE_XML,
         string $post_data = '',
         array $headers = [],
         bool $disp_headers = false
@@ -36,9 +36,9 @@ class Curl
         curl_close($ch);
 
         if ($data['content']) {
-            if ($type === 1) {
+            if ($type === CURL_TYPE_XML) {
                 $data['content'] = simplexml_load_string($data['content']);
-            } else if ($type === 2) {
+            } else if ($type === CURL_TYPE_JSON) {
                 $data['content'] = json_decode($data['content']);
             }
         }

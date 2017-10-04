@@ -30,6 +30,20 @@ define('MOBILE_FLAG', preg_match(
     USER_AGENT) ? true : false);
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
 
+// form用パラメータ種別の定義
+const PARAM_TYPE_TEXTAREA = 1;
+const PARAM_TYPE_RADIO = 2;
+const PARAM_TYPE_SELECT = 3;
+const PARAM_TYPE_CHECK = 4;
+const PARAM_TYPE_TEXT = 5;
+const PARAM_TYPE_PASSWORD = 6;
+const PARAM_TYPE_EMAIL = 7;
+
+// curl用結果形式の定義
+const CURL_TYPE_XML = 1;
+const CURL_TYPE_JSON = 2;
+const CURL_TYPE_TEXT = 3;
+
 // データベースデバッグ用表示カウンタ
 $g_counter = 1;
 
