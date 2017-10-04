@@ -17,7 +17,7 @@
  * 携帯の場合、$_SESSION['mobile_pc_flag']で携帯とPCの表示切り替えができる
  * 
  * @author   Sawada Hideshige
- * @version  1.1.6.2
+ * @version  1.1.7.0
  * @package  device
  * 
  */
@@ -38,8 +38,7 @@ class View
             $content = '';
             $open = self::open($tpl);
             if ($open) {
-                $content = self::match(
-                    $disp, self::replace($disp, self::elementMatch($open)));
+                $content = self::setContent($open, $disp);
             }
         } catch (\Error $e) {
             $info = new ErrorInfo;
@@ -49,6 +48,18 @@ class View
             return $content;
         }
     }
+    
+    /**
+     * テキストにデータを埋め込む
+     * @param string $content テキスト内容
+     * @param array $disp テンプレートに埋め込むデータ配列
+     * @return string
+     */
+    public static function setContent(string $content, array $disp): string
+    {
+        return self::match(
+            $disp, self::replace($disp, self::elementMatch($content)));
+    }
 
     /**
      * テンプレートの読み込み
@@ -56,7 +67,7 @@ class View
      * @return string 読み込んだコンテンツ
      * @throws \Error
      */
-    private static function open(string $tpl): string
+    public static function open(string $tpl): string
     {
         $content = '';
         $add = strpos($tpl, '.') !== false ? '' : '.tpl';
