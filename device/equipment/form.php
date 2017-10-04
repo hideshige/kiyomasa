@@ -3,17 +3,17 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.5
+ * @version  1.3.5.6
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
  $params = array(
-    'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
-    'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
+    'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => PARAM_TYPE_TEXT, 'name' => '例1'),
+    'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => PARAM_TYPE_SELECT, 'name' => '例2'),
  );
  *
  * ルールの意味
- * type   : フォームの種類(1 textarea, 2 radio, 3 select, 4 check, 5 text, 6 password, 7 email)
+ * type   : パラメータ種別（/core/.define.phpに記載）
  * must   : 入力必須
  * must_select: 選択必須
  * max    : 最大文字数
@@ -65,8 +65,8 @@
  *
 モデルは以下のようにする
 $params = array(
-    'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => 5, 'name' => '例1'),
-    'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => 3, 'name' => '例2'),
+    'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => PARAM_TYPE_TEXT, 'name' => '例1'),
+    'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => PARAM_TYPE_SELECT, 'name' => '例2'),
 );
 
 $box = S::$post;
@@ -277,20 +277,21 @@ class Form
             if (isset($val['pre_add'])) {
                 $form[$key] .= $val['pre_add'];
             }
-            if ($val['type'] === 3) {
+            if ($val['type'] === PARAM_TYPE_SELECT) {
                 self::selectForm($name, $key, $val['select'],
                     $post[$name] ?? '', $form, $val['tag_add'] ?? '');
-            } else if ($val['type'] === 2) {
+            } else if ($val['type'] === PARAM_TYPE_RADIO) {
                 self::radioForm($name, $key, $val['select'],
                     $post[$name] ?? '', $form, $val['tag_add'] ?? '', $br_flag);
-            } else if ($val['type'] === 4) {
+            } else if ($val['type'] === PARAM_TYPE_CHECK) {
                 self::checkForm($name, $key, $val['select'],
                     $post[$name] ?? '', $form, $val['tag_add'] ?? '', $br_flag);
-            } else if ($val['type'] === 5
-                or $val['type'] === 6 or $val['type'] === 7) {
+            } else if ($val['type'] === PARAM_TYPE_TEXT
+                or $val['type'] === PARAM_TYPE_PASSWORD
+                or $val['type'] === PARAM_TYPE_EMAIL) {
                 switch ($val['type']) {
-                    case 6: $text_type = 'password'; break;
-                    case 7: $text_type = 'email'; break;
+                    case PARAM_TYPE_PASSWORD: $text_type = 'password'; break;
+                    case PARAM_TYPE_EMAIL: $text_type = 'email'; break;
                     default: $text_type = 'text';
                 }
                 $max = isset($val['max'])
@@ -434,7 +435,8 @@ class Form
         foreach ($question as $k => $v) {
             $form[$k]['question_num'] = $k + 1;
             $form[$k]['question'] = nl2br($v['question']);
-            if ($v['answer_type'] === 2 or $v['answer_type'] === 3) {
+            if ($v['answer_type'] === PARAM_TYPE_RADIO
+                or $v['answer_type'] === PARAM_TYPE_SELECT) {
                 //セレクト、ラジオ
                 $select = unserialize($v['answer_select']);
                 if ($answer[$v['question_id']]) {
@@ -442,7 +444,7 @@ class Form
                 } else {
                     $form[$k]['answer'] = '回答なし';
                 }
-            } else if ($v['answer_type'] === 4) {
+            } else if ($v['answer_type'] === PARAM_TYPE_CHECK) {
                 //チェックボックス
                 $box = [];
                 if (count($answer[$v['question_id']])) {
@@ -481,7 +483,7 @@ class Form
             $form[$k]['question_id'] = $v['question_id'];
             $form[$k]['answer_type'] = $v['answer_type'];
             $form[$k]['question'] = $v['question'];
-            if ($v['answer_type'] === 4) {
+            if ($v['answer_type'] === PARAM_TYPE_CHECK) {
                 $form[$k]['answer']
                     = self::makeDataCheckbox($answer, $v['question_id']);
             } else {

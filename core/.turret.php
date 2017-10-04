@@ -3,7 +3,7 @@
  * タレット　強化コントローラ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.3
+ * @version  1.0.5.4
  * @package  core
  * 
  */
@@ -56,13 +56,6 @@ class Turret
     public function disp(string $pagename, string $folder = ''): void
     {
         try {
-            // modelファイルの読み込み
-            $file = SERVER_PATH . 'model/' . $folder . $pagename . '.php';
-            if (!file_exists($file)) {
-                throw new \Error($file . ' not found: '
-                    . filter_input(INPUT_SERVER, 'REQUEST_URI'), 10);
-            }
-            require_once($file);
             $class_name = NAME_SPACE . '\Model\\' . trim(
                 str_replace(' ', '', ucwords(str_replace(
                 ['_', '/'], [' ', '\\'], $folder . $pagename))));
