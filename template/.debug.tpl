@@ -94,7 +94,7 @@
     font-size: 0.8em;
     top: 0;
     left: 0;
-    z-index: 10001;
+    z-index: 10004;
 }
 
 #fw_debug .fw_debug_html
@@ -114,7 +114,7 @@
     background: #f7fee5;
     color: #333;
     padding: 10px;
-    position:relative;
+    position: relative;
 }
 
 #fw_debug .fw_debug_header
