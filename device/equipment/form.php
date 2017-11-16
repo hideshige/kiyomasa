@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.6
+ * @version  1.3.5.8
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -142,7 +142,9 @@ class Form
         $res = [];
 
         foreach ($params as $key => $val) {
-            if (isset($data[$key]) and !is_array($data[$key])) {
+            if (!isset($data[$key])) {
+                $str = null;
+            } else if (isset($data[$key]) and !is_array($data[$key])) {
                 $str = htmlspecialchars_decode($data[$key], ENT_QUOTES);
             } else if (isset($data[$key]) and is_array($data[$key])) {
                 $tmp = [];
@@ -156,7 +158,7 @@ class Form
             foreach ($val as $k => $v) {
                 if ($k === 'must' and preg_replace('/^[　 \r\n]+|[　 \r\n]+$/u', '', $str) === '') {
                     $res[$key][$k] = true;
-                } else if ($k === 'must_select' and $str === '') {
+                } else if ($k === 'must_select' and !$str) {
                     $res[$key][$k] = true;
                 } else if ($k === 'max' and $str !== '' and mb_strlen($str) > $v) {
                     $res[$key][$k] = mb_strlen($str);
@@ -184,9 +186,9 @@ class Form
                     $res[$key][$k] = $v . $tani;
                 } else if ($k === 'email' and $str !== '' and (!preg_match('/^.+@.+\..+$/', $str) or !preg_match('/^[0-9a-zA-Z@\-_\.\+]+$/u', $str))) {
                     $res[$key][$k] = true;
-                } else if ($k === 'select' and $str !== '' and !is_array($str) and !isset($v[$str])) {//ラジオ、セレクト値送信の不正チェック
+                } else if ($k === 'select' and $str !== null and !is_array($str) and !isset($v[$str])) {//ラジオ、セレクト値送信の不正チェック
                     $res[$key]['select_error'] = true;
-                } else if ($k === 'select' and $str !== '' and is_array($str)) {//チェックボックス値送信の不正チェック
+                } else if ($k === 'select' and is_array($str)) {//チェックボックス値送信の不正チェック
                     foreach ($str as $strv) {
                         if (!isset($v[$strv]) or $v[$strv] === '') {
                             $res[$key]['select_error'] = true;
