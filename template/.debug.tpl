@@ -95,6 +95,7 @@
     top: 0;
     left: 0;
     z-index: 10004;
+    background: rgba(50, 50, 50, 0.3);
 }
 
 #fw_debug .fw_debug_html

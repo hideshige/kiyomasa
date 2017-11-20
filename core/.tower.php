@@ -3,7 +3,7 @@
  * タワー　オートロード、エラーハンドラなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.3
+ * @version  1.0.1.4
  * @package  core
  * 
  */
@@ -35,6 +35,7 @@ spl_autoload_register(
         }
         $file_name = SERVER_PATH . implode('/', $arr) . '.php';
         if (!file_exists($file_name)) {
+            header('HTTP/1.1 404 Not Found');
             throw new \Error(
                 'Class File Not Found: ' . $file_name
             );

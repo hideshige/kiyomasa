@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.8
+ * @version  1.3.5.9
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -355,7 +355,7 @@ class Form
      * @param array $val ラジオボタンの内容
      * @param string $data 受け取ったデータの値
      * @param array $form フォームオブジェクト
-     * @param string $tag_add タグに付加する文字
+     * @param string $tag タグに付加する文字
      * @param bool $br_flag 改行を入れるか否か
      * @return void
      */
@@ -365,7 +365,7 @@ class Form
         array $val,
         string $data,
         array &$form,
-        string $tag_add = '',
+        string $tag = '',
         bool $br_flag = false
     ): void {
         if (!isset($form[$key])) {
@@ -375,9 +375,10 @@ class Form
             $check = (isset($data) and $data == $k)
                 ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
-            $t = '<label><input type="radio" name="%s" value="%s"%s%s />'
+            $t = '<label title="%s">'
+                . '<input type="radio" name="%s" value="%s"%s%s />'
                 . ' %s </label>%s';
-            $form[$key] .= sprintf($t, $name, $k, $check, $tag_add, $v, $br);
+            $form[$key] .= sprintf($t, $v, $name, $k, $check, $tag, $v, $br);
         }
     }
 
@@ -389,7 +390,7 @@ class Form
      * @param array $val チェックボックスの内容
      * @param mixed array|string $data 受け取ったデータの値
      * @param array $form フォームオブジェクト
-     * @param string $tag_add タグに付加する文字
+     * @param string $tag タグに付加する文字
      * @param bool $br_flag 改行を入れるか否か
      * @return void
      */
@@ -399,7 +400,7 @@ class Form
         array $val,
         $data,
         array &$form,
-        string $tag_add = '',
+        string $tag = '',
         bool $br_flag = false
     ): void {
         if (!isset($form[$key])) {
@@ -416,9 +417,10 @@ class Form
             $check = (array_search($k, $data, false) !== false)
                 ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
-            $t = '<label><input type="checkbox" name="%s[]" value="%s"%s%s />'
+            $t = '<label title="%s">'
+                . '<input type="checkbox" name="%s[]" value="%s"%s%s />'
                 . ' %s </label>%s';
-            $form[$key] .= sprintf($t, $name, $k, $check, $tag_add, $v, $br);
+            $form[$key] .= sprintf($t, $v, $name, $k, $check, $tag, $v, $br);
         }
     }
 
