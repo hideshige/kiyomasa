@@ -1,14 +1,14 @@
 <?php
 /**
- * admin用のページかどうかチェックする共通モデル
+ * admin用のページかどうかチェックする
  *
  * @author   Sawada Hideshige
  * @version  1.0.3.0
- * @package  extension
+ * @package  base
  *
  */
 
-namespace Yourname\Yourproject\Extension;
+namespace Yourname\Yourproject\Base;
 
 class AdminCheck
 {

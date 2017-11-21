@@ -1,18 +1,18 @@
 <?php
 /**
- * テスト モデル
+ * テスト 
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  model
+ * @package  gate
  */
 
-namespace Yourname\Yourproject\Model;
+namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Extension as E;
+use Yourname\Yourproject\Base as B;
 
-class Test extends E\BaseModel
+class Test extends B\BaseModel
 {
     public $tpl = ['part/header', 'content/error_page', 'part/footer'];
 
@@ -26,7 +26,7 @@ class Test extends E\BaseModel
             // 検証環境以外は通常のエラー画面を表示
             throw new D\UserEx();
         }
-        E\Citadel::set('test');
+        B\Citadel::set('test');
 
         return;
         

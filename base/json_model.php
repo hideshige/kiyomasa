@@ -4,11 +4,11 @@
  * 
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  extension
+ * @package  base
  * 
  */
 
-namespace Dh\Ai\Extension;
+namespace Dh\Ai\Base;
 
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Prop as P;

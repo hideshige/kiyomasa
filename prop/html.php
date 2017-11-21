@@ -1,6 +1,6 @@
 <?php
 /**
- * HTMLモデル用インターフェース
+ * HTML用インターフェース
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0

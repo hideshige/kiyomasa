@@ -9,9 +9,9 @@
 
 namespace Yourname\Yourproject\Shell;
 
-use Yourname\Yourproject\Extention as E;
+use Yourname\Yourproject\Base as B;
 
-class Sample extends E\BaseShell
+class Sample extends B\BaseShell
 {
     /**
      * 実行

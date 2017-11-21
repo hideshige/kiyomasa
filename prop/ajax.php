@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajaxモデル用インターフェース
+ * Ajax用インターフェース
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0

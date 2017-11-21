@@ -1,18 +1,18 @@
 <?php
 /**
- * モデルの書き方　チュートリアル
+ * 使い方　チュートリアル
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  model/content
+ * @package  gate/content
  */
 
-namespace Yourname\Yourproject\Model\Content;
+namespace Yourname\Yourproject\Gate\Content;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Extension as E;
+use Yourname\Yourproject\Base as B;
 
-class HelloWorld extends E\BaseModel // クラス名はファイル名に合わせる
+class HelloWorld extends B\BaseModel // クラス名はファイル名に合わせる
 {
     public $tpl = ['part/header', 'content/hello_world', 'part/footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
 

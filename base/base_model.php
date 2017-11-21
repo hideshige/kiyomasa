@@ -4,11 +4,11 @@
  * 
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  extension
+ * @package  base
  * 
  */
 
-namespace Yourname\Yourproject\Extension;
+namespace Yourname\Yourproject\Base;
 
 use Php\Framework\Device as D;
 use Yourname\Yourproject\Prop as P;

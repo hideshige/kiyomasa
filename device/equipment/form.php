@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.9
+ * @version  1.3.5.10
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -63,7 +63,7 @@
 <!-- END FORM_AREA -->
  *
  *
-モデルは以下のようにする
+パラメータの指定は以下のようにする
 $params = array(
     'example1' => array('must' => 1, 'max' => 30, 'int' => 1, 'type' => PARAM_TYPE_TEXT, 'name' => '例1'),
     'example2' => array('select' => array('0' => 'OFF', '1' => 'ON'), 'type' => PARAM_TYPE_SELECT, 'name' => '例2'),
@@ -122,10 +122,10 @@ class Form
         'email' => '正しいメールアドレスを入力してください。<br />',
         'email2' => 'メールアドレスは既に登録されています。<br />',
         'email3' => '確認用のメールアドレスと異なります。<br />',
-        'password_error' => '確認用のパスワードと異なります。<br />', // model側から判定する
-        'password_error2' => 'パスワードが正しくありません。<br />', // model側から判定する
-        'checkdate' => '日付が正しくありません。<br />', // model側から判定する
-        'ng_word' => '不適切な文字が含まれています。<br />', // model側から判定する
+        'password_error' => '確認用のパスワードと異なります。<br />', // 親プログラムから判定する
+        'password_error2' => 'パスワードが正しくありません。<br />', // 親プログラムから判定する
+        'checkdate' => '日付が正しくありません。<br />', // 親プログラムから判定する
+        'ng_word' => '不適切な文字が含まれています。<br />', // 親プログラムから判定する
     ];
 
     /**

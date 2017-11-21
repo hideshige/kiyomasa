@@ -1,16 +1,16 @@
 <?php
 /**
- * error モデル
+ * error 
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  model/content
+ * @package  gate/content
  */
 
-namespace Yourname\Yourproject\Model\Content;
+namespace Yourname\Yourproject\Gate\Content;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Extension as E;
+use Yourname\Yourproject\Base as B;
 use Yourname\Yourproject\Prop as P;
 
 class ErrorPage implements P\Html
@@ -24,7 +24,7 @@ class ErrorPage implements P\Html
     public function logic(): bool
     {
         $title = 'エラー';
-        E\Citadel::set($title, false, false);
+        B\Citadel::set($title, false, false);
         $message = 'ページが見つかりません。';
         if (isset($_SESSION['error_message']) and $_SESSION['error_message']) {
             $message = $_SESSION['error_message'];

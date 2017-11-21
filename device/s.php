@@ -21,5 +21,5 @@ class S
     public static $disp; // テンプレートデータ
     public static $user; // セッション上のユーザーデータ
     public static $ouser; // ページに表示するユーザーデータ
-    public static $jflag; // そのモデルがJSON形式かHTML形式か
+    public static $jflag; // JSON形式かHTML形式か
 }

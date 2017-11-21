@@ -1,16 +1,16 @@
 <?php
 /**
- * メンテ モデル
+ * メンテ 
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  models
+ * @package  gate
  */
 
-namespace Yourname\Yourproject\Model;
+namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Extension as E;
+use Yourname\Yourproject\Base as B;
 use Yourname\Yourproject\Prop as P;
 
 class Mainte implements P\Html
@@ -28,7 +28,7 @@ class Mainte implements P\Html
             exit;
         }
         $title = 'メンテナンス中';
-        E\Citadel::set($title, false, false);
+        B\Citadel::set($title, false, false);
         if (!isset(S::$user['user_id'])) {
             echo 'ただいまメンテナンス中です';
             exit;

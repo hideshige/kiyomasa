@@ -1,18 +1,18 @@
 <?php
 /**
- * index モデル
+ * index 
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  models
+ * @package  gate
  */
 
-namespace Yourname\Yourproject\Model;
+namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Extension as E;
+use Yourname\Yourproject\Base as B;
 
-class Index extends E\BaseModel
+class Index extends B\BaseModel
 {
     public $tpl = ['part/header', 'index', 'part/footer'];
 
@@ -22,7 +22,7 @@ class Index extends E\BaseModel
      */
     protected function execute(): void
     {
-        E\Citadel::set('YOURSITE');
+        B\Citadel::set('YOURSITE');
     }
     
     /**
