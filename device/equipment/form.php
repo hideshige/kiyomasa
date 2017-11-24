@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.10
+ * @version  1.3.5.11
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -160,31 +160,31 @@ class Form
                     $res[$key][$k] = true;
                 } else if ($k === 'must_select' and !$str) {
                     $res[$key][$k] = true;
-                } else if ($k === 'max' and $str !== '' and mb_strlen($str) > $v) {
+                } else if ($k === 'max' and $str !== '' and $str !== null and mb_strlen($str) > $v) {
                     $res[$key][$k] = mb_strlen($str);
-                } else if ($k === 'min' and $str !== '' and mb_strlen($str) < $v) {
+                } else if ($k === 'min' and $str !== '' and $str !== null and mb_strlen($str) < $v) {
                     $res[$key][$k] = mb_strlen($str);
-                } else if ($k === 'fill' and $str !== '' and mb_strlen($str) !== $v) {
+                } else if ($k === 'fill' and $str !== '' and $str !== null and mb_strlen($str) !== $v) {
                     $res[$key][$k] = mb_strlen($str);
-                } else if ($k === 'int' and $str !== '' and !preg_match('/^[\d,]+$/', $str)) {
+                } else if ($k === 'int' and $str !== '' and $str !== null and !preg_match('/^[\d,]+$/', $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'eng' and $str !== '' and !preg_match("/^[\w.',=-]+$/", $str)) {
+                } else if ($k === 'eng' and $str !== '' and $str !== null and !preg_match("/^[\w.',=-]+$/", $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'char' and $str !== '' and strlen($str) !== mb_strlen($str)) {
+                } else if ($k === 'char' and $str !== '' and $str !== null and strlen($str) !== mb_strlen($str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'char2' and $str !== '' and mb_convert_kana($str, 'R') !== $str) {
+                } else if ($k === 'char2' and $str !== '' and $str !== null and mb_convert_kana($str, 'R') !== $str) {
                     $res[$key][$k] = true;
-                } else if ($k === 'hiragana' and $str !== '' and !preg_match('/^[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょっぁぃぅぇぉーゐゑゝゞ・　 ]+$/u', $str)) {
+                } else if ($k === 'hiragana' and $str !== '' and $str !== null and !preg_match('/^[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょっぁぃぅぇぉーゐゑゝゞ・　 ]+$/u', $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'katakana' and $str !== '' and !preg_match('/^[アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンヴガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポャュョッァィゥェォヶーヰヱヽヾ・　 ]+$/u', $str)) {
+                } else if ($k === 'katakana' and $str !== '' and $str !== null and !preg_match('/^[アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンヴガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポャュョッァィゥェォヶーヰヱヽヾ・　 ]+$/u', $str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'count' and $str !== '' and count($str) > $v) {
+                } else if ($k === 'count' and $str !== '' and $str !== null and count($str) > $v) {
                     $tani = $v < 10 ? 'つ' : '';
                     $res[$key][$k] = $v . $tani;
                 } else if ($k === 'match_count' and count($str) !== $v) {
                     $tani = $v < 10 ? 'つ' : '';
                     $res[$key][$k] = $v . $tani;
-                } else if ($k === 'email' and $str !== '' and (!preg_match('/^.+@.+\..+$/', $str) or !preg_match('/^[0-9a-zA-Z@\-_\.\+]+$/u', $str))) {
+                } else if ($k === 'email' and $str !== '' and $str !== null and (!preg_match('/^.+@.+\..+$/', $str) or !preg_match('/^[0-9a-zA-Z@\-_\.\+]+$/u', $str))) {
                     $res[$key][$k] = true;
                 } else if ($k === 'select' and $str !== null and !is_array($str) and !isset($v[$str])) {//ラジオ、セレクト値送信の不正チェック
                     $res[$key]['select_error'] = true;
