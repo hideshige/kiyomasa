@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.5.11
+ * @version  1.3.6.0
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -288,6 +288,8 @@ class Form
             } else if ($val['type'] === PARAM_TYPE_CHECK) {
                 self::checkForm($name, $key, $val['select'],
                     $post[$name] ?? '', $form, $val['tag_add'] ?? '', $br_flag);
+            } else if ($val['type'] === PARAM_TYPE_META) {
+                $form[$key] .= nl2br($post[$name] ?? '');
             } else if ($val['type'] === PARAM_TYPE_TEXT
                 or $val['type'] === PARAM_TYPE_PASSWORD
                 or $val['type'] === PARAM_TYPE_EMAIL) {

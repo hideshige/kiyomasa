@@ -38,6 +38,7 @@ const PARAM_TYPE_CHECK = 4;
 const PARAM_TYPE_TEXT = 5;
 const PARAM_TYPE_PASSWORD = 6;
 const PARAM_TYPE_EMAIL = 7;
+const PARAM_TYPE_META = 8;
 
 // curl用結果形式の定義
 const CURL_TYPE_XML = 1;

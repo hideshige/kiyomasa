@@ -2,7 +2,7 @@
  * JSONの展開
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.0
+ * @version  1.1.4.1
  * @package  js
  */
 var Js;
@@ -30,7 +30,7 @@ var Js;
                     return true;
                 }
                 catch (e) {
-                    window.alert("エラーになりました");
+                    window.alert("JSONエラーになりました");
                     console.log(e.name + ":" + e.message);
                 }
             };
