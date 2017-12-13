@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.6.0
+ * @version  1.3.6.1
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -172,7 +172,7 @@ class Form
                     $res[$key][$k] = true;
                 } else if ($k === 'char' and $str !== '' and $str !== null and strlen($str) !== mb_strlen($str)) {
                     $res[$key][$k] = true;
-                } else if ($k === 'char2' and $str !== '' and $str !== null and mb_convert_kana($str, 'R') !== $str) {
+                } else if ($k === 'char2' and $str !== '' and $str !== null and mb_convert_kana($str, 'RN') !== $str) {
                     $res[$key][$k] = true;
                 } else if ($k === 'hiragana' and $str !== '' and $str !== null and !preg_match('/^[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょっぁぃぅぇぉーゐゑゝゞ・　 ]+$/u', $str)) {
                     $res[$key][$k] = true;
