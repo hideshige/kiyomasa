@@ -14,23 +14,18 @@ http://www.php-fig.org/
 ◆ディレクトリ構造
 
 root/
-├ base/
 ├ core/ 
 ├ device/
 ├ gate/
 ├ log/
 ├ public_html/
 ├ shell/
-└ template/
+├ template/
+└ work/
 
 ◆各ディレクトおよびファイルの説明
 
 root/                  ルートディレクトリはプロジェクト名に変更する
-├ base/               プロジェクトの共通クラス、基底クラスなどを格納
-│ ├ base_model.php   HTML用モデルの基底クラス。例外処理などを指定
-│ ├ base_shell.php   シェル用モデルの基底クラス。例外処理などを指定
-│ ├ json_model.php   Ajax用モデルの基底クラス。例外処理などを指定
-│ └ citadel.php      プロジェクトで共通で利用できるメソッド
 ├ core/               フレームワークの心臓部
 │ ├ *.camp.php       シェルプログラム・コントローラ
 │ ├ *.castle.php  　 WEBプログラム・コントローラ
@@ -71,6 +66,11 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ element/         プロジェクトの共通部分テンプレートを格納
 │ └ *.debug.tpl      デバッグ表示用のテンプレート
 ├ (template_mobile/)  プロジェクトの携帯用テンプレートを格納
+├ work/               プロジェクトの共通クラス、基底クラスなどを格納
+│ ├ base_model.php   HTML用モデルの基底クラス。例外処理などを指定
+│ ├ base_shell.php   シェル用モデルの基底クラス。例外処理などを指定
+│ ├ json_model.php   Ajax用モデルの基底クラス。例外処理などを指定
+│ └ citadel.php      プロジェクトで共通で利用できるメソッド
 ├ (.library/)         ライブラリ（ここで警告エラーが出ても例外を投げない）
 └ (.gitignore)        Gitを利用する場合に必要な設定ファイル
 
