@@ -4,11 +4,11 @@
  *
  * @author   Sawada Hideshige
  * @version  1.0.3.0
- * @package  base
+ * @package  work
  *
  */
 
-namespace Yourname\Yourproject\Base;
+namespace Yourname\Yourproject\Work;
 
 class AdminCheck
 {

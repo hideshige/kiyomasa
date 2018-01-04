@@ -10,7 +10,7 @@
 namespace Yourname\Yourproject\Gate\Content;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Base as B;
+use Yourname\Yourproject\Work as W;
 use Yourname\Yourproject\Prop as P;
 
 class ErrorPage implements P\Html
@@ -24,7 +24,7 @@ class ErrorPage implements P\Html
     public function logic(): bool
     {
         $title = 'エラー';
-        B\Citadel::set($title, false, false);
+        W\Citadel::set($title, false, false);
         $message = 'ページが見つかりません。';
         if (isset($_SESSION['error_message']) and $_SESSION['error_message']) {
             $message = $_SESSION['error_message'];

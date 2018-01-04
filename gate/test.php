@@ -10,9 +10,9 @@
 namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Base as B;
+use Yourname\Yourproject\Work as W;
 
-class Test extends B\BaseModel
+class Test extends W\BaseModel
 {
     public $tpl = ['part/header', 'content/error_page', 'part/footer'];
 
@@ -26,7 +26,7 @@ class Test extends B\BaseModel
             // 検証環境以外は通常のエラー画面を表示
             throw new D\UserEx();
         }
-        B\Citadel::set('test');
+        W\Citadel::set('test');
 
         return;
         

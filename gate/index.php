@@ -10,9 +10,9 @@
 namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Base as B;
+use Yourname\Yourproject\Work as W;
 
-class Index extends B\BaseModel
+class Index extends W\BaseModel
 {
     public $tpl = ['part/header', 'index', 'part/footer'];
 
@@ -22,7 +22,7 @@ class Index extends B\BaseModel
      */
     protected function execute(): void
     {
-        B\Citadel::set('YOURSITE');
+        W\Citadel::set('YOURSITE');
     }
     
     /**

@@ -10,7 +10,7 @@
 namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Base as B;
+use Yourname\Yourproject\Work as W;
 use Yourname\Yourproject\Prop as P;
 
 class Mainte implements P\Html
@@ -28,7 +28,7 @@ class Mainte implements P\Html
             exit;
         }
         $title = 'メンテナンス中';
-        B\Citadel::set($title, false, false);
+        W\Citadel::set($title, false, false);
         if (!isset(S::$user['user_id'])) {
             echo 'ただいまメンテナンス中です';
             exit;

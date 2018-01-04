@@ -10,9 +10,9 @@
 namespace Yourname\Yourproject\Gate\Content;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Base as B;
+use Yourname\Yourproject\Work as W;
 
-class HelloWorld extends B\BaseModel // クラス名はファイル名に合わせる
+class HelloWorld extends W\BaseModel // クラス名はファイル名に合わせる
 {
     public $tpl = ['part/header', 'content/hello_world', 'part/footer']; // 使用するテンプレートのファイル名を指定する。.htmlは省略可
 

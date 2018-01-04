@@ -4,13 +4,13 @@
  * 
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  base
+ * @package  work
  * 
  * 自由に読み出せる静的便利機能をここに記述する
  * 
  */
 
-namespace Yourname\Yourproject\Base;
+namespace Yourname\Yourproject\Work;
 
 use Php\Framework\Device as D;
 
