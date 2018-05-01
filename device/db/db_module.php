@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.0
+ * @version  1.0.7.0
  * @package  device/db
  *
  */
@@ -30,7 +30,7 @@ class DbModule
     private $lock_flag = false; // テーブル排他ロック中の場合TRUE
     
     /**
-     * コンストラクタ
+     * パラメータのセット
      * @param string $db_server
      * @param string $db_user
      * @param string $db_password
@@ -38,7 +38,7 @@ class DbModule
      * @param string $db_soft
      * @param bool $debug
      */
-    public function __construct(
+    public function setParams(
         string $db_server, 
         string $db_user, 
         string $db_password, 
@@ -145,7 +145,7 @@ class DbModule
 
         $this->lock_flag = true;
         $this->query(sprintf('LOCK TABLES %s WRITE',
-            preg_replace('/,/', ' WRITE,', $tables)));
+            preg_replace('/,/', ' WRITE, ', $tables)));
     }
 
     /**

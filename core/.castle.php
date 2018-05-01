@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.4.4
+ * @version  1.4.5.0
  * @package  core
  * 
  */
@@ -30,10 +30,13 @@ class Castle
             $this->debug = ENV <= 1 ? true : false;
             
             // データベースオブジェクトの準備
-            S::$dbm = new DbModule(DB_MASTER_SERVER, DB_MASTER_USER,
+            S::$dbm = new DbModule();
+            S::$dbs = clone S::$dbm;
+            S::$dbm->setParams(DB_MASTER_SERVER, DB_MASTER_USER,
                 DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_SOFT, $this->debug);
-            S::$dbs = new DbModule(DB_SLAVE_SERVER, DB_SLAVE_USER,
+            S::$dbs->setParams(DB_SLAVE_SERVER, DB_SLAVE_USER,
                 DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_SOFT, $this->debug);
+            
             if (!S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
                 S::$dbs = S::$dbm;
