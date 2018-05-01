@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.9.0
+ * @version  1.0.10.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -145,7 +145,7 @@ class Mem
             $expire = $res->temp_flag === 1 ? time() + COOKIE_LIFETIME : 0;
             if ($this->active) {
                 //データベースの値をmemcachedに保存
-                $this->memcached_1->set($key, $var, false, $expire);
+                $this->memcached_1->set($key, $var, $expire);
             }
         }
         return $var;

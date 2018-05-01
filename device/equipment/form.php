@@ -312,7 +312,7 @@ class Form
                     isset($val['must']) ? ' required' : '', $post[$name] ?? '');
             }
             if (isset($val['add'])) {
-                 $form[$key] .= $val['add'];
+                $form[$key] .= $val['add'];
             }
         }
     }

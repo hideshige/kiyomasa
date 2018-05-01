@@ -3,8 +3,10 @@
  * 画像 モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.5.5
+ * @version  1.1.5.6
  * @package  device/equipment
+ * 
+ * gdモジュール、exifモジュールが必要
  * 
  */
 

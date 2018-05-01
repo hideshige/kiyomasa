@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.2.0
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -15,14 +15,11 @@ $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;
 
 // PHP環境の確認
-if ((float)phpversion() < 7.1) {
+if ((float)phpversion() < 7.2) {
     echo 'PHP ' . phpversion();
     exit;
 } else if (!extension_loaded('mbstring')) {
     echo 'mbstringがインストールされていません';
-    exit;
-} else if (!extension_loaded('PDO')) {
-    echo 'PDOがインストールされていません';
     exit;
 }
 
