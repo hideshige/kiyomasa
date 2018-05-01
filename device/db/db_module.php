@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.0
+ * @version  1.0.6.0
  * @package  device/db
  *
  */
@@ -38,7 +38,7 @@ class DbModule
      * @param string $db_soft
      * @param bool $debug
      */
-    public function setParams(
+    public function __construct(
         string $db_server, 
         string $db_user, 
         string $db_password, 

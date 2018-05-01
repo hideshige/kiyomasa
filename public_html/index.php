@@ -16,7 +16,7 @@ $first_memory = memory_get_usage() / 1024;
 
 // PHP環境の確認
 if ((float)phpversion() < 7.2) {
-    echo 'PHP ' . phpversion();
+    echo 'PHP OLD VERSION: ' . phpversion();
     exit;
 } else if (!extension_loaded('mbstring')) {
     echo 'mbstringがインストールされていません';
