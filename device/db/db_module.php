@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.0
+ * @version  1.0.6.1
  * @package  device/db
  *
  */
@@ -22,7 +22,7 @@ class DbModule
     private $db_user; // DBユーザ
     private $db_password; // DBパスワード
     private $db_name; // DB名
-    private $db_soft; // 使用するソフトウェア
+    private $db_driver; // 使用するドライバ
     private $connect_flag = false; // データベースに接続されているかどうか
     private $connect; // データベースオブジェクト
     private $sql = ''; // 実行するSQL
@@ -35,7 +35,7 @@ class DbModule
      * @param string $db_user
      * @param string $db_password
      * @param string $db_name
-     * @param string $db_soft
+     * @param string $db_driver
      * @param bool $debug
      */
     public function __construct(
@@ -43,14 +43,14 @@ class DbModule
         string $db_user, 
         string $db_password, 
         string $db_name, 
-        string $db_soft,
+        string $db_driver,
         bool $debug
     ) {
         $this->db_server = $db_server;
         $this->db_user = $db_user;
         $this->db_password = $db_password;
         $this->db_name = $db_name;
-        $this->db_soft = $db_soft;
+        $this->db_driver = $db_driver;
         $this->debug = $debug;
     }
     
@@ -63,7 +63,7 @@ class DbModule
         try {
             $res = true;
             $dsn = sprintf('%s:host=%s;dbname=%s',
-                $this->db_soft, $this->db_server, $this->db_name);
+                $this->db_driver, $this->db_server, $this->db_name);
             $this->connect = new \PDO($dsn, $this->db_user, $this->db_password,
                 [\PDO::ATTR_PERSISTENT => false,
                 \PDO::ATTR_EMULATE_PREPARES => false,
