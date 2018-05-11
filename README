@@ -98,7 +98,7 @@ root/                  ルートディレクトリはプロジェクト名に変
 
  4. /var/www/html/project_x/conf/config.phpをプロジェクト内容に合わせて変更する
 
- 5. /var/www/html/project_x/直下にlogsとlogs/batchのディレクトリを作成する
+ 5. /var/www/html/project_x/直下にlogとlog/batchのディレクトリを作成する
 
  6. Webサーバのルートディレクトリを/var/www/html/project_x/public_html/にする
 
