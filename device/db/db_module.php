@@ -3,7 +3,7 @@
  * データベース（接続、クエリ関連）
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.1
+ * @version  1.0.6.2
  * @package  device/db
  *
  */
@@ -62,7 +62,7 @@ class DbModule
     public function connect(): bool {
         try {
             $res = true;
-            $dsn = sprintf('%s:host=%s;dbname=%s',
+            $dsn = sprintf('%s:host=%s;dbname=%s;charset=utf8mb4',
                 $this->db_driver, $this->db_server, $this->db_name);
             $this->connect = new \PDO($dsn, $this->db_user, $this->db_password,
                 [\PDO::ATTR_PERSISTENT => false,
@@ -70,7 +70,6 @@ class DbModule
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->connect_flag = true;
             
-            $this->query("SET NAMES 'utf8mb4'");
             //$this->query("SET sql_mode = 'STRICT_TRANS_TABLES, NO_ZERO_IN_DATE'");
         } catch (\PDOException $e) {
             Log::error($e->getMessage());

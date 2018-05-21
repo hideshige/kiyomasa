@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.1
+ * @version  1.1.6.3
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -58,8 +58,8 @@ class Camp
             $this->exec($argv[1]);
 
             if ($this->debug) {
-                echo "<DBS>\n" . S::$dbs->getSql(false) . "\n";
-                echo "<DBM>\n" . S::$dbm->getSql(false) . "\n";
+                echo '<DBS>', PHP_EOL, S::$dbs->getSql(false), PHP_EOL;
+                echo '<DBM>', PHP_EOL, S::$dbm->getSql(false), PHP_EOL;
             }
         } catch (\Error $e) {
             echo $e->getMessage();

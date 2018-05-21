@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.0
+ * @version  1.0.2.1
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -15,6 +15,7 @@ $first_time = microtime(true);
 $first_memory = memory_get_usage() / 1024;
 
 // PHP環境の確認
+/*
 if ((float)phpversion() < 7.2) {
     echo 'PHP OLD VERSION: ' . phpversion();
     exit;
@@ -22,9 +23,11 @@ if ((float)phpversion() < 7.2) {
     echo 'mbstringがインストールされていません';
     exit;
 }
+*/
 
 header("P3P: CP='UNI CUR OUR'"); // コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block'); // XSS対策
+header('X-Frame-Options: DENY'); // クリックジャック対策
 header('Content-Type: text/html;charset=UTF-8'); // 文字コード
 
 // コントローラの読み込み

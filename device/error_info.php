@@ -31,7 +31,7 @@ class ErrorInfo
         Log::error($error);
 
         global $dump;
-        $dump .= sprintf("# %s {{DUMP_LINE}}%d\n{{ERROR_INFO}}%s\n",
-            $short_file, $line, $message);
+        $dump .= sprintf('# %s {{DUMP_LINE}}%d%s{{ERROR_INFO}}%s%s',
+            $short_file, $line, PHP_EOL, $message, PHP_EOL);
     }
 }
