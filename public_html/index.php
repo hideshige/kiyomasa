@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.1
+ * @version  1.0.2.2
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -28,7 +28,6 @@ if ((float)phpversion() < 7.2) {
 header("P3P: CP='UNI CUR OUR'"); // コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block'); // XSS対策
 header('X-Frame-Options: DENY'); // クリックジャック対策
-header('Content-Type: text/html;charset=UTF-8'); // 文字コード
 
 // コントローラの読み込み
 require_once(__DIR__ . '/../core/.define.php');

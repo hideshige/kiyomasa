@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.8
+ * @version  1.0.5.9
  * @package  core
  * 
  */
@@ -86,6 +86,7 @@ class Turret
         session_write_close();
         
         if (S::$jflag === false and count($tpl)) {
+            header('Content-Type: text/html; charset=UTF-8');
             foreach ($tpl as $tk => $tv) {
                 echo View::template($tv, S::$disp[$tk] ?? []);
             }
@@ -94,7 +95,7 @@ class Turret
             echo $this->dispDebug();
         } else if (is_array($res)) {
             $this->jsonDebug($res);
-            header('content-type: application/json; charset=utf-8');
+            header('Content-Type: application/json; charset=UTF-8');
             echo json_encode($res,
                 JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
         }
