@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.1
+ * @version  1.0.0.2
  * @package  core
  * 
  */
@@ -19,6 +19,7 @@ trait Wall
      * @global float $first_memory
      * @global float $first_time
      * @global string $dump
+     * @global array $trace
      * @return string|array
      */
     private function dispDebug()
@@ -59,6 +60,7 @@ trait Wall
             global $first_memory;
             global $first_time;
             global $dump;
+            global $trace;
 
             $peak_memory = memory_get_peak_usage() / 1024;
             $last_time = microtime(true);
@@ -90,6 +92,7 @@ trait Wall
                 'cookie' => $this->modDebugDump($cookie),
                 'namespace' => NAME_SPACE,
                 'dump' => $this->modDebugDump($dump),
+                'trace' => View::template('element/.trace.tpl', $trace ?? []),
                 'debug_disp' => $dump ? 'block' : 'none',
                 'navi_id' => $navi_id
             ];

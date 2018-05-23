@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.2
+ * @version  1.0.3.0
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -56,4 +56,42 @@ function dump(...$arguments): string
     }
     $dump .= ob_get_clean();
     return $dump;
+}
+
+/**
+ * トレース
+ * トレースしたい場所で"trace('識別子')"の形で利用する
+ * @global array $trace トレース用バッファ
+ * @param string $id 識別子
+ * @return void
+ */
+$trace = [];
+function trace(string $id = ''): void
+{
+    global $trace;
+    static $num = 0;
+    $backtrace = debug_backtrace();
+    $i = 0;
+    
+    end($backtrace);
+    do {
+        $current = current($backtrace);
+        prev($backtrace);
+        if (empty($current['file']) or
+            ($current['function'] ?? '-') === 'trace') {
+            continue;
+        }
+
+        $trace['TRACE'][$num]['id'] = $id ? $id : $num;
+        $trace['TRACE'][$num]['TABLE_DATA'][$i] = [
+            'file_name' => str_replace(SERVER_PATH, '', $current['file']),
+            'line' => $current['line'],
+            'class_name' => $current['class'] ?? '-',
+            'function_name' => $current['function'] ?? '-',
+            'args' => trim(print_r($current['args'] ?? '', true)),
+        ];
+        $i ++;
+    } while ($current);
+
+    $num ++;
 }

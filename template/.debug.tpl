@@ -10,7 +10,8 @@
 }
 
 #fw_debug p,
-#fw_debug pre
+#fw_debug pre,
+#fw_debug .fw_debug_trace
 {
     font-size: 11px;
     line-height: 13px;
@@ -207,6 +208,26 @@
     color: #aaf;
     font-size:0.8em;
     margin-left:10px;
+}
+
+#fw_debug .fw_debug_trace table
+{
+    margin-bottom: 10px;
+}
+
+#fw_debug .fw_debug_trace table td,
+#fw_debug .fw_debug_trace table th
+{
+    border: 1px solid #ccc;
+    padding: 0 5px;
+}
+
+#fw_debug .fw_debug_trace_args
+{
+    width: 200px;
+    height: 15px;
+    font-size: 0.9em;
+    background: #eee;
 }
 </style>
 

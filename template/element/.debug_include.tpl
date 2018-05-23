@@ -9,6 +9,8 @@
         <h3>{request_url}</h3>
         <h4><span title="dump()の結果がここに出ます">【DEBUG】</span></h4>
         <pre class="fw_debug_dump">{dump}</pre>
+        <h4><span title="trace()の結果がここに出ます">【TRACE】</span></h4>
+        {trace}
         <h4>
             【DB MASTER】
             <input type="button" onclick="FwDebugClass.fwDebugCounter();" value="CHANGE" />

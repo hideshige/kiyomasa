@@ -3,7 +3,7 @@
  * エラー情報モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  device
  * 
  */
@@ -24,12 +24,15 @@ class ErrorInfo
     {
         S::$dbm->rollback();
         S::$dbm->unlock();
-
+        
         // ログに記録し、開発環境の場合デバッグを表示
         $short_file = str_replace(SERVER_PATH, '', $file);
         $error = sprintf('%s(%d) %s', $short_file, $line, $message);
         Log::error($error);
 
+        trace(sprintf('%s<br />発生場所 %s <strong>%s</strong>',
+            $message, $short_file, $line));
+        
         global $dump;
         $dump .= sprintf('# %s {{DUMP_LINE}}%d%s{{ERROR_INFO}}%s%s',
             $short_file, $line, PHP_EOL, $message, PHP_EOL);

@@ -7,7 +7,7 @@ const NAME_SPACE = 'Yourname\Yourproject';
 
 if (ENV === 0) {
     // ビルトインウェブサーバ
-    ini_set('display_errors', 1);
+    ini_set('display_errors', 'On');
     define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
 //    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
 
@@ -32,7 +32,7 @@ if (ENV === 0) {
     define('FROM_NAME', '');
 } else if (ENV === 1) {
     // テスト環境
-    ini_set('display_errors', 1);
+    ini_set('display_errors', 'On');
     define('SERVER_PATH', '/var/www/html/yoursite/');
 
     define('DOMAIN_NAME', '/');
@@ -56,7 +56,7 @@ if (ENV === 0) {
     define('FROM_NAME', '');
 } else {
     // 本番環境
-    ini_set('display_errors', 0);
+    ini_set('display_errors', 'Off');
     define('SERVER_PATH', '/var/www/html/yoursite/');
 
     define('DOMAIN_NAME', '/');
