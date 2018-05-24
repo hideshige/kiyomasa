@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.0
+ * @version  1.0.3.1
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -76,14 +76,14 @@ function trace(string $id = ''): void
     end($backtrace);
     do {
         $current = current($backtrace);
-        prev($backtrace);
         if (empty($current['file']) or
-            ($current['function'] ?? '-') === 'trace') {
+            preg_match('/\.router\.php$/', $current['file'])) {
             continue;
         }
 
-        $trace['TRACE'][$num]['id'] = $id ? $id : $num;
+        $trace['TRACE'][$num]['id'] = $id ? $id : $num + 1;
         $trace['TRACE'][$num]['TABLE_DATA'][$i] = [
+            'trace_num' => $i + 1,
             'file_name' => str_replace(SERVER_PATH, '', $current['file']),
             'line' => $current['line'],
             'class_name' => $current['class'] ?? '-',
@@ -91,7 +91,6 @@ function trace(string $id = ''): void
             'args' => trim(print_r($current['args'] ?? '', true)),
         ];
         $i ++;
-    } while ($current);
-
+    } while (prev($backtrace));
     $num ++;
 }

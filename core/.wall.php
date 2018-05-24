@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.2
+ * @version  1.0.0.3
  * @package  core
  * 
  */
@@ -92,7 +92,8 @@ trait Wall
                 'cookie' => $this->modDebugDump($cookie),
                 'namespace' => NAME_SPACE,
                 'dump' => $this->modDebugDump($dump),
-                'trace' => View::template('element/.trace.tpl', $trace ?? []),
+                'trace' =>
+                    View::template('element/.debug_trace.tpl', $trace ?? []),
                 'debug_disp' => $dump ? 'block' : 'none',
                 'navi_id' => $navi_id
             ];

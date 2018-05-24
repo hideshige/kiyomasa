@@ -3,7 +3,7 @@
  * タワー　オートロード、エラーハンドラなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.5
+ * @version  1.0.1.6
  * @package  core
  * 
  */
@@ -60,9 +60,9 @@ set_error_handler(
     {
         switch ($no) {
             case E_ERROR: $type = 'エラー'; break;
-            case E_WARNING : $type = 'ワーニング'; break;
-            case E_PARSE: $type = 'パースエラー'; break;
-            case E_NOTICE: $type = '警告'; break;
+            case E_WARNING : $type = '警告'; break;
+            case E_PARSE: $type = '構文不正'; break;
+            case E_NOTICE: $type = '注意'; break;
             case E_DEPRECATED: $type = '非推奨'; break;
             default: $type = 'エラー番号 ' . $no; break;
         }

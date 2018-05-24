@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.11
+ * @version  1.0.5.12
  * @package  core
  * 
  */
@@ -123,7 +123,7 @@ class Turret
                 // エラー画面の読み込み
                 $this->disp('error_page', 'content/');
             } else {
-                echo '循環エラー';
+                echo 'エラーになりましたが、エラー画面が表示できませんでした';
             }
         } else {
             $json = ['alert' => 'エラー'];
