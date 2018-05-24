@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.1
+ * @version  1.0.3.2
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -75,20 +75,26 @@ function trace(string $id = ''): void
     
     end($backtrace);
     do {
-        $current = current($backtrace);
-        if (empty($current['file']) or
-            preg_match('/\.router\.php$/', $current['file'])) {
+        $cur = current($backtrace);
+        if (empty($cur['file']) or
+            preg_match('/\.router\.php$/', $cur['file'])) {
             continue;
         }
+        
+        $class_name = $cur['class'] ?? '';
+        $match = [];
+        preg_match('/.*\\\/', $class_name, $match);
+        $namespace = $match[0] ?? '';
 
         $trace['TRACE'][$num]['id'] = $id ? $id : $num + 1;
         $trace['TRACE'][$num]['TABLE_DATA'][$i] = [
             'trace_num' => $i + 1,
-            'file_name' => str_replace(SERVER_PATH, '', $current['file']),
-            'line' => $current['line'],
-            'class_name' => $current['class'] ?? '-',
-            'function_name' => $current['function'] ?? '-',
-            'args' => trim(print_r($current['args'] ?? '', true)),
+            'file_name' => str_replace(SERVER_PATH, '', $cur['file']),
+            'line' => $cur['line'],
+            'namespace' => trim($namespace, '\\'),
+            'class_name' => str_replace($namespace, '', $class_name),
+            'function_name' => $cur['function'] ?? '',
+            'args' => trim(print_r($cur['args'] ?? '', true)),
         ];
         $i ++;
     } while (prev($backtrace));
