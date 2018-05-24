@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.6.1
+ * @version  1.3.6.2
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -25,6 +25,7 @@
  * char2  : 全角のみ有効
  * hiragana: ひらがなのみ有効
  * katakana: カタカナのみ有効
+ * datetime: 日時判定
  * email  : メールアドレスのみ有効
  * count  : チェックボックスで選択可能な数
  * match_count: チェックボックスで選択する数
@@ -114,6 +115,7 @@ class Form
         'char2' => '全角以外の文字が含まれています。<br />',
         'hiragana' => 'ひらがな以外の文字が含まれています。<br />',
         'katakana' => 'カタカナ以外の文字が含まれています。<br />',
+        'datetime' => '日時判定ができません。<br />',
         'count' => '選択できるのは%sまでです。<br />',
         'match_count' => '%s選択してください。<br />',
         'select_error' => '一致する選択肢が存在しません。<br />',
@@ -178,6 +180,8 @@ class Form
                     $res[$key][$k] = true;
                 } else if ($k === 'katakana' and $str !== '' and $str !== null and !preg_match('/^[アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンヴガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポャュョッァィゥェォヶーヰヱヽヾ・　 ]+$/u', $str)) {
                     $res[$key][$k] = true;
+                } else if ($k === 'datetime' and $str !== '' and $str !== null and !strtotime($str)) {
+                    $res[$key][$k] = true;
                 } else if ($k === 'count' and $str !== '' and $str !== null and count($str) > $v) {
                     $tani = $v < 10 ? 'つ' : '';
                     $res[$key][$k] = $v . $tani;
@@ -218,7 +222,7 @@ class Form
                 $k --;
             }
             if (isset($error_data[$name])) {
-                $form_list[$k]['COLOR'] = '';
+                $form_list[$k]['COLOR'][0] = [];
                 $m = &$form_list[$k]['MESS'][0]['mess'];
                 $m = '';
                 if ($error_customize) {
@@ -239,6 +243,7 @@ class Form
                 if (array_key_exists('char2', $error_data[$name])) $m .= self::$e['char2'];
                 if (array_key_exists('hiragana', $error_data[$name])) $m .= self::$e['hiragana'];
                 if (array_key_exists('katakana', $error_data[$name])) $m .= self::$e['katakana'];
+                if (array_key_exists('datetime', $error_data[$name])) $m .= self::$e['datetime'];
                 if (array_key_exists('email', $error_data[$name])) $m .= self::$e['email'];
                 if (array_key_exists('email2', $error_data[$name])) $m .= self::$e['email2'];
                 if (array_key_exists('email3', $error_data[$name])) $m .= self::$e['email3'];

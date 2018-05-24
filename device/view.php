@@ -17,7 +17,7 @@
  * 携帯の場合、$_SESSION['mobile_pc_flag']で携帯とPCの表示切り替えができる
  * 
  * @author   Sawada Hideshige
- * @version  1.1.7.0
+ * @version  1.1.7.1
  * @package  device
  * 
  */
@@ -178,7 +178,7 @@ class View
         array $match2
     ): string {
         $all_tag = '';
-        $num = count($disp[$name]);
+        $num = is_array($disp[$name]) ? count($disp[$name]) : 0;
         for ($i = 0; $i < $num; $i ++) {
             if (isset($disp[$name][$i])) {
                 $tag_data = self::match($disp[$name][$i], $tag_data);

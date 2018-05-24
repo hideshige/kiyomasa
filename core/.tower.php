@@ -3,14 +3,14 @@
  * タワー　オートロード、エラーハンドラなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.6
+ * @version  1.0.1.7
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\ErrorInfo;
+use Php\Framework\Device\{ErrorInfo, UserEx};
 
 // オートロード
 spl_autoload_register(
@@ -58,6 +58,12 @@ set_error_handler(
      */
     function (int $no, string $message, string $file, int $line): void
     {
+        // ユーザエラーはユーザ用の例外へ
+        if ($no === E_USER_ERROR or
+            $no === E_USER_WARNING or $no === E_USER_NOTICE) {
+            throw new UserEx($message, 10);
+        }
+        
         switch ($no) {
             case E_ERROR: $type = 'エラー'; break;
             case E_WARNING : $type = '警告'; break;
