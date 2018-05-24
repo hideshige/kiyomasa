@@ -3,14 +3,14 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.12
+ * @version  1.0.6.0
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\{ErrorInfo, S, View};
+use Php\Framework\Device\{ErrorInfo, S, View, UserEx};
 
 class Turret
 {
@@ -61,7 +61,7 @@ class Turret
                 ['_', '/'], [' ', '\\'], $folder . $pagename))));
             
             $this->gate($class_name);
-        } catch (\Error $e) {
+        } catch (UserEx|\Error $e) {
             $this->gateError($e);
         }
     }
@@ -103,10 +103,10 @@ class Turret
     
     /**
      * ゲート実行例外エラー
-     * @param \Error $e
+     * @param UserEx|\Error $e
      * @return void
      */
-    private function gateError(\Error $e): void
+    private function gateError($e): void
     {
         if ($e->getCode() !== 10) {
             $info = new ErrorInfo;
@@ -115,14 +115,13 @@ class Turret
 
         // エラーページの表示
         if (S::$jflag === false) {
-            header('Content-Type: text/html; charset=UTF-8');
-            
             if ($this->error_flag === false) {
                 // 循環防止のフラグ
                 $this->error_flag = true;
                 // エラー画面の読み込み
                 $this->disp('error_page', 'content/');
             } else {
+                header('Content-Type: text/html; charset=UTF-8');
                 echo 'エラーになりましたが、エラー画面が表示できませんでした';
             }
         } else {
