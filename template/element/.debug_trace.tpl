@@ -16,7 +16,7 @@
             <td>{file_name} <strong>{line}</strong></td>
             <td>{namespace}</td>
             <td>{class_name}</td>
-            <td>{function_name}()</td>
+            <td>{call_method}{function_name}()</td>
             <td><textarea class="fw_debug_trace_args">{args}</textarea></td>
         </tr>
         <!-- END TABLE_DATA -->

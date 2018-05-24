@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.3
+ * @version  1.0.3.4
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -93,6 +93,7 @@ function trace(string $id = ''): void
             'line' => $cur['line'],
             'namespace' => $namespace,
             'class_name' => $class_name,
+            'call_method' => $cur['type'] ?? '',
             'function_name' => $cur['function'] ?? '-',
             'args' => trim(print_r($cur['args'] ?? '', true)),
         ];
