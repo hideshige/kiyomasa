@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.4
+ * @version  1.0.3.5
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -43,7 +43,6 @@ new Php\Framework\Core\Castle();
  * @param mixed $arguments 引数群（引数はカンマ区切りでいくつでも指定できる）
  * @return string
  */
-$dump = '';
 function dump(...$arguments): string
 {
     global $dump;
@@ -57,6 +56,7 @@ function dump(...$arguments): string
     $dump .= ob_get_clean();
     return $dump;
 }
+$dump = '';
 
 /**
  * トレース
@@ -65,7 +65,6 @@ function dump(...$arguments): string
  * @param string $id 識別子
  * @return void
  */
-$trace = [];
 function trace(string $id = ''): void
 {
     global $trace;
@@ -81,10 +80,21 @@ function trace(string $id = ''): void
             continue;
         }
         
-        $match = [];
+        $match = $match2 = [];
         preg_match('/^(.*\\\)(.*)$/', $cur['class'] ?? '', $match);
         $namespace = trim($match[1] ?? '-', '\\');
         $class_name = $match[2] ?? '-';
+        $ref = '';
+        if ($class_name !== '-') {
+            $ref = ReflectionMethod::export(
+                $cur['class'], $cur['function'], true);
+        } else {
+            $ref = ReflectionFunction::export($cur['function'], true);
+        }
+        // ソースからメソッドのコメントを抽出
+        preg_match('</\*\*(.*)?\*/>s', $ref, $match2);
+        $comment = isset($match2[1]) ?
+            preg_replace('/(.*)\* /', '', trim($match2[1])) : '';
 
         $trace['TRACE'][$num]['id'] = $id ? $id : $num + 1;
         $trace['TRACE'][$num]['TABLE_DATA'][$i] = [
@@ -93,6 +103,7 @@ function trace(string $id = ''): void
             'line' => $cur['line'],
             'namespace' => $namespace,
             'class_name' => $class_name,
+            'comment' => $comment,
             'call_method' => $cur['type'] ?? '',
             'function_name' => $cur['function'] ?? '-',
             'args' => trim(print_r($cur['args'] ?? '', true)),
@@ -101,3 +112,4 @@ function trace(string $id = ''): void
     } while (prev($backtrace));
     $num ++;
 }
+$trace = [];

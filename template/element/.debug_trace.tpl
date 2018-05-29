@@ -9,6 +9,7 @@
             <th>クラス</th>
             <th>関数</th>
             <th>引数</th>
+            <th>コメント</th>
         </tr>
         <!-- BEGIN TABLE_DATA -->
         <tr>
@@ -18,6 +19,7 @@
             <td>{class_name}</td>
             <td>{call_method}{function_name}()</td>
             <td><textarea class="fw_debug_trace_args">{args}</textarea></td>
+            <td><textarea class="fw_debug_trace_args">{comment}</textarea></td>
         </tr>
         <!-- END TABLE_DATA -->
     </table>
