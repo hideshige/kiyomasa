@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.1.1
  * @package  core
  * 
  */
@@ -196,7 +196,7 @@ trait Wall
      */
     private function modDebugDump(string $text): string
     {
-        $text = htmlspecialchars($text);
+        $text = filter_var($text, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: $text;
         $text = preg_replace('/#\s(.*){{DUMP_LINE}}(\d*)/',
             '<span class="fw_debug_line">$1</span>'
             . '<span class="fw_debug_bold fw_debug_line">$2</span>', $text);
@@ -206,9 +206,9 @@ trait Wall
             '<span class="fw_debug_null">NULL</span>', $text);
         $text = preg_replace('/\[&quot;(.*?)&quot;\]/',
             '[&quot;<span class="fw_debug_bold">$1</span>&quot;]', $text);
-        $text = preg_replace('/string\((\d*)\)\s&quot;(.*?)&quot;/s',
+        $text = preg_replace('/string\((\d*)\)\s&quot;(.*?)&quot;\n/s',
             'string($1) &quot;<span class="fw_debug_bold fw_debug_str">'
-            . '$2</span>&quot;', $text);
+            . "$2</span>&quot;\n", $text);
         $text = preg_replace('/int\((\d*)\)/', '<span class="fw_debug_int">'
             . 'int(<span class="fw_debug_bold">$1</span>)</span>', $text);
         return $text;

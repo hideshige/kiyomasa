@@ -143,11 +143,11 @@ class Turret
                 $data[$k] = $this->h($v);
             }
         } else {
-            $invisible_strs = array_walk(self::$invisible_utf8_codes,
+            $invisible_strs = array_map(
                 function ($code) {
                     return html_entity_decode($code, ENT_NOQUOTES, 'UTF-8');
                 }
-            );
+                , self::$invisible_utf8_codes);
             $data = htmlspecialchars(str_replace($invisible_strs, '',
                 // 改行コード以外のコントロールコードを排除
                 preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data)
