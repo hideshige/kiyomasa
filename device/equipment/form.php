@@ -3,7 +3,7 @@
  * 入力フォーム検証モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.3.6.2
+ * @version  1.3.6.3
  * @package  device/equipment
  *
  * 以下のような形でパラメーターを設定し検証ルールを適用させる。
@@ -421,8 +421,7 @@ class Form
                 // 区切り文字の場合は配列に変換
                 $data = explode(',', $data);
             }
-            $check = (array_search($k, $data, false) !== false)
-                ? ' checked="checked"' : '';
+            $check = in_array($k, $data, false) ? ' checked="checked"' : '';
             $br = $br_flag ? '<br />' : '';
             $t = '<label title="%s">'
                 . '<input type="checkbox" name="%s[]" value="%s"%s%s />'

@@ -142,8 +142,7 @@ class DataOption
             // MySQLで単体検索が無視される単語は次の単語につなげる
             $words[$i] = isset($words[$i]) ?
                 $words[$i] . ' ' . $res['ngram'] : $res['ngram'];
-            if (array_search($res['ngram'],
-                $ful_text_stop_words) === false) {
+            if (!in_array($res['ngram'], $ful_text_stop_words)) {
                 $i ++;
             }
         }

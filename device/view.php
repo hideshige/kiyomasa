@@ -17,7 +17,7 @@
  * 携帯の場合、$_SESSION['mobile_pc_flag']で携帯とPCの表示切り替えができる
  * 
  * @author   Sawada Hideshige
- * @version  1.1.7.2
+ * @version  1.1.7.3
  * @package  device
  * 
  */
@@ -99,7 +99,7 @@ class View
     {
         //部分テンプレートの挿入
         $element_match = [];
-        preg_match_all('/<!-- INCLUDE (.*?) -->/', $content, $element_match);
+        preg_match_all('/<!--\sINCLUDE\s(.*?)\s-->/', $content, $element_match);
 
         if ($element_match[1]) {
             $element_match[1] = array_unique($element_match[1]);
@@ -139,11 +139,11 @@ class View
     private static function match($disp, string $content): string
     {
         $match = $match1 = $match2 = [];
-        preg_match_all('/<!-- BEGIN (.*?) -->/', $content, $match);
+        preg_match_all('/<!--\sBEGIN\s(.*?)\s-->/', $content, $match);
 
         foreach ($match[1] as $name) {
-            $pattern = '/<!-- BEGIN ' . $name
-                . ' -->(.*)<!-- END ' . $name . ' -->/s';
+            $pattern = '/<!--\sBEGIN\s' . $name . '\s-->(.*)'
+                . '<!--\sEND\s' . $name . '\s-->/s';
             preg_match_all($pattern, $content, $match1);
             $tag_data = $original = isset($match1[1][0]) ? $match1[1][0] : '';
 
