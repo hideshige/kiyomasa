@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.4
+ * @version  1.0.0.5
  * @package  core
  * 
  */
@@ -65,9 +65,6 @@ trait Wall
             $peak_memory = memory_get_peak_usage() / 1024;
             $last_time = microtime(true);
             
-            // ENV定数に対応
-            $env = ['ローカル', '開発環境', '検証環境', '本番環境'];
-            
             $navi_id = microtime(true);
             
             $debug = [
@@ -94,7 +91,7 @@ trait Wall
                 'namespace' => NAME_SPACE,
                 'dump' => $this->modDebugDump($dump),
                 'trace' =>
-                    View::template('element/.debug_trace.tpl', $trace ?? []),
+                    View::template('include/.debug_trace.tpl', $trace ?? []),
                 'debug_disp' => $dump ? 'block' : 'none',
                 'navi_id' => $navi_id
             ];
@@ -112,13 +109,12 @@ trait Wall
                 $disp = [];
                 $disp['navi_id'] = $navi_id;
                 $disp['debug'] =
-                    View::template('element/.debug_include.tpl', $view);
+                    View::template('include/.debug_include.tpl', $view);
                 $disp['navi'] =
-                    View::template('element/.debug_ajax_navi.tpl', $view2);
+                    View::template('include/.debug_ajax_navi.tpl', $view2);
             } else {
                 $debug['disp_type'] = 'html';
                 $view['DEBUG'][0]['DEBUG_INCLUDE'][0] = $debug;
-                $view['REPLACE']['env'] = $env[ENV] ?? 'ENV' . ENV;
                 $view['REPLACE']['process'] = $process;
                 $view['REPLACE']['navi_id'] = $navi_id;
                 $disp = View::template('.debug.tpl', $view);

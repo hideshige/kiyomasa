@@ -12,12 +12,12 @@
  * として指定した場合、<!-- BEGEIN *** -->～<!-- END *** --->を無視して
  * テンプレートの{???}に$txtが置き換えられる。
  *
- * <!-- ELEMENT *** -->には指定のテンプレートが挿入される。
+ * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * 携帯の場合、$_SESSION['mobile_pc_flag']で携帯とPCの表示切り替えができる
  * 
  * @author   Sawada Hideshige
- * @version  1.1.7.1
+ * @version  1.1.7.2
  * @package  device
  * 
  */
@@ -91,7 +91,7 @@ class View
     }
     
     /**
-     * エレメント部の処理
+     * インクルード要素の処理
      * @param string $content テンプレート
      * @return string
      */
@@ -99,7 +99,7 @@ class View
     {
         //部分テンプレートの挿入
         $element_match = [];
-        preg_match_all('/<!-- ELEMENT (.*?) -->/', $content, $element_match);
+        preg_match_all('/<!-- INCLUDE (.*?) -->/', $content, $element_match);
 
         if ($element_match[1]) {
             $element_match[1] = array_unique($element_match[1]);

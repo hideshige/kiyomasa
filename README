@@ -63,7 +63,7 @@ root/                  ルートディレクトリはプロジェクト名に変
 ├ (session/)          セッションファイルを格納（Gitでは更新されない）
 ├ shell/              プロジェクトのシェルプログラムを格納
 ├ template/           プロジェクトのテンプレートを格納
-│ ├ element/         プロジェクトの共通部分テンプレートを格納
+│ ├ include/         プロジェクトの共通部分テンプレートを格納
 │ └ *.debug.tpl      デバッグ表示用のテンプレート
 ├ (template_mobile/)  プロジェクトの携帯用テンプレートを格納
 ├ work/               プロジェクトの共通クラス、基底クラスなどを格納
@@ -94,7 +94,7 @@ root/                  ルートディレクトリはプロジェクト名に変
  3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する
     <?php
     //0:PHPビルトイン環境 1:開発環境 2:ステージング環境 3:本番環境
-    define('ENV', 1);
+    const ENV = 0;
 
  4. /var/www/html/project_x/conf/config.phpをプロジェクト内容に合わせて変更する
 

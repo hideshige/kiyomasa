@@ -73,7 +73,7 @@
     float: left;
     background: blue;
     color: white;
-    width: 210px;
+    width: 155px;
     text-align: right;
     
 }
@@ -222,7 +222,7 @@
     padding: 0 5px;
 }
 
-#fw_debug .fw_debug_trace_args
+#fw_debug .fw_debug_trace_textarea
 {
     width: 200px;
     height: 15px;
@@ -240,7 +240,7 @@
     </div>
 
     <div id="fw_debug_include_html">
-    <!-- ELEMENT element/.debug_include.tpl -->
+    <!-- INCLUDE include/.debug_include.tpl -->
     </div>
     <div id="fw_debug_include_ajax">
     </div>

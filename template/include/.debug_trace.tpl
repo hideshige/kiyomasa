@@ -18,8 +18,8 @@
             <td>{namespace}</td>
             <td>{class_name}</td>
             <td>{call_method}{function_name}()</td>
-            <td><textarea class="fw_debug_trace_args">{args}</textarea></td>
-            <td><textarea class="fw_debug_trace_args">{comment}</textarea></td>
+            <td><textarea class="fw_debug_trace_textarea">{args}</textarea></td>
+            <td><textarea class="fw_debug_trace_textarea">{comment}</textarea></td>
         </tr>
         <!-- END TABLE_DATA -->
     </table>
