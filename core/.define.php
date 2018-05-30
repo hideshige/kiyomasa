@@ -26,7 +26,7 @@ if ($http_client_ip){
 define('IP_ADDRESS', $ip);
 define('USER_AGENT', filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'));
 define('MOBILE_FLAG', preg_match(
-    '/(iPhone|iPod|Android|BlackBerry|Windows Phone)/',
+    '/(iPhone|iPod|Android|BlackBerry|Windows\sPhone)/',
     USER_AGENT) ? true : false);
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
 

@@ -66,7 +66,7 @@ set_error_handler(
         
         switch ($no) {
             case E_ERROR: $type = 'エラー'; break;
-            case E_WARNING : $type = '警告'; break;
+            case E_WARNING: $type = '警告'; break;
             case E_PARSE: $type = '構文不正'; break;
             case E_NOTICE: $type = '注意'; break;
             case E_DEPRECATED: $type = '非推奨'; break;

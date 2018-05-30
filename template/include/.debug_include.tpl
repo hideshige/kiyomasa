@@ -21,6 +21,8 @@
         <p>{db_slave}</p>
         <h4>【MEMCACHED】</h4>
         <p>{memcached}</p>
+        <h4>【JSON】</h4>
+        <pre>{json}</pre>
         <h4>【POST】</h4>
         <pre>{post}</pre>
         <h4>【GET】</h4>
@@ -35,10 +37,9 @@
         <pre>{url}</pre>
         <h4>【OS】</h4>
         <p>
-            {os}<br />
-            {web_server}<br />
-            {user_agent}<br />
+            {os}　{web_server}<br />
             PHP　{php_ver}<br />
+            {user_agent}<br />
             メモリ　{memory1} KB (固定分)
             + {memory2} KB (追加分) = {memory3} KB<br />
             IPアドレス　{ip}<br />

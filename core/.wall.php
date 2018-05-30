@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.5
+ * @version  1.0.1.0
  * @package  core
  * 
  */
@@ -14,6 +14,8 @@ use Php\Framework\Device\{S, View};
 
 trait Wall
 {
+    private $debug_json = []; // JSONデバッグ用
+    
     /**
      * デバッグ情報の成形
      * @global float $first_memory
@@ -56,6 +58,11 @@ trait Wall
                 var_dump($_SESSION);
             }
             $session = ob_get_clean();
+            ob_start();
+            if ($this->debug_json) {
+                var_dump($this->debug_json);
+            }
+            $json = ob_get_clean();
 
             global $first_memory;
             global $first_time;
@@ -82,14 +89,15 @@ trait Wall
                 'db_slave' => $this->modDebugSql(S::$dbs->getSql(true)),
                 'db_master' => $this->modDebugSql(S::$dbm->getSql(true)),
                 'memcached' => nl2br(htmlspecialchars(S::$mem->getDispMem())),
-                'post' => $this->modDebugDump($post),
-                'get' => $this->modDebugDump($get),
-                'url' => $this->modDebugDump($url),
-                'files' => $this->modDebugDump($files),
-                'session' => $this->modDebugDump($session),
-                'cookie' => $this->modDebugDump($cookie),
+                'post' => $this->modDebugDump((string)$post),
+                'get' => $this->modDebugDump((string)$get),
+                'url' => $this->modDebugDump((string)$url),
+                'files' => $this->modDebugDump((string)$files),
+                'session' => $this->modDebugDump((string)$session),
+                'cookie' => $this->modDebugDump((string)$cookie),
                 'namespace' => NAME_SPACE,
-                'dump' => $this->modDebugDump($dump),
+                'dump' => $this->modDebugDump((string)$dump),
+                'json' => $this->modDebugDump((string)$json),
                 'trace' =>
                     View::template('include/.debug_trace.tpl', $trace ?? []),
                 'debug_disp' => $dump ? 'block' : 'none',
@@ -183,13 +191,13 @@ trait Wall
     
     /**
      * DUMPデバッグの成型
-     * @param string|null $text DUMP文字列
+     * @param string $text DUMP文字列
      * @return string
      */
-    private function modDebugDump($text): string
+    private function modDebugDump(string $text): string
     {
-        $text = htmlspecialchars((string)$text);
-        $text = preg_replace('/# (.*){{DUMP_LINE}}(\d*)/',
+        $text = htmlspecialchars($text);
+        $text = preg_replace('/#\s(.*){{DUMP_LINE}}(\d*)/',
             '<span class="fw_debug_line">$1</span>'
             . '<span class="fw_debug_bold fw_debug_line">$2</span>', $text);
         $text = preg_replace('/{{ERROR_INFO}}(.*)/',
@@ -198,7 +206,7 @@ trait Wall
             '<span class="fw_debug_null">NULL</span>', $text);
         $text = preg_replace('/\[&quot;(.*?)&quot;\]/',
             '[&quot;<span class="fw_debug_bold">$1</span>&quot;]', $text);
-        $text = preg_replace('/string\((\d*)\) &quot;(.*?)&quot;/s',
+        $text = preg_replace('/string\((\d*)\)\s&quot;(.*?)&quot;/s',
             'string($1) &quot;<span class="fw_debug_bold fw_debug_str">'
             . '$2</span>&quot;', $text);
         $text = preg_replace('/int\((\d*)\)/', '<span class="fw_debug_int">'
@@ -208,13 +216,14 @@ trait Wall
     
     /**
      * JSON用デバッグの表示
-     * @global string $dump DUMPデータ
      * @param array $json JSON参照渡し
      * @return void
      */
     private function jsonDebug(array &$json): void
     {
         if ($this->debug) {
+            $this->debug_json = $json;
+            
             $arr = $this->dispDebug();
             $debug = [];
             $debug['node'] = $arr['debug'];
