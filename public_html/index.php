@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.5
+ * @version  1.0.3.6
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -39,35 +39,35 @@ new Php\Framework\Core\Castle();
 /**
  * ダンプをバッファに保存してデバッグに表示する
  * "dump(ダンプしたい変数)"の形で利用する
- * @global string $dump ダンプ用バッファ
+ * @global string $g_dump ダンプ用バッファ
  * @param mixed $arguments 引数群（引数はカンマ区切りでいくつでも指定できる）
  * @return string
  */
 function dump(...$arguments): string
 {
-    global $dump;
+    global $g_dump;
     $bt = debug_backtrace();
-    $dump .= sprintf("# %s {{DUMP_LINE}}%s\n",
+    $g_dump .= sprintf("# %s {{DUMP_LINE}}%s\n",
         str_replace(SERVER_PATH, '', $bt[0]['file']), $bt[0]['line']);
     ob_start();
     foreach ($arguments as $v) {
         var_dump($v);
     }
-    $dump .= ob_get_clean();
-    return $dump;
+    $g_dump .= ob_get_clean();
+    return $g_dump;
 }
-$dump = '';
+$g_dump = '';
 
 /**
  * トレース
  * トレースしたい場所で"trace('識別子')"の形で利用する
- * @global array $trace トレース用バッファ
+ * @global array $g_trace トレース用バッファ
  * @param string $id 識別子
  * @return void
  */
 function trace(string $id = ''): void
 {
-    global $trace;
+    global $g_trace;
     static $num = 0;
     $backtrace = debug_backtrace();
     $i = 0;
@@ -96,8 +96,8 @@ function trace(string $id = ''): void
         $comment = isset($match2[1]) ?
             preg_replace('/(.*)\* /', '', trim($match2[1])) : '';
 
-        $trace['TRACE'][$num]['id'] = $id ? $id : $num + 1;
-        $trace['TRACE'][$num]['TABLE_DATA'][$i] = [
+        $g_trace['TRACE'][$num]['id'] = $id ? $id : $num + 1;
+        $g_trace['TRACE'][$num]['TABLE_DATA'][$i] = [
             'trace_num' => $i + 1,
             'file_name' => str_replace(SERVER_PATH, '', $cur['file']),
             'line' => $cur['line'],
@@ -108,8 +108,13 @@ function trace(string $id = ''): void
             'function_name' => $cur['function'] ?? '-',
             'args' => trim(print_r($cur['args'] ?? '', true)),
         ];
+        array_walk($g_trace['TRACE'][$num]['TABLE_DATA'][$i],
+            function (&$var) {
+                $var = filter_var($var,
+                    FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: '';
+            });
         $i ++;
     } while (prev($backtrace));
     $num ++;
 }
-$trace = [];
+$g_trace = [];

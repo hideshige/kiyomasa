@@ -3,7 +3,7 @@
  * エラー情報モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.1.1
  * @package  device
  * 
  */
@@ -14,7 +14,7 @@ class ErrorInfo
 {
     /**
      * エラー情報のセット
-     * @global string $dump
+     * @global string $g_dump
      * @param string $message
      * @param string $file
      * @param int $line
@@ -33,8 +33,8 @@ class ErrorInfo
         trace(sprintf('%s<br />発生場所 %s <strong>%s</strong>',
             $message, $short_file, $line));
         
-        global $dump;
-        $dump .= sprintf('# %s {{DUMP_LINE}}%d%s{{ERROR_INFO}}%s%s',
+        global $g_dump;
+        $g_dump .= sprintf('# %s {{DUMP_LINE}}%d%s{{ERROR_INFO}}%s%s',
             $short_file, $line, PHP_EOL, $message, PHP_EOL);
     }
 }

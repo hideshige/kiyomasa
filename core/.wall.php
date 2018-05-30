@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.1
+ * @version  1.0.1.3
  * @package  core
  * 
  */
@@ -20,8 +20,8 @@ trait Wall
      * デバッグ情報の成形
      * @global float $first_memory
      * @global float $first_time
-     * @global string $dump
-     * @global array $trace
+     * @global string $g_dump
+     * @global array $g_trace
      * @return string|array
      */
     private function dispDebug()
@@ -66,8 +66,8 @@ trait Wall
 
             global $first_memory;
             global $first_time;
-            global $dump;
-            global $trace;
+            global $g_dump;
+            global $g_trace;
 
             $peak_memory = memory_get_peak_usage() / 1024;
             $last_time = microtime(true);
@@ -96,11 +96,11 @@ trait Wall
                 'session' => $this->modDebugDump((string)$session),
                 'cookie' => $this->modDebugDump((string)$cookie),
                 'namespace' => NAME_SPACE,
-                'dump' => $this->modDebugDump((string)$dump),
+                'dump' => $this->modDebugDump((string)$g_dump),
                 'json' => $this->modDebugDump((string)$json),
                 'trace' =>
-                    View::template('include/.debug_trace.tpl', $trace ?? []),
-                'debug_disp' => $dump ? 'block' : 'none',
+                    View::template('include/.debug_trace.tpl', $g_trace ?? []),
+                'debug_disp' => $g_dump ? 'block' : 'none',
                 'navi_id' => $navi_id
             ];
             
@@ -138,12 +138,13 @@ trait Wall
      */
     private function modDebugSql(string $text): string
     {
-        $text = htmlspecialchars((string)$text);
-        preg_match_all("/{{STRING}}'(.*?)'/s", $text, $match);
+        $text = filter_var($text, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: '';
+        preg_match_all("/{{STRING}}&#039;(.*?)&#039;/s", $text, $match);
         if (isset($match[1])) {
             foreach ($match[1] as $v) {
-                $text = preg_replace("/{{STRING}}'" . preg_quote($v, '/')
-                     . "'/s", '&apos;<span class="fw_debug_bold fw_debug_str">'
+                $text = preg_replace("/{{STRING}}&#039;"
+                    . preg_quote($v, '/') . "&#039;/s",
+                    '&apos;<span class="fw_debug_bold fw_debug_str">'
                     // 文字列として使用されているコロンを置換しておく
                     . preg_replace('/:/', '{{COLON}}', $v)
                     . '</span>&apos;', $text);
@@ -196,7 +197,7 @@ trait Wall
      */
     private function modDebugDump(string $text): string
     {
-        $text = filter_var($text, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: $text;
+        $text = filter_var($text, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: '';
         $text = preg_replace('/#\s(.*){{DUMP_LINE}}(\d*)/',
             '<span class="fw_debug_line">$1</span>'
             . '<span class="fw_debug_bold fw_debug_line">$2</span>', $text);
