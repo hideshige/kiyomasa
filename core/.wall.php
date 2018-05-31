@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.3
+ * @version  1.0.1.4
  * @package  core
  * 
  */
@@ -78,7 +78,8 @@ trait Wall
                 'request_url' => filter_input(INPUT_SERVER, 'REQUEST_URI'),
                 'os' => PHP_OS,
                 'php_ver' => phpversion(),
-                'web_server' => php_sapi_name(),
+                'web_server' => filter_input(INPUT_SERVER, 'SERVER_SOFTWARE')
+                    . '　' . php_sapi_name(),
                 'memory1' => number_format($first_memory),
                 'memory2' => number_format($peak_memory - $first_memory),
                 'memory3' => number_format($peak_memory),
