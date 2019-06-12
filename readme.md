@@ -85,7 +85,7 @@ const ENV_PRO = 3; // 本番環境
 const ENV_STA = 2; // ステージング環境  
 const ENV_DEV = 1; // 開発環境
 const ENV_PHP = 0; // ビルトインサーバ環境
-const ENV = ENV_PHP;```
+const ENV = ENV_PHP;```(
 
 4. /var/www/html/project_x/conf/config.phpをプロジェクト内容に合わせて変更する
 
@@ -99,13 +99,13 @@ const ENV = ENV_PHP;```
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]```
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]```(
     
     <nginxの場合>  
 ```# 設定ファイルのlocation部に以下を記載してからnginxを再起動する
 location / {
     try_files $uri /index.php?url=$uri&$args;
-}```
+}```(
 
 8. project_xディレクトリ配下のオーナーをWebサーバユーザに一括変更する
 
