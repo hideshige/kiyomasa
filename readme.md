@@ -80,7 +80,8 @@ root/                  ルートディレクトリはプロジェクト名に変
 2. /var/www/html直下にKIYOMASAのフォルダを一式を置き、project_xにリネームする
 
 3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する  
-```<?php
+```php
+<?php
 const ENV_PRO = 3; // 本番環境
 const ENV_STA = 2; // ステージング環境  
 const ENV_DEV = 1; // 開発環境
@@ -96,7 +97,8 @@ const ENV = ENV_PHP;
 
 7. Webサーバのリダイレクト設定を行う  
     <Apacheの場合>  
-```# /var/www/html/project_x/public_html/.htaccess に記述するだけで良い  
+```Apach
+# /var/www/html/project_x/public_html/.htaccess に記述するだけで良い  
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -104,7 +106,8 @@ RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 ```(
     
     <nginxの場合>  
-```# 設定ファイルのlocation部に以下を記載してからnginxを再起動する
+```nginx
+# 設定ファイルのlocation部に以下を記載してからnginxを再起動する
 location / {
     try_files $uri /index.php?url=$uri&$args;
 }
