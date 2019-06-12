@@ -96,8 +96,8 @@ const ENV = ENV_PHP;
 6. Webサーバのルートディレクトリを/var/www/html/project_x/public_html/にする
 
 7. Webサーバのリダイレクト設定を行う  
-    <Apacheの場合>  
 ```Apache
+# Apache
 # /var/www/html/project_x/public_html/.htaccess に記述するだけで良い  
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -105,8 +105,8 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 ```
     
-    <nginxの場合>  
 ```nginx
+# nginx
 # 設定ファイルのlocation部に以下を記載してからnginxを再起動する
 location / {
     try_files $uri /index.php?url=$uri&$args;
