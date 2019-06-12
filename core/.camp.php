@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.3
+ * @version  1.1.6.4
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -37,7 +37,7 @@ class Camp
         try {
             global $argv;
             if (!isset($argv[1])) {
-                exit;
+                exit(0);
             }
             Log::$batch = 'batch/';
             

@@ -18,10 +18,10 @@ $first_memory = memory_get_usage() / 1024;
 /*
 if ((float)phpversion() < 7.2) {
     echo 'PHP OLD VERSION: ' . phpversion();
-    exit;
+    exit(0);
 } else if (!extension_loaded('mbstring')) {
     echo 'mbstringがインストールされていません';
-    exit;
+    exit(0);
 }
 */
 

@@ -214,6 +214,6 @@ class Csv
             echo $csv;
         }
         session_write_close();
-        exit;
+        exit(0);
     }
 }

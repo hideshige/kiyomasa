@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.4
+ * @version  1.0.2.0
  * @package  core
  * 
  */
@@ -17,6 +17,16 @@ trait Wall
     private $debug_json = []; // JSONデバッグ用
     
     /**
+     * デストラクタ
+     */
+    public function __destruct()
+    {
+        if ($this->debug and S::$jflag === false) {
+            echo $this->dispDebug();
+        }
+    }
+    
+    /**
      * デバッグ情報の成形
      * @global float $first_memory
      * @global float $first_time
@@ -26,108 +36,109 @@ trait Wall
      */
     private function dispDebug()
     {
+        // デバッグにセッションの動作を表示するため事前にセッションを閉じる
+        session_write_close();
+        
         $disp = '';
-        if ($this->debug) {
-            ob_start();
-            if (S::$post) {
-                var_dump(S::$post);
-            }
-            $post = ob_get_clean();
-            ob_start();
-            if (S::$get) {
-                var_dump(S::$get);
-            }
-            $get = ob_get_clean();
-            ob_start();
-            if (S::$url) {
-                var_dump(S::$url);
-            }
-            $url = ob_get_clean();
-            ob_start();
-            if ($_FILES) {
-                var_dump($_FILES);
-            }
-            $files = ob_get_clean();
-            ob_start();
-            if ($_COOKIE) {
-                var_dump($_COOKIE);
-            }
-            $cookie = ob_get_clean();
-            ob_start();
-            if ($_SESSION) {
-                var_dump($_SESSION);
-            }
-            $session = ob_get_clean();
-            ob_start();
-            if ($this->debug_json) {
-                var_dump($this->debug_json);
-            }
-            $json = ob_get_clean();
+        ob_start();
+        if (S::$post) {
+            var_dump(S::$post);
+        }
+        $post = ob_get_clean();
+        ob_start();
+        if (S::$get) {
+            var_dump(S::$get);
+        }
+        $get = ob_get_clean();
+        ob_start();
+        if (S::$url) {
+            var_dump(S::$url);
+        }
+        $url = ob_get_clean();
+        ob_start();
+        if ($_FILES) {
+            var_dump($_FILES);
+        }
+        $files = ob_get_clean();
+        ob_start();
+        if ($_COOKIE) {
+            var_dump($_COOKIE);
+        }
+        $cookie = ob_get_clean();
+        ob_start();
+        if ($_SESSION) {
+            var_dump($_SESSION);
+        }
+        $session = ob_get_clean();
+        ob_start();
+        if ($this->debug_json) {
+            var_dump($this->debug_json);
+        }
+        $json = ob_get_clean();
 
-            global $first_memory;
-            global $first_time;
-            global $g_dump;
-            global $g_trace;
+        global $first_memory;
+        global $first_time;
+        global $g_dump;
+        global $g_trace;
 
-            $peak_memory = memory_get_peak_usage() / 1024;
-            $last_time = microtime(true);
-            
-            $navi_id = microtime(true);
-            
-            $debug = [
-                'request_url' => filter_input(INPUT_SERVER, 'REQUEST_URI'),
-                'os' => PHP_OS,
-                'php_ver' => phpversion(),
-                'web_server' => filter_input(INPUT_SERVER, 'SERVER_SOFTWARE')
-                    . '　' . php_sapi_name(),
-                'memory1' => number_format($first_memory),
-                'memory2' => number_format($peak_memory - $first_memory),
-                'memory3' => number_format($peak_memory),
-                'ip' => IP_ADDRESS,
-                'user_agent' => USER_AGENT,
-                'timestamp' => TIMESTAMP,
-                'time' => time(),
-                'db_slave' => $this->modDebugSql(S::$dbs->getSql(true)),
-                'db_master' => $this->modDebugSql(S::$dbm->getSql(true)),
-                'memcached' => nl2br(htmlspecialchars(S::$mem->getDispMem())),
-                'post' => $this->modDebugDump((string)$post),
-                'get' => $this->modDebugDump((string)$get),
-                'url' => $this->modDebugDump((string)$url),
-                'files' => $this->modDebugDump((string)$files),
-                'session' => $this->modDebugDump((string)$session),
-                'cookie' => $this->modDebugDump((string)$cookie),
-                'namespace' => NAME_SPACE,
-                'dump' => $this->modDebugDump((string)$g_dump),
-                'json' => $this->modDebugDump((string)$json),
-                'trace' =>
-                    View::template('include/.debug_trace.tpl', $g_trace ?? []),
-                'debug_disp' => $g_dump ? 'block' : 'none',
-                'navi_id' => $navi_id
-            ];
-            
-            $process = round($last_time - $first_time, 5);
-            
-            $view = [];
-            
-            if (S::$jflag) {
-                $debug['disp_type'] = 'ajax';
-                $view['DEBUG_INCLUDE'][0] = $debug;
-                $view2 = [];
-                $view2['AJAX_NAVI'][0]['process'] = $process;
-                $view2['AJAX_NAVI'][0]['navi_id'] = $navi_id;
-                $disp = [];
-                $disp['navi_id'] = $navi_id;
-                $disp['debug'] =
-                    View::template('include/.debug_include.tpl', $view);
-                $disp['navi'] =
-                    View::template('include/.debug_ajax_navi.tpl', $view2);
-            } else {
-                $debug['disp_type'] = 'html';
-                $view['DEBUG'][0]['DEBUG_INCLUDE'][0] = $debug;
-                $view['REPLACE']['process'] = $process;
-                $view['REPLACE']['navi_id'] = $navi_id;
-                $disp = View::template('.debug.tpl', $view);
-            }
+        $peak_memory = memory_get_peak_usage() / 1024;
+        $last_time = microtime(true);
+
+        $navi_id = microtime(true);
+
+        $debug = [
+            'request_url' => filter_input(INPUT_SERVER, 'REQUEST_URI'),
+            'os' => PHP_OS,
+            'php_ver' => phpversion(),
+            'web_server' => filter_input(INPUT_SERVER, 'SERVER_SOFTWARE')
+                . '　' . php_sapi_name(),
+            'memory1' => number_format($first_memory),
+            'memory2' => number_format($peak_memory - $first_memory),
+            'memory3' => number_format($peak_memory),
+            'ip' => IP_ADDRESS,
+            'user_agent' => USER_AGENT,
+            'timestamp' => TIMESTAMP,
+            'time' => time(),
+            'db_slave' => $this->modDebugSql(S::$dbs->getSql(true)),
+            'db_master' => $this->modDebugSql(S::$dbm->getSql(true)),
+            'memcached' => nl2br(htmlspecialchars(S::$mem->getDispMem())),
+            'post' => $this->modDebugDump((string)$post),
+            'get' => $this->modDebugDump((string)$get),
+            'url' => $this->modDebugDump((string)$url),
+            'files' => $this->modDebugDump((string)$files),
+            'session' => $this->modDebugDump((string)$session),
+            'cookie' => $this->modDebugDump((string)$cookie),
+            'namespace' => NAME_SPACE,
+            'dump' => $this->modDebugDump((string)$g_dump),
+            'json' => $this->modDebugDump((string)$json),
+            'trace' =>
+                View::template('include/.debug_trace.tpl', $g_trace ?? []),
+            'debug_disp' => $g_dump ? 'block' : 'none',
+            'navi_id' => $navi_id
+        ];
+
+        $process = round($last_time - $first_time, 5);
+
+        $view = [];
+
+        if (S::$jflag) {
+            $debug['disp_type'] = 'ajax';
+            $view['DEBUG_INCLUDE'][0] = $debug;
+            $view2 = [];
+            $view2['AJAX_NAVI'][0]['process'] = $process;
+            $view2['AJAX_NAVI'][0]['navi_id'] = $navi_id;
+            $disp = [];
+            $disp['navi_id'] = $navi_id;
+            $disp['debug'] =
+                View::template('include/.debug_include.tpl', $view);
+            $disp['navi'] =
+                View::template('include/.debug_ajax_navi.tpl', $view2);
+        } else {
+            $debug['disp_type'] = 'html';
+            $view['DEBUG'][0]['DEBUG_INCLUDE'][0] = $debug;
+            $view['REPLACE']['process'] = $process;
+            $view['REPLACE']['navi_id'] = $navi_id;
+            $disp = View::template('.debug.tpl', $view);
         }
         return $disp;
     }

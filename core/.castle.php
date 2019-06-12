@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.1
+ * @version  1.4.5.2
  * @package  core
  * 
  */
@@ -79,7 +79,7 @@ class Castle
         } else {
             echo 'エラーになりました。 ' . TIMESTAMP;
         }
-        exit;
+        exit(0);
     }
     
     /**

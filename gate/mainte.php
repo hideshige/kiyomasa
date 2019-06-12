@@ -25,13 +25,13 @@ class Mainte implements P\Html
     {
         if (D\S::$url[0] == 'mainte') {
             header('Location: /');
-            exit;
+            exit(0);
         }
         $title = 'メンテナンス中';
         W\Citadel::set($title, false, false);
         if (!isset(S::$user['user_id'])) {
             echo 'ただいまメンテナンス中です';
-            exit;
+            exit(0);
         }
         return true;
     }

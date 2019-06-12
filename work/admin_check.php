@@ -26,19 +26,19 @@ class AdminCheck
 //        if (!in_array(IP_ADDRESS, $g_ip_address)) {
 //            // メンテ突破端末以外はエラー画面に
 //            header(sprintf('Location: %serror', DOMAIN_NAME));
-//            exit;
+//            exit(0);
 //        }
 
         if (filter_input(INPUT_SERVER, 'SERVER_PORT') != '443') {
             // httpはhttpsに飛ばす
             header(sprintf('Location: %sadmin', SSL_LINK_DOMAIN_NAME));
-            exit;
+            exit(0);
         }
     
         if (!isset ($_SESSION['user_id']) or $_SESSION['user_id'] != 1) {
             // 管理者以外は通常のエラー画面に
             header(sprintf('Location: %serror', DOMAIN_NAME));
-            exit;
+            exit(0);
         }
     }
 

@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.1
+ * @version  1.0.6.2
  * @package  core
  * 
  */
@@ -82,18 +82,13 @@ class Turret
         
         $tpl = $gate->tpl ?? [];
         
-        // デバッグにセッションの動作を表示するため事前にセッションを閉じる
-        session_write_close();
-        
         if (S::$jflag === false and count($tpl)) {
             header('Content-Type: text/html; charset=UTF-8');
             foreach ($tpl as $tk => $tv) {
                 echo View::template($tv, S::$disp[$tk] ?? []);
             }
         }
-        if (S::$jflag === false) {
-            echo $this->dispDebug();
-        } else if (is_array($res)) {
+        if (S::$jflag === true and is_array($res)) {
             $this->jsonDebug($res);
             header('Content-Type: application/json; charset=UTF-8');
             echo json_encode($res,
