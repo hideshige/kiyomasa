@@ -11,14 +11,14 @@ PHP(バージョン7.3以上)がインストールされているLinux(CentOS,Ub
 --------------------------------------------------------------------------------
 ## ディレクトリ構造
 
-root/ 
-├ core/ 
-├ device/ 
-├ gate/ 
-├ log/ 
-├ public_html/ 
-├ shell/ 
-└ template/ 
+root/  
+├ core/  
+├ device/  
+├ gate/  
+├ log/  
+├ public_html/  
+├ shell/  
+└ template/  
 
 ## 各ディレクトおよびファイルの説明
 
