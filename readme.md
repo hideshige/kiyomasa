@@ -6,7 +6,7 @@ PHPの開発を円滑に進めるために設計された枠組み
 
 PHP(バージョン7.3以上)がインストールされているLinux(CentOS,Ubuntuなど)、Windows、macOS上で動作可能。WebサーバはApache、nginxに対応。DBはMySQL(MariaDB)、PostgreSQLで動作確認済み。
 
-コーディングについてはPHPフレームワーク展示会グループによる標準規約に準ずる
+コーディングについてはPHPフレームワーク展示会グループによる標準規約に準ずる  
 [http://www.php-fig.org/](http://www.php-fig.org/ "PHP-FIG")
 --------------------------------------------------------------------------------
 ## ディレクトリ構造
@@ -72,12 +72,12 @@ root/                  ルートディレクトリはプロジェクト名に変
 
 ここでは一例としてプロジェクト名を「project_x」とし、PHP,MySQL(MariaDB),Memcached,WebサーバがLinuxにインストールされているものとし、/var/www/htmlの直下にKIYOMASAをインストールする手順を記載する。
 
-1. 下記サイトよりKIYOMASAをダウンロードする
+1. 下記サイトよりKIYOMASAをダウンロードする  
     [linkref]: https://github.com/hideshige/kiyomasa "GitHub"
  
 2. /var/www/html直下にKIYOMASAのフォルダを一式を置き、project_xにリネームする
 
-3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する
+3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する  
 `<?php
     const ENV_PRO = 3; // 本番環境
     const ENV_STA = 2; // ステージング環境
@@ -91,15 +91,15 @@ root/                  ルートディレクトリはプロジェクト名に変
 
 6. Webサーバのルートディレクトリを/var/www/html/project_x/public_html/にする
 
-7. Webサーバのリダイレクト設定を行う
-    <Apacheの場合>
+7. Webサーバのリダイレクト設定を行う  
+    <Apacheの場合>  
 `# /var/www/html/project_x/public_html/.htaccess に記述するだけで良い
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]`
     
-    <nginxの場合>
+    <nginxの場合>  
 `# 設定ファイルのlocation部に以下を記載してからnginxを再起動する
     location / {
         try_files $uri /index.php?url=$uri&$args;
@@ -113,10 +113,14 @@ root/                  ルートディレクトリはプロジェクト名に変
 
 --------------------------------------------------------------------------------
 ## KIYOMASAの大きな特長
+
 開発環境では詳細なデバッグ情報（実行時間や実行されたSQLなど）がHTMLの末尾に付与されて返される。dump()コマンドを使うとデバッグ情報枠に成型したダンプデータを表示させることも可能。エラーや警告が出た場合も瞬時に教えてくれる。バグを見つけるためのヒントとして大いにKIYOMASAを活用して欲しい。
+
 --------------------------------------------------------------------------------
 ## KIYOMASAのルール
+
 名前空間はディレクトリに合わせる。プログラムファイルのファイル名はクラス名に合わせる。ただしファイル名はunder_bar形式、クラス名はStudlyCaps形式にする。ディレクトリ構造と、.（ドット）で始まるファイルは原則として変更しない。
+
 --------------------------------------------------------------------------------
 ## KIYOMASAの名前の由来
 築城の名手・加藤清正の名にちなむ。プロジェクトのプログラムを作ることは、城を構築していくことに近いという思いが込められている。ファイル名やクラス名に城にちなんだ名前が付けられているのもユニークな特徴である。
