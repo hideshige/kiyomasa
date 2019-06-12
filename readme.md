@@ -87,7 +87,7 @@ const ENV_STA = 2; // ステージング環境
 const ENV_DEV = 1; // 開発環境
 const ENV_PHP = 0; // ビルトインサーバ環境
 const ENV = ENV_PHP;
-```(
+```
 
 4. /var/www/html/project_x/conf/config.phpをプロジェクト内容に合わせて変更する
 
