@@ -80,12 +80,12 @@ root/                  ルートディレクトリはプロジェクト名に変
 2. /var/www/html直下にKIYOMASAのフォルダを一式を置き、project_xにリネームする
 
 3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する  
-`<?php  
-    const ENV_PRO = 3; // 本番環境  
-    const ENV_STA = 2; // ステージング環境  
-    const ENV_DEV = 1; // 開発環境  
-    const ENV_PHP = 0; // ビルトインサーバ環境  
-    const ENV = ENV_PHP;`
+```<?php
+const ENV_PRO = 3; // 本番環境
+const ENV_STA = 2; // ステージング環境  
+const ENV_DEV = 1; // 開発環境
+const ENV_PHP = 0; // ビルトインサーバ環境
+const ENV = ENV_PHP;```
 
 4. /var/www/html/project_x/conf/config.phpをプロジェクト内容に合わせて変更する
 
@@ -95,17 +95,17 @@ root/                  ルートディレクトリはプロジェクト名に変
 
 7. Webサーバのリダイレクト設定を行う  
     <Apacheの場合>  
-`# /var/www/html/project_x/public_html/.htaccess に記述するだけで良い  
-    RewriteEngine On  
-    RewriteCond %{REQUEST_FILENAME} !-d  
-    RewriteCond %{REQUEST_FILENAME} !-f  
-    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]`
+```# /var/www/html/project_x/public_html/.htaccess に記述するだけで良い  
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]```
     
     <nginxの場合>  
-`# 設定ファイルのlocation部に以下を記載してからnginxを再起動する
-    location / {  
-        try_files $uri /index.php?url=$uri&$args;  
-    }`
+```# 設定ファイルのlocation部に以下を記載してからnginxを再起動する
+location / {
+    try_files $uri /index.php?url=$uri&$args;
+}```
 
 8. project_xディレクトリ配下のオーナーをWebサーバユーザに一括変更する
 
