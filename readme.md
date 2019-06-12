@@ -75,7 +75,7 @@ root/                  ルートディレクトリはプロジェクト名に変
 ここでは一例としてプロジェクト名を「project_x」とし、PHP,MySQL(MariaDB),Memcached,WebサーバがLinuxにインストールされているものとし、/var/www/htmlの直下にKIYOMASAをインストールする手順を記載する。
 
 1. 下記サイトよりKIYOMASAをダウンロードする  
-    [linkref]: https://github.com/hideshige/kiyomasa "GitHub"
+    https://github.com/hideshige/kiyomasa
  
 2. /var/www/html直下にKIYOMASAのフォルダを一式を置き、project_xにリネームする
 
