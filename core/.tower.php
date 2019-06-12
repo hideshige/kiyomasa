@@ -27,18 +27,14 @@ spl_autoload_register(
             throw new \Error('Class Name Error: ' . $class_name);
         }
         foreach ($arr as $k => $v) {
-            $arr[$k] = strtolower(
-                preg_replace('/^_/', '',
-                    // スタッドリーキャップス記法をアンダースコア記法に変換
-                    preg_replace('/([A-Z])/', '_$1', $v))
-            );
+            $arr[$k] = strtolower(preg_replace('/^_/', '',
+                // スタッドリーキャップス記法をアンダースコア記法に変換
+                preg_replace('/([A-Z])/', '_$1', $v)));
         }
         $file_name = SERVER_PATH . implode('/', $arr) . '.php';
         if (!file_exists($file_name)) {
             header('HTTP/1.1 404 Not Found');
-            throw new \Error(
-                'Class File Not Found: ' . $file_name
-            );
+            throw new \Error('Class File Not Found: ' . $file_name);
         }
         // リクワイア実行
         require $file_name;
@@ -58,6 +54,11 @@ set_error_handler(
      */
     function (int $no, string $message, string $file, int $line): void
     {
+        // 開発環境以外とライブラリ内のエラーは無視する
+        if (ENV > ENV_DEV or strpos($file, '.library') !== false) {
+            return;
+        }
+        
         // ユーザエラーはユーザ用の例外へ
         if ($no === E_USER_ERROR or
             $no === E_USER_WARNING or $no === E_USER_NOTICE) {
@@ -67,18 +68,17 @@ set_error_handler(
         switch ($no) {
             case E_ERROR: $type = 'エラー'; break;
             case E_WARNING: $type = '警告'; break;
-            case E_PARSE: $type = '構文不正'; break;
             case E_NOTICE: $type = '注意'; break;
+            case E_PARSE: $type = '構文不正'; break;
             case E_DEPRECATED: $type = '非推奨'; break;
-            default: $type = 'エラー番号 ' . $no; break;
+            default: $type = '番号' . $no; break;
         }
         
-        if (ENV <= 1 and strpos($file, '.library') === false) {
-            $info = new ErrorInfo;
-            $info->set($type . ': ' . $message, $file, $line);
-        }
+        $info = new ErrorInfo;
+        $info->set($type . ': ' . $message, $file, $line);
         
-        if (ENV <= 1 and $no !== E_NOTICE and $no !== E_DEPRECATED) {
+        // 注意と非推奨以外は例外処理
+        if ($no !== E_NOTICE and $no !== E_DEPRECATED) {
             throw new \Error('エラーハンドラからエラーをスローします', 10);
         }
     }

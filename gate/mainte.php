@@ -10,25 +10,22 @@
 namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Work as W;
-use Yourname\Yourproject\Prop as P;
 
-class Mainte implements P\Html
+class Mainte
 {
     public $tpl = ['part/header', 'mainte', 'part/footer'];
 
     /**
-     * ロジック
+     * 実行
      * @return bool
      */
-    public function logic(): bool
+    public function execute(): bool
     {
         if (D\S::$url[0] == 'mainte') {
             header('Location: /');
             exit(0);
         }
         $title = 'メンテナンス中';
-        W\Citadel::set($title, false, false);
         if (!isset(S::$user['user_id'])) {
             echo 'ただいまメンテナンス中です';
             exit(0);

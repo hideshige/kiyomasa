@@ -3,11 +3,10 @@
  * PHPビルトイン　ウェブサーバ設定
  * 
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.0.1
  * @package  core
  *
- * プロジェクトのディレクトリに入り
- * > php -S localhost:(ポート番号) -t public_html core/.router.php
+ * > php -S localhost:(ポート番号) -t /ファイルの場所/public_html /ファイルの場所/core/.router.php
  * でローカルマシンから実行可能
  */
 

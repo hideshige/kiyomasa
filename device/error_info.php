@@ -22,8 +22,8 @@ class ErrorInfo
      */
     public function set(string $message, string $file, int $line): void
     {
-        S::$dbm->rollback();
-        S::$dbm->unlock();
+//        S::$dbm->rollback();
+//        S::$dbm->unlock();
         
         // ログに記録し、開発環境の場合デバッグを表示
         $short_file = str_replace(SERVER_PATH, '', $file);

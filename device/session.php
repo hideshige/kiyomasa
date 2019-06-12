@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.4.6
+ * @version  1.1.5.0
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -21,7 +21,7 @@
  * を実行させること
  * 
  * セッションの消し方
- * setcookie('bts_login', '', time() - COOKIE_LIFETIME, '/');//COOKIEを消す
+ * setcookie(PROJECT_PREFIX . 'login', '', time() - COOKIE_LIFETIME, '/');//COOKIEを消す
  * session_destroy();//DBのレコードを消す
  * 
  */
@@ -46,9 +46,18 @@ class Session
         ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
         ini_set('session.cookie_httponly', 1);
         session_save_path(SERVER_PATH . 'session');
-        session_name('bts_login_sesid');
+        session_name(PROJECT_PREFIX . 'login_sesid');
         session_set_cookie_params(COOKIE_LIFETIME, '/', '', false, true);
         session_start();
+    }
+
+    /**
+     * セッションIDの値を変えてCOOKIEを更新
+     * @return void
+     */
+    public static function sessionIdChange(): void
+    {
+        session_regenerate_id();
     }
 }
 
@@ -108,7 +117,7 @@ class sessionHandlerDb
             'session'
         );
         S::$dbm->bind($params, 'session');
-        $res = S::$dbm->Fetch('\stdClass', 'session');
+        $res = S::$dbm->fetch('session');
         if ($res) {
             $read = $res->session_value;
         }

@@ -4,27 +4,24 @@
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
- * @package  gate/content
+ * @package  gate
  */
 
-namespace Yourname\Yourproject\Gate\Content;
+namespace Yourname\Yourproject\Gate;
 
 use Php\Framework\Device as D;
-use Yourname\Yourproject\Work as W;
-use Yourname\Yourproject\Prop as P;
 
-class ErrorPage implements P\Html
+class ErrorPage
 {
-    public $tpl = ['part/header', 'content/error_page', 'part/footer'];
+    public $tpl = ['part/header', 'error_page', 'part/footer'];
 
     /**
-     * ロジック
+     * 実行
      * @return bool
      */
-    public function logic(): bool
+    public function execute(): bool
     {
         $title = 'エラー';
-        W\Citadel::set($title, false, false);
         $message = 'ページが見つかりません。';
         if (isset($_SESSION['error_message']) and $_SESSION['error_message']) {
             $message = $_SESSION['error_message'];

@@ -9,20 +9,27 @@
 
 namespace Yourname\Yourproject\Shell;
 
-use Yourname\Yourproject\Work as W;
-
-class Sample extends W\BaseShell
+class Sample
 {
     /**
      * 実行
-     * @global array $argv
-     * @return void
+     * @return bool FALSEの場合エラーページを表示する
      */
-    protected function execute(): void
+    public function execute(): bool
     {
-        global $argv;
-
-        var_dump($argv);
-        echo 'TEST';
+        try {
+            $check = true;
+            
+            global $argv;
+            var_dump($argv);
+            
+            echo 'TEST';
+            
+        } catch (\Error $e) {
+            echo $e->getMessage();
+            $check = false;
+        } finally {
+            return $check;
+        }
     }
 }

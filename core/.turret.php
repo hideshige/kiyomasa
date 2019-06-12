@@ -75,7 +75,7 @@ class Turret
     private function gate(string $class_name): void
     {
         $gate = new $class_name;
-        $res = $gate->logic();
+        $res = $gate->execute();
         if ($res === false) {
             throw new \Error($class_name . ' logic notice', 10);
         }
@@ -114,7 +114,7 @@ class Turret
                 // 循環防止のフラグ
                 $this->error_flag = true;
                 // エラー画面の読み込み
-                $this->disp('error_page', 'content/');
+                $this->disp('error_page');
             } else {
                 header('Content-Type: text/html; charset=UTF-8');
                 echo 'エラーになりましたが、エラー画面が表示できませんでした';
@@ -128,6 +128,7 @@ class Turret
     
     /**
      * サニタイズ
+     * （htmlspecialcharはここでは行わない）
      * @param array|string $data
      * @return array|string
      */
@@ -143,10 +144,9 @@ class Turret
                     return html_entity_decode($code, ENT_NOQUOTES, 'UTF-8');
                 }
                 , self::$invisible_utf8_codes);
-            $data = htmlspecialchars(str_replace($invisible_strs, '',
+            $data = str_replace($invisible_strs, '',
                 // 改行コード以外のコントロールコードを排除
-                preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data)
-                ), ENT_QUOTES);
+                preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data));
             global $g_change_chara;
             foreach ($g_change_chara as $ck => $cv) {
                 $data = str_replace($cv, $ck, $data);

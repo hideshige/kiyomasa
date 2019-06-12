@@ -5,39 +5,38 @@
 
 const NAME_SPACE = 'Yourname\Yourproject';
 
-if (ENV === 0) {
+if (ENV === ENV_PHP) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 'On');
-    define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
-//    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
-
-    define('DOMAIN_NAME', '/');
-    define('LINK_DOMAIN_NAME', 'http://localhost:8000/');
-    define('SSL_LINK_DOMAIN_NAME', 'http://localhost:8000/');
+    define('SERVER_PATH', 'D:\kiyomasa2\\'); // Win
+//    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa2/'); // Mac
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_DRIVER', 'mysql');
     define('DB_MASTER_SERVER', 'localhost:3306');
-    define('DB_MASTER_USER', 'kiyomasa');
+//    define('DB_MASTER_USER', 'kiyomasa');
+//    define('DB_MASTER_PASSWORD', 'password');
+//    define('DB_MASTER_NAME', 'kiyomasa');
+//    define('DB_SLAVE_SERVER', 'localhost:3306');
+//    define('DB_SLAVE_USER', 'kiyomasa');
+//    define('DB_SLAVE_PASSWORD', 'password');
+//    define('DB_SLAVE_NAME', 'kiyomasa');
+    define('DB_MASTER_USER', 'bts');
     define('DB_MASTER_PASSWORD', 'password');
-    define('DB_MASTER_NAME', 'kiyomasa');
-    define('DB_SLAVE_SERVER', 'localhost:3306');
-    define('DB_SLAVE_USER', 'kiyomasa');
+    define('DB_MASTER_NAME', 'bts');
+    define('DB_SLAVE_SERVER', 'localhost');
+    define('DB_SLAVE_USER', 'bts');
     define('DB_SLAVE_PASSWORD', 'password');
-    define('DB_SLAVE_NAME', 'kiyomasa');
+    define('DB_SLAVE_NAME', 'bts');
 
     define('TO_EMAIL', '');
     define('FROM_EMAIL', '');
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
-} else if (ENV === 1) {
+} else if (ENV === ENV_DEV) {
     // テスト環境
     ini_set('display_errors', 'On');
     define('SERVER_PATH', '/var/www/html/yoursite/');
-
-    define('DOMAIN_NAME', '/');
-    define('LINK_DOMAIN_NAME', 'http://yoursite/');
-    define('SSL_LINK_DOMAIN_NAME', 'https://yoursite/');
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_DRIVER', 'mysql');
@@ -58,10 +57,6 @@ if (ENV === 0) {
     // 本番環境
     ini_set('display_errors', 'Off');
     define('SERVER_PATH', '/var/www/html/yoursite/');
-
-    define('DOMAIN_NAME', '/');
-    define('LINK_DOMAIN_NAME', 'http://yoursite/');
-    define('SSL_LINK_DOMAIN_NAME', 'https://yoursite/');
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_DRIVER', 'mysql');
@@ -89,8 +84,6 @@ const PROJECT_PREFIX = ''; // プロジェクトを示す接頭辞
 /*-------------- 暗号化 ----------------*/
 
 const OPEN_SSL_PASSPHRASE = 'ssl_keyword1'; // OpenSSL用
-const CRYPT_KEY = 'crypt_keyword1'; // mcrypt用
-const CRYPT_IV = 'crypt_keyword2'; // mcrypt用
 
 // Openssl::makeKeyにより以下を生成しておく
 const OPEN_SSL_PRIVATE_KEY = <<<EOT
@@ -124,7 +117,7 @@ EOT;
 /*-------------- 以下は global で呼び出す共通パラメータ ----------------*/
 
 // URLをフォルダで分ける場合、この配列に追加する
-$g_folder = ['admin', 'content'];
+$g_folder = [];
 
 // メンテ突破IPアドレス
 $g_ip_address = [];

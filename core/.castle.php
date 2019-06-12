@@ -3,14 +3,14 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.5.2
+ * @version  1.4.6.0
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\{Db\DbModule, Mem, Session, S, Log};
+use Php\Framework\Device\{S, Session, Log};
 
 require_once(__DIR__ . '/.tower.php');
 require_once(__DIR__ . '/.wall.php');
@@ -27,13 +27,15 @@ class Castle
     {
         try {
             S::$jflag = false;
-            $this->debug = ENV <= 1 ? true : false;
+            $this->debug = ENV <= ENV_DEV ? true : false;
             
             // データベースオブジェクトの準備
-            S::$dbm = new DbModule(DB_MASTER_SERVER, DB_MASTER_USER,
-                DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER, $this->debug);
-            S::$dbs = new DbModule(DB_SLAVE_SERVER, DB_SLAVE_USER,
-                DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER, $this->debug);
+            $dbo = $this->debug ?
+                'Php\Framework\Device\DebugDb' : 'Php\Framework\Device\Db';
+            S::$dbm = new $dbo(DB_MASTER_SERVER, DB_MASTER_USER,
+                DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER);
+            S::$dbs = new $dbo(DB_SLAVE_SERVER, DB_SLAVE_USER,
+                DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER);
             
             if (!S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
@@ -42,7 +44,9 @@ class Castle
             }
             
             // memchached
-            S::$mem = new Mem($this->debug);
+            $mem = $this->debug ?
+                'Php\Framework\Device\DebugMem' : 'Php\Framework\Device\Mem';
+            S::$mem = new $mem;
 
             // セッションのセット
             new Session();
@@ -54,17 +58,17 @@ class Castle
             S::$get = $turret->h($_GET);
             
             $this->open($turret);
-        } catch (\Error $e) {
+        } catch (\Error|\PDOException $e) {
             $this->error($e);
         }
     }
     
     /**
      * エラー処理
-     * @param \Error $e
+     * @param \Error|\PDOException $e
      * @return void
      */
-    private function error(\Error $e): void
+    private function error($e): void
     {
         $error = sprintf(
             '%s(%s) %s',

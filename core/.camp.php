@@ -41,13 +41,15 @@ class Camp
             }
             Log::$batch = 'batch/';
             
-            $this->debug = ENV <= 1 ? true : false;
+            $this->debug = ENV <= ENV_DEV ? true : false;
             
             // データベースオブジェクトの準備
-            S::$dbm = new DbModule(DB_MASTER_SERVER, DB_MASTER_USER,
-                DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER, $this->debug);
-            S::$dbs = new DbModule(DB_SLAVE_SERVER, DB_SLAVE_USER,
-                DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER, $this->debug);
+            $dbo = $this->debug ?
+                'Php\Framework\Device\DebugDb' : 'Php\Framework\Device\Db';
+            S::$dbm = new $dbo(DB_MASTER_SERVER, DB_MASTER_USER,
+                DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER);
+            S::$dbs = new $dbo(DB_SLAVE_SERVER, DB_SLAVE_USER,
+                DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER);
             
             if (!S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
@@ -58,10 +60,10 @@ class Camp
             $this->exec($argv[1]);
 
             if ($this->debug) {
-                echo '<DBS>', PHP_EOL, S::$dbs->getSql(false), PHP_EOL;
-                echo '<DBM>', PHP_EOL, S::$dbm->getSql(false), PHP_EOL;
+                echo '<DBS>', PHP_EOL, S::$dbs->getSql(), PHP_EOL;
+                echo '<DBM>', PHP_EOL, S::$dbm->getSql(), PHP_EOL;
             }
-        } catch (\Error $e) {
+        } catch (\Error|\PDOException $e) {
             echo $e->getMessage();
         }
     }
@@ -79,7 +81,7 @@ class Camp
                 ' ', '', ucwords(str_replace('_', ' ', $pagename))));
             
             $gate = new $class_name();
-            $res = $gate->logic();
+            $res = $gate->execute();
             if ($res === false) {
                 throw new \Error($pagename . ' logic notice', 10);
             }

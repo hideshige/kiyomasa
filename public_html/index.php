@@ -16,7 +16,7 @@ $first_memory = memory_get_usage() / 1024;
 
 // PHP環境の確認
 /*
-if ((float)phpversion() < 7.2) {
+if ((float)phpversion() < 7.3) {
     echo 'PHP OLD VERSION: ' . phpversion();
     exit(0);
 } else if (!extension_loaded('mbstring')) {
@@ -88,7 +88,7 @@ function trace(string $id = ''): void
         if ($class_name !== '-') {
             $ref = ReflectionMethod::export(
                 $cur['class'], $cur['function'], true);
-        } else {
+        } else if ($cur['function'] !== 'Php\Framework\Core\{closure}') {
             $ref = ReflectionFunction::export($cur['function'], true);
         }
         // ソースからメソッドのコメントを抽出

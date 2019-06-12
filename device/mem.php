@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.10.0
+ * @version  2.0.1.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -24,21 +24,17 @@ namespace Php\Framework\Device;
 
 class Mem
 {
-    private $memcached_1;//memcachedオブジェクト
-    private $active;//memcachedが起動しているかどうかのフラグ
-    private $disp_mem = '';//debug情報
-    private $debug;//debugかどうかのフラグ
+    protected $memcached_1;//memcachedオブジェクト
+    protected $active;//memcachedが起動しているかどうかのフラグ
 
     /**
      * 接続
-     * @param bool $debug
      */
-    public function __construct(bool $debug)
+    public function __construct()
     {
         if (!extension_loaded('memcached')) {
             // Memcachedがインストールされていない
             $this->active = false;
-            $this->disp_mem .= "Memcached is not installed. Execute it using DB.\n";
         } else {
             $this->memcached_1 = new \Memcached();
 
@@ -47,10 +43,8 @@ class Mem
             if ($this->active === false) {
                 // Memcachedがダウンしている
                 Log::error('Memcached down');
-                $this->disp_mem .= "Memcached is down. Execute it using DB.\n";
             }
         }
-        $this->debug = $debug;
     }
 
     /**
@@ -62,12 +56,7 @@ class Mem
      */
     public function set(string $key, string $var, int $expire = 0)
     {
-        if ($this->debug and $this->active) {
-            $bt = debug_backtrace();
-            $dump = sprintf("%s(%s)", $bt[0]['file'], $bt[0]['line']);
-            $this->disp_mem .= sprintf("■SET %s\n[K]%s [V]%s\n",
-                $dump, $key, print_r($var, true));
-        }
+        $res = false;
         if ($this->active) {
             $res = $this->memcached_1->set($key, $var, $expire);
         }
@@ -94,12 +83,6 @@ class Mem
         if ($var === false) {
             $var = $this->dbSelect($key);
         }
-        if ($this->debug and $this->active and $var !== false) {
-            $bt = debug_backtrace();
-            $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
-            $this->disp_mem .= sprintf("■GET %s\n[K]%s [V]%s\n",
-                $dump, $key, print_r($var, true));
-        }
         return $var;
     }
     
@@ -117,12 +100,6 @@ class Mem
         if ($check) {
             $this->dbDelete($key);
         }
-
-        if ($check and $this->debug and $this->active) {
-            $bt = debug_backtrace();
-            $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
-            $this->disp_mem .= sprintf("■DELETE %s\n[K]%s\n", $dump, $key);
-        }
         return $check;
     }
     
@@ -131,14 +108,14 @@ class Mem
      * @param string $key
      * @return mixed
      */
-    private function dbSelect(string $key)
+    protected function dbSelect(string $key)
     {
         $var = false;
         $param = ['memcached_key' => $key];
         $where = 'WHERE memcached_key = :memcached_key';
         S::$dbs->select('memcached', '*', $where, 'memcached');
         S::$dbs->bind($param, 'memcached');
-        $res = S::$dbs->fetch('\stdClass', 'memcached');
+        $res = S::$dbs->fetchClass('\stdClass', 'memcached');
         if (($res === false or ($res->temp_flag and 
             strtotime($res->expire) < time())) === false) {
             $var = unserialize($res->memcached_value);
@@ -158,7 +135,7 @@ class Mem
      * @param int $expire 有効期限
      * @return int|bool
      */
-    private function dbSet(string $key, $var, int $expire)
+    protected function dbSet(string $key, $var, int $expire)
     {
         $temp_flag = $expire !== 0 ? 1 : 0;
         $params = [];
@@ -178,20 +155,11 @@ class Mem
      * @param string $key
      * @return void
      */
-    private function dbDelete(string $key): void
+    protected function dbDelete(string $key): void
     {
         $param = [$key];
         $where = 'WHERE memcached_key = ?';
         S::$dbm->delete('memcached', $where, 'memcached');
         S::$dbm->bind($param, 'memcached');
-    }
-    
-    /**
-     * デバッグ表示用文字列の取得
-     * @return string
-     */
-    public function getDispMem(): string
-    {
-        return $this->disp_mem;
     }
 }

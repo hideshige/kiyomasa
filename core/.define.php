@@ -1,6 +1,6 @@
 <?php
 /**
- * フレームワーク定義
+ * 定義
  *
  * @author   Sawada Hideshige
  * @version  1.0.0.0
@@ -8,10 +8,9 @@
  */
 
 // php.iniで設定されていない場合ここで設定する
-const DEFAULT_CHARSET = 'utf8';
 date_default_timezone_set('Asia/Tokyo');
 mb_language('Japanese');
-mb_internal_encoding(DEFAULT_CHARSET);
+mb_internal_encoding('utf8');
 
 define('TIMESTAMP', date('Y-m-d H:i:s'));
 $http_client_ip = filter_input(INPUT_SERVER, 'HTTP_CLIENT_IP');

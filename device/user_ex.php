@@ -10,8 +10,6 @@
 
 namespace Php\Framework\Device;
 
-/**
- */
 class UserEx extends \Exception
 {
 }

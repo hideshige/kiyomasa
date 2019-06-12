@@ -1,5 +1,0 @@
-AuthUserFile /var/www/html/yoursite/public_html/admin/.htpasswd
-AuthGroupFile /dev/null
-AuthName programadmin
-AuthType Basic
-require valid-user

@@ -67,7 +67,7 @@ trait Wall
         $cookie = ob_get_clean();
         ob_start();
         if ($_SESSION) {
-            var_dump($_SESSION);
+          var_dump($_SESSION);
         }
         $session = ob_get_clean();
         ob_start();
@@ -99,8 +99,8 @@ trait Wall
             'user_agent' => USER_AGENT,
             'timestamp' => TIMESTAMP,
             'time' => time(),
-            'db_slave' => $this->modDebugSql(S::$dbs->getSql(true)),
-            'db_master' => $this->modDebugSql(S::$dbm->getSql(true)),
+            'db_slave' => $this->modDebugSql(S::$dbs->getSql()),
+            'db_master' => $this->modDebugSql(S::$dbm->getSql()),
             'memcached' => nl2br(htmlspecialchars(S::$mem->getDispMem())),
             'post' => $this->modDebugDump((string)$post),
             'get' => $this->modDebugDump((string)$get),
