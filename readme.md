@@ -5,7 +5,9 @@ AUTHUR: SAWADA HIDESHIGE
 --------------------------------------------------------------------------------
 PHPの開発を円滑に進めるために設計された枠組み
 
-PHP(バージョン7.3以上)がインストールされているLinux(CentOS,Ubuntuなど)、Windows、macOS上で動作可能。WebサーバはApache、nginxに対応。DBはMySQL(MariaDB)、PostgreSQLで動作確認済み。
+PHP(バージョン7.3以上)がインストールされているLinux(CentOS,Ubuntuなど)、Windows、macOS上で動作可能。  
+WebサーバはApache、nginxに対応。  
+DBはMySQL(MariaDB)、PostgreSQLで動作確認済み。
 
 コーディングについてはPHPフレームワーク展示会グループによる標準規約に準ずる  
 [http://www.php-fig.org/](http://www.php-fig.org/ "PHP-FIG")
