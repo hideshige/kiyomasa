@@ -78,6 +78,8 @@ root/                  ルートディレクトリはプロジェクト名に変
 
 1. 下記サイトよりKIYOMASAをダウンロードする  
     https://github.com/hideshige/kiyomasa
+    または/var/www/htmlで
+    git clone https://github.com/hideshige/kiyomasa
  
 2. /var/www/html直下にKIYOMASAのフォルダを一式を置き、project_xにリネームする
 
