@@ -79,7 +79,7 @@ root/                  ルートディレクトリはプロジェクト名に変
 1. /var/www/html直下で次のコマンドを実施  
     git clone https://github.com/hideshige/kiyomasa.git
  
-2. kiyomasaをproject_xにリネームする
+2. kiyomasaディレクトリをproject_xにリネームする
 
 3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する  
 ```php
