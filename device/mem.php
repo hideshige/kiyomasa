@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.1.0
+ * @version  2.0.1.1
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -54,7 +54,7 @@ class Mem
      * @param int $expire 有効期限
      * @return int|bool
      */
-    public function set(string $key, string $var, int $expire = 0)
+    public function set(string $key, $var, int $expire = 0)
     {
         $res = false;
         if ($this->active) {
@@ -71,7 +71,7 @@ class Mem
     /**
      * memcach から値を取得する
      * @param string $key キー
-     * @return array|bool
+     * @return string|array|bool
      */
     public function get(string $key)
     {

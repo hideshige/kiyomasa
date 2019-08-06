@@ -3,7 +3,7 @@
  * memcached モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.0.1
  * @package  device
  * 
  */
@@ -34,7 +34,7 @@ class DebugMem extends Mem
      * @param int $expire 有効期限
      * @return int|bool
      */
-    public function set(string $key, string $var, int $expire = 0)
+    public function set(string $key, $var, int $expire = 0)
     {
         if ($this->active) {
             $bt = debug_backtrace();
