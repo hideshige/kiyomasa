@@ -29,13 +29,13 @@ root/
 root/                  ルートディレクトリはプロジェクト名に変更する  
 ├ core/               枠組みの心臓部  
 │ ├ *.camp.php       シェルプログラム・コントローラ  
-│ ├ *.castle.php  　 WEBプログラム・コントローラ  
-│ ├ *.define.php  　 定義ファイル  
+│ ├ *.castle.php     WEBプログラム・コントローラ  
+│ ├ *.define.php     定義ファイル  
 │ ├ (*.router.php)   PHPビルトインサーバを利用する場合に必要な設定ファイル  
 │ ├ *.tower.php      オートロード、エラーハンドラに関するファイル  
 │ ├ *.turret.php     ビュー関連のコントローラ  
 │ ├ *.wall.php       デバッグ関連のコントローラ  
-│ ├ config.php    　 プロジェクトの設定ファイル  
+│ ├ config.php       プロジェクトの設定ファイル  
 │ └ env.php          プロジェクトの環境設定ファイル（Gitでは更新されない）  
 ├ *device/            様々の便利機能を格納（変更不可）  
 │ ├ (*equipment/)    枠組み固有の便利機能を格納  
