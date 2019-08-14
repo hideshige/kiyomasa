@@ -3,7 +3,7 @@
  * cURL(カール)　モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.3
+ * @version  1.0.6.0
  * @package  device/equipment
  */
 
@@ -16,7 +16,8 @@ class Curl
      *
      * @param string $url アクセスするURL
      * @param int $type 結果形式
-     * @param string $post_data POSTするデータがある場合記入する
+     * @param string $crud CRUDの形式
+     * @param string $post_data 送信するデータがある場合記入する
      * @param array $headers 送信するヘッダ
      * @param bool $disp_headers ヘッダを取得するか否か
      * @return array 結果データ(情報と内容)
@@ -24,11 +25,12 @@ class Curl
     public static function getRes(
         string $url,
         int $type = CURL_TYPE_XML,
+        string $crud = 'GET',
         string $post_data = '',
         array $headers = [],
         bool $disp_headers = false
     ): array {
-        $ch = self::header($url, $post_data, $headers, $disp_headers);
+        $ch = self::header($url, $crud, $post_data, $headers, $disp_headers);
 
         $data = [];
         $data['content'] = curl_exec($ch);
@@ -48,18 +50,21 @@ class Curl
     /**
      * cURLハンドルの作成とヘッダの設定
      * @param string $url
-     * @param string $post_data
+     * @param string $crud
+     * @param string $data
      * @param array $headers
      * @param bool $disp_headers
      * @return resource
      */
     private static function header(
         string $url,
-        string $post_data,
+        string $crud,
+        string $data,
         array $headers,
         bool $disp_headers
     ) {
         $ch = curl_init();
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $crud);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, $disp_headers);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
@@ -72,9 +77,8 @@ class Curl
         if ($headers) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
-        if ($post_data) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        if ($data) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
