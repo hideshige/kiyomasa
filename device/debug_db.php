@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.0.0
+ * @version  2.1.1.0
  * @package  device
  * 
  */
@@ -20,7 +20,7 @@ class DebugDb extends Db
     /**
      * 接続
      * @global int $g_counter
-     * @return bool
+     * @return bool 成否
      */
     public function connect(): bool {
         global $g_counter;
@@ -452,13 +452,11 @@ class DebugDb extends Db
         try {
             parent::stmtClose($statement_id);
             
-            if ($this->debug) {
-                global $g_counter;
-                $this->disp_sql .= sprintf(
-                    "{{COUNTER %d}}DEALLOCATE PREPARE {{STATEMENT}}%s;\n",
-                    $g_counter, $statement_id);
-                $g_counter ++;
-            }
+            global $g_counter;
+            $this->disp_sql .= sprintf(
+                "{{COUNTER %d}}DEALLOCATE PREPARE {{STATEMENT}}%s;\n",
+                $g_counter, $statement_id);
+            $g_counter ++;
         } catch (\PDOException $e) {
             $this->dbLog('stmtClose', $e->getMessage());
         }

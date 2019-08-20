@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.6.0
+ * @version  1.4.6.1
  * @package  core
  * 
  */
@@ -28,6 +28,7 @@ class Castle
         try {
             S::$jflag = false;
             $this->debug = ENV <= ENV_DEV ? true : false;
+//$this->debug = false;
             
             // データベースオブジェクトの準備
             $dbo = $this->debug ?
@@ -54,8 +55,8 @@ class Castle
             $turret = new Turret($this->debug);
 
             // HTMLクエリのセット
-            S::$post = $turret->h($_POST);
-            S::$get = $turret->h($_GET);
+            S::$post = $turret->trim($_POST);
+            S::$get = $turret->trim($_GET);
             
             $this->open($turret);
         } catch (\Error|\PDOException $e) {

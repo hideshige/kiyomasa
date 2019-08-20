@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.2
+ * @version  1.0.7.0
  * @package  core
  * 
  */
@@ -17,7 +17,7 @@ class Turret
     use Wall;
     
     // UNICODE不可視文字トリム
-    private static $invisible_utf8_codes = [
+    private $invisible_utf8_codes = [
         '&#x00AD;','&#x2000;','&#x2001;','&#x2002;','&#x2003;','&#x2004;',
         '&#x2005;','&#x2006;','&#x2007;','&#x2008;','&#x2009;',
         '&#x200A;','&#x200B;','&#x200C;','&#x200D;','&#x200E;',
@@ -34,6 +34,7 @@ class Turret
         '&#xFE0F;','&#xFEFF;','&#xFFF0;','&#xFFF1;','&#xFFF2;',
         '&#xFFF3;','&#xFFF4;','&#xFFF5;','&#xFFF6;','&#xFFF7;','&#xFFF8;',
     ];
+    private $invisible_strs;
     
     private $debug = false; // デバッグモード
     private $error_flag = false; // 初回エラーかどうか（循環防止のため）
@@ -45,6 +46,10 @@ class Turret
     public function __construct(bool $debug)
     {
         $this->debug = $debug;
+        $this->invisible_strs = array_map(
+            function ($code) {
+                return html_entity_decode($code, ENT_NOQUOTES, 'UTF-8');
+            }, $this->invisible_utf8_codes);
     }
     
     /**
@@ -127,30 +132,20 @@ class Turret
     }
     
     /**
-     * サニタイズ
-     * （htmlspecialcharはここでは行わない）
+     * 不可視文字の排除
      * @param array|string $data
      * @return array|string
      */
-    public function h($data)
+    public function trim($data)
     {
         if (is_array($data)) {
             foreach ($data as $k => $v) {
-                $data[$k] = $this->h($v);
+                $data[$k] = $this->trim($v);
             }
         } else {
-            $invisible_strs = array_map(
-                function ($code) {
-                    return html_entity_decode($code, ENT_NOQUOTES, 'UTF-8');
-                }
-                , self::$invisible_utf8_codes);
-            $data = str_replace($invisible_strs, '',
+            $data = str_replace($this->invisible_strs, '',
                 // 改行コード以外のコントロールコードを排除
                 preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $data));
-            global $g_change_chara;
-            foreach ($g_change_chara as $ck => $cv) {
-                $data = str_replace($cv, $ck, $data);
-            }
         }
         return $data;
     }

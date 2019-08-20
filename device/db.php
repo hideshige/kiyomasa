@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.0.0
+ * @version  2.1.1.0
  * @package  device
  * 
  */
@@ -26,7 +26,7 @@ class Db
     protected $name = []; // プレースホルダが名前の場合TRUE
     protected $transaction_flag = false; // トランザクション実行中の場合TRUE
     protected $lock_flag = false; // テーブル排他ロック中の場合TRUE
-    
+
     /**
      * パラメータのセット
      * @param string $db_server
@@ -97,6 +97,7 @@ class Db
         string $sql,
         string $statement = 'stmt'
     ): \PDOStatement {
+        $this->connectCheck();
         $this->stmt[$statement] = $this->connect->query($sql);
         return $this->stmt[$statement];
     }
