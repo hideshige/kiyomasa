@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.0
+ * @version  1.1.6.1
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -47,7 +47,6 @@ class Session
         ini_set('session.gc_maxlifetime', COOKIE_LIFETIME);
         ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
         ini_set('session.cookie_httponly', 1);
-        session_cache_limiter(false);
         session_save_path(SERVER_PATH . 'session');
         session_name(PROJECT_PREFIX . 'login_sesid');
         $secure = ENV >= ENV_STA ? true : false;
