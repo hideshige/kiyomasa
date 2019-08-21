@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.0
+ * @version  1.0.2.1
  * @package  core
  * 
  */
@@ -193,7 +193,7 @@ trait Wall
         $text = preg_replace("/{{TIME}}(.*?\])/",
             '<span name="fw_debug_process" class="fw_debug_time">$1</span>',
             $text);
-        $text = preg_replace('/(LEFT JOIN|INNER JOIN|RIGHT JOIN|WHERE |SELECT |'
+        $text = preg_replace('/(FROM |WHERE |GROUP BY |SELECT |'
             . 'ORDER |LIMIT |UPDATE |INSERT |REPLACE |DELETE |VALUES )/',
             '<br />$1', $text);
         if ($text === '') {

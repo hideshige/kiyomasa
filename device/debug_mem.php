@@ -3,7 +3,7 @@
  * memcached モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.1
+ * @version  1.0.1.0
  * @package  device
  * 
  */
@@ -30,7 +30,7 @@ class DebugMem extends Mem
     /**
      * memcached に保存する
      * @param string $key キー
-     * @param string|array $var 値
+     * @param int|string|array $var 値
      * @param int $expire 有効期限
      * @return int|bool
      */
@@ -75,6 +75,22 @@ class DebugMem extends Mem
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf("■DELETE %s\n[K]%s\n", $dump, $key);
+        }
+        return $check;
+    }
+    
+    /**
+     * memcach を一括削除する
+     * @param bool $db_flag DBのデータも消す場合true
+     * @return bool
+     */
+    public function flush(bool $db_flag = false)
+    {
+        $check = parent::flush($db_flag);
+        if ($check and $this->active) {
+            $bt = debug_backtrace();
+            $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
+            $this->disp_mem .= sprintf("■FLUSH %s\n", $dump);
         }
         return $check;
     }

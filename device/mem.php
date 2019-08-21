@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.1.1
+ * @version  2.0.2.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -50,7 +50,7 @@ class Mem
     /**
      * memcached に保存する
      * @param string $key キー
-     * @param string|array $var 値
+     * @param int|string|array $var 値
      * @param int $expire 有効期限
      * @return int|bool
      */
@@ -99,6 +99,23 @@ class Mem
         }
         if ($check) {
             $this->dbDelete($key);
+        }
+        return $check;
+    }
+    
+    /**
+     * memcach を一括削除する
+     * @param bool $db_flag DBのデータも消す場合true
+     * @return bool
+     */
+    public function flush(bool $db_flag = false)
+    {
+        $check = false;
+        if ($this->active) {
+            $check = $this->memcached_1->flush();
+            if ($db_flag) {
+                S::$dbm->query('DELETE FROM memcached');
+            }
         }
         return $check;
     }

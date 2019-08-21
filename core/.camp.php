@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.4
+ * @version  1.1.7.0
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -51,12 +51,17 @@ class Camp
             S::$dbs = new $dbo(DB_SLAVE_SERVER, DB_SLAVE_USER,
                 DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER);
             
-            if (!S::$dbs->connect()) {
+            if (DB_MASTER_SERVER !== DB_SLAVE_SERVER and !S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
                 S::$dbs = clone S::$dbm;
                 S::$dbm->connectCheck();
             }
             
+            // memchached
+            $mem = $this->debug ?
+                'Php\Framework\Device\DebugMem' : 'Php\Framework\Device\Mem';
+            S::$mem = new $mem;
+           
             $this->exec($argv[1]);
 
             if ($this->debug) {

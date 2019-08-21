@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.6.1
+ * @version  1.4.6.2
  * @package  core
  * 
  */
@@ -38,7 +38,7 @@ class Castle
             S::$dbs = new $dbo(DB_SLAVE_SERVER, DB_SLAVE_USER,
                 DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER);
             
-            if (!S::$dbs->connect()) {
+            if (DB_MASTER_SERVER !== DB_SLAVE_SERVER and !S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
                 S::$dbs = clone S::$dbm;
                 S::$dbm->connectCheck();

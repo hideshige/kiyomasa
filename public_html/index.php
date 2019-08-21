@@ -3,7 +3,7 @@
  * PHPフレームワーク KIYOMASA
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.6
+ * @version  1.0.3.7
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -27,6 +27,7 @@ if ((float)phpversion() < 7.3) {
 
 header("P3P: CP='UNI CUR OUR'"); // コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block'); // XSS対策
+header('Content-Security-Policy: reflected-xss block'); // XSS対策
 header('X-Frame-Options: DENY'); // クリックジャック対策
 
 // コントローラの読み込み
@@ -88,7 +89,8 @@ function trace(string $id = ''): void
         if ($class_name !== '-') {
             $ref = ReflectionMethod::export(
                 $cur['class'], $cur['function'], true);
-        } else if ($cur['function'] !== 'Php\Framework\Core\{closure}') {
+        } else if ($cur['function'] !== 'Php\Framework\Core\{closure}' and
+            $cur['function'] !== 'require') {
             $ref = ReflectionFunction::export($cur['function'], true);
         }
         // ソースからメソッドのコメントを抽出
