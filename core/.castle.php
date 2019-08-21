@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.6.2
+ * @version  1.4.6.3
  * @package  core
  * 
  */
@@ -48,10 +48,7 @@ class Castle
             $mem = $this->debug ?
                 'Php\Framework\Device\DebugMem' : 'Php\Framework\Device\Mem';
             S::$mem = new $mem;
-
-            // セッションのセット
-            new Session();
-
+            
             $turret = new Turret($this->debug);
 
             // HTMLクエリのセット

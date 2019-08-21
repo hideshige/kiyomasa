@@ -3,7 +3,7 @@
  * 定義
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  core
  */
 
@@ -43,6 +43,9 @@ const PARAM_TYPE_META = 8;
 const CURL_TYPE_XML = 1;
 const CURL_TYPE_JSON = 2;
 const CURL_TYPE_TEXT = 3;
+
+// セッションが起動しているかどうか
+$g_session_flag = false;
 
 // データベースデバッグ用表示カウンタ
 $g_counter = 1;

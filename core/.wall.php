@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.1
+ * @version  1.0.2.2
  * @package  core
  * 
  */
@@ -37,7 +37,10 @@ trait Wall
     private function dispDebug()
     {
         // デバッグにセッションの動作を表示するため事前にセッションを閉じる
-        session_write_close();
+        global $g_session_flag;
+        if ($g_session_flag) {
+            session_write_close();
+        }
         
         $disp = '';
         ob_start();
@@ -65,11 +68,15 @@ trait Wall
             var_dump($_COOKIE);
         }
         $cookie = ob_get_clean();
-        ob_start();
-        if ($_SESSION) {
-          var_dump($_SESSION);
+        if ($g_session_flag) {
+            ob_start();
+            if ($_SESSION) {
+              var_dump($_SESSION);
+            }
+            $session = ob_get_clean();
+        } else {
+            $session = 'no session';
         }
-        $session = ob_get_clean();
         ob_start();
         if ($this->debug_json) {
             var_dump($this->debug_json);
