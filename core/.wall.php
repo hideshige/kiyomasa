@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.2
+ * @version  1.0.2.3
  * @package  core
  * 
  */
@@ -68,14 +68,14 @@ trait Wall
             var_dump($_COOKIE);
         }
         $cookie = ob_get_clean();
-        if ($g_session_flag) {
+        if (isset($_SESSION)) {
             ob_start();
             if ($_SESSION) {
-              var_dump($_SESSION);
+                var_dump($_SESSION);
             }
             $session = ob_get_clean();
         } else {
-            $session = 'no session';
+            $session = '';
         }
         ob_start();
         if ($this->debug_json) {

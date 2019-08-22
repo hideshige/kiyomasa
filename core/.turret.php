@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.0
+ * @version  1.0.7.1
  * @package  core
  * 
  */
@@ -86,6 +86,17 @@ class Turret
         }
         
         $tpl = $gate->tpl ?? [];
+        
+        global $g_cache_flag;
+        if ($g_cache_flag) {
+            header('Expires: ' . gmdate('D, d M Y H:i:s T', time() + 36000));
+            header('Cache-Control: private, max-age=' . 36000);
+            header('Pragma: cache');
+        } else {
+            header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
+            header('Cache-Control: private, max-age=0');
+            header('Pragma: no-cache');
+        }
         
         if (S::$jflag === false and count($tpl)) {
             header('Content-Type: text/html; charset=UTF-8');

@@ -3,7 +3,7 @@
  * 定義
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.1.1
  * @package  core
  */
 
@@ -46,6 +46,9 @@ const CURL_TYPE_TEXT = 3;
 
 // セッションが起動しているかどうか
 $g_session_flag = false;
+
+// キャッシュするかどうか
+$g_cache_flag = true;
 
 // データベースデバッグ用表示カウンタ
 $g_counter = 1;

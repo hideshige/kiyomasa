@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.1
+ * @version  1.1.6.2
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -30,10 +30,17 @@ namespace Php\Framework\Device;
 
 class Session
 {
+    /**
+     * コンストラクタ
+     * @global bool $g_session_flag
+     * @global bool $g_cache_flag
+     */
     public function __construct()
     {
         global $g_session_flag;
+        global $g_cache_flag;
         $g_session_flag = true;
+        $g_cache_flag = false;
         $handler = new sessionHandlerMem();
         session_set_save_handler(
             [$handler, 'open'],
@@ -242,7 +249,7 @@ class sessionHandlerMem
 
     /**
      * 有効期限が切れているものを一括削除
-     * @param type $ses_time
+     * @param int $ses_time
      * @return bool
      */
     public function gc($ses_time): bool
