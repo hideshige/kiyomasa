@@ -1,9 +1,9 @@
 <?php
 /**
- * PHPフレームワーク KIYOMASA
+ * PHPフレームワーク
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.9
+ * @version  1.0.3.10
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -16,7 +16,7 @@ $first_memory = memory_get_usage() / 1024;
 
 // PHP環境の確認
 /*
-if ((float)phpversion() < 7.3) {
+if ((float)phpversion() < 7.4) {
     echo 'PHP OLD VERSION: ' . phpversion();
     exit(0);
 } else if (!extension_loaded('mbstring')) {

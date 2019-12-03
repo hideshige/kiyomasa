@@ -3,7 +3,7 @@
  * ログ モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.0
+ * @version  1.0.5.0
  * @package  device
  * 
  * メモ: Linuxのログローテーションは/etc/logrotate.dで設定できる
@@ -24,8 +24,8 @@ class Log
     public static function error($log): void
     {
         $file = sprintf(
-            '%slog/%serror.log',
-            SERVER_PATH,
+            '%s%serror.log',
+            LOG_PATH,
             self::$batch
         );
         self::printLog($log, $file);
@@ -39,8 +39,8 @@ class Log
     public static function access($log): void
     {
         $file = sprintf(
-            '%slog/%saccess.log',
-            SERVER_PATH,
+            '%s%saccess.log',
+            LOG_PATH,
             self::$batch
         );
         self::printLog($log, $file);

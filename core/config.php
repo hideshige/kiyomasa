@@ -8,28 +8,22 @@ const NAME_SPACE = 'Yourname\Yourproject';
 if (ENV === ENV_PHP) {
     // ビルトインウェブサーバ
     ini_set('display_errors', 'On');
-    define('SERVER_PATH', 'D:\kiyomasa2\\'); // Win
-//    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa2/'); // Mac
+    define('SERVER_PATH', 'D:\kiyomasa\\'); // Win
+//    define('SERVER_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/'); // Mac
+    define('LOG_PATH', 'D:\kiyomasa\log\\');
+//    define('LOG_PATH', '/Users/hideshige/Documents/Sites/kiyomasa/log/'); // Mac
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_DRIVER', 'mysql');
     define('DB_MASTER_SERVER', 'localhost:3306');
-//    define('DB_MASTER_USER', 'kiyomasa');
-//    define('DB_MASTER_PASSWORD', 'password');
-//    define('DB_MASTER_NAME', 'kiyomasa');
-//    define('DB_SLAVE_SERVER', 'localhost:3306');
-//    define('DB_SLAVE_USER', 'kiyomasa');
-//    define('DB_SLAVE_PASSWORD', 'password');
-//    define('DB_SLAVE_NAME', 'kiyomasa');
-    define('DB_MASTER_USER', 'bts');
+    define('DB_MASTER_USER', 'kiyomasa');
     define('DB_MASTER_PASSWORD', 'password');
-    define('DB_MASTER_NAME', 'bts');
-    define('DB_SLAVE_SERVER', 'localhost');
-    define('DB_SLAVE_USER', 'bts');
+    define('DB_MASTER_NAME', 'kiyomasa');
+    define('DB_SLAVE_SERVER', 'localhost:3306');
+    define('DB_SLAVE_USER', 'kiyomasa');
     define('DB_SLAVE_PASSWORD', 'password');
-    define('DB_SLAVE_NAME', 'bts');
+    define('DB_SLAVE_NAME', 'kiyomasa');
 
-    define('TO_EMAIL', '');
     define('FROM_EMAIL', '');
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
@@ -37,6 +31,7 @@ if (ENV === ENV_PHP) {
     // テスト環境
     ini_set('display_errors', 'On');
     define('SERVER_PATH', '/var/www/html/yoursite/');
+    define('LOG_PATH', '/var/www/html/yoursite/log/');
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_DRIVER', 'mysql');
@@ -49,7 +44,6 @@ if (ENV === ENV_PHP) {
     define('DB_SLAVE_PASSWORD', '');
     define('DB_SLAVE_NAME', '');
 
-    define('TO_EMAIL', '');
     define('FROM_EMAIL', '');
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
@@ -57,6 +51,7 @@ if (ENV === ENV_PHP) {
     // 本番環境
     ini_set('display_errors', 'Off');
     define('SERVER_PATH', '/var/www/html/yoursite/');
+    define('LOG_PATH', '/var/log/yoursite_');
 
     define('MEMCACHED_SERVER', 'localhost');
     define('DB_DRIVER', 'mysql');
@@ -69,7 +64,6 @@ if (ENV === ENV_PHP) {
     define('DB_SLAVE_PASSWORD', '');
     define('DB_SLAVE_NAME', '');
 
-    define('TO_EMAIL', '');
     define('FROM_EMAIL', '');
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
@@ -85,7 +79,10 @@ const PROJECT_PREFIX = ''; // プロジェクトを示す接頭辞
 
 const OPEN_SSL_PASSPHRASE = 'ssl_keyword1'; // OpenSSL用
 
-// Openssl::makeKeyにより以下を生成しておく
+// 以下の手順で鍵を生成しておく
+// require_once(SERVER_PATH . 'device/equipment/openssl.php');
+// $key = Php\Framework\Device\Equipment\Openssl::makeKey();
+// echo $key[0] . $key[1];
 const OPEN_SSL_PRIVATE_KEY = <<<EOT
 -----BEGIN ENCRYPTED PRIVATE KEY-----
 MIICxjBABgkqhkiG9w0BBQ0wMzAbBgkqhkiG9w0BBQwwDgQIMT7at7VImBsCAggA

@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.7.0
+ * @version  1.1.7.1
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -39,7 +39,7 @@ class Camp
             if (!isset($argv[1])) {
                 exit(0);
             }
-            Log::$batch = 'batch/';
+            Log::$batch = 'batch_';
             
             $this->debug = ENV <= ENV_DEV ? true : false;
             
