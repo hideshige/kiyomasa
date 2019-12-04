@@ -71,8 +71,6 @@ if (ENV === ENV_PHP) {
 
 define('COOKIE_LIFETIME', 60 * 60 * 24 * 30);
 
-const AUTO_UPDATE_TIME = 1; // DBに作成・更新日時を自動保存する場合1
-const CSV_MAX = 100000; // CSV最大行数
 const PROJECT_PREFIX = ''; // プロジェクトを示す接頭辞
 
 /*-------------- 暗号化 ----------------*/
