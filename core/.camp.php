@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.7.1
+ * @version  1.1.7.2
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -92,7 +92,6 @@ class Camp
             }
         } catch (\Error $e) {
             S::$dbm->rollback();
-            S::$dbm->unlock();
             $error = sprintf(
                 '%s(%s) %s',
                 str_replace(SERVER_PATH, '', $e->getFile()),
