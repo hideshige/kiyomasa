@@ -27,6 +27,8 @@ if (ENV === ENV_PHP) {
     define('FROM_EMAIL', '');
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
+    
+    require_once('.debug.php');
 } else if (ENV === ENV_DEV) {
     // テスト環境
     ini_set('display_errors', 'On');
@@ -47,6 +49,8 @@ if (ENV === ENV_PHP) {
     define('FROM_EMAIL', '');
     define('EMAIL_RETURN_PATH', '');
     define('FROM_NAME', '');
+    
+    require_once('.debug.php');
 } else {
     // 本番環境
     ini_set('display_errors', 'Off');

@@ -3,7 +3,7 @@
  * ログ モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.0
+ * @version  1.0.5.1
  * @package  device
  * 
  * メモ: Linuxのログローテーションは/etc/logrotate.dで設定できる
@@ -59,7 +59,7 @@ class Log
             var_dump($log);
             $log = ob_get_clean();
         }
-        $res = sprintf("%s [%s] %s\n", date('H:i:s'), IP_ADDRESS, $log);
+        $res = sprintf("%s [%s] %s\n", date('Y-m-d H:i:s'), IP_ADDRESS, $log);
         error_log($res, 3, $file);
     }
 }
