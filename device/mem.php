@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.2.0
+ * @version  2.0.3.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -12,11 +12,11 @@ CREATE TABLE memcached (
     memcached_key VARCHAR(255) NOT NULL,
     memcached_value TEXT,
     temp_flag TINYINT NOT NULL DEFAULT 0,
-    expire DATETIME DEFAULT NULL,
-    created_at DATETIME DEFAULT NULL,
-    updated_at DATETIME DEFAULT NULL,
+    expires DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (memcached_key)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
  *
  */
 
@@ -134,7 +134,7 @@ class Mem
         S::$dbs->bind($param, 'memcached');
         $res = S::$dbs->fetchClass('\stdClass', 'memcached');
         if (($res === false or ($res->temp_flag and 
-            strtotime($res->expire) < time())) === false) {
+            strtotime($res->expires) < time())) === false) {
             $var = unserialize($res->memcached_value);
             $expire = $res->temp_flag === 1 ? time() + COOKIE_LIFETIME : 0;
             if ($this->active) {
@@ -159,9 +159,8 @@ class Mem
         $params['memcached_key'] = $key;
         $params['memcached_value'] = serialize($var);
         $params['temp_flag'] = $temp_flag;
-        $params['expire'] = $expire !== 0
+        $params['expires'] = $expire !== 0
             ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
-        $params['created_at'] = TIMESTAMP;
         S::$dbm->insert('memcached', $params, true, 'memcached');
         $res = S::$dbm->bind($params, 'memcached');
         return $res;

@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.2
+ * @version  1.1.6.3
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -12,6 +12,7 @@
  * (3)ファイルをsessionディレクトリに保存する → ハンドラを使用しないこと
  * 
  * セッションの読み方
+ * new Session;
  * $a = $_SESSION['example'];
  * 
  * セッションの書き方

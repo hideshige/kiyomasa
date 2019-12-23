@@ -3,14 +3,14 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.6.3
+ * @version  1.4.6.4
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\{S, Session, Log};
+use Php\Framework\Device\{S, Log};
 
 require_once(__DIR__ . '/.tower.php');
 require_once(__DIR__ . '/.wall.php');
