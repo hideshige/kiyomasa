@@ -3,7 +3,7 @@
  * ページングモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.0
+ * @version  1.0.6.1
  * @package  device/equipment
  *
  */
@@ -78,10 +78,10 @@ class Paging
         foreach ($get as $k => $v) {
             if (is_array($v)) {
                 foreach ($v as $vv) {
-                    $q .= sprintf('%s[]=%s&', $k, $vv);
+                    $q .= sprintf('%s[]=%s&', $k, urlencode($vv));
                 }
             } else {
-                $q .= sprintf('%s=%s&', $k, $v);
+                $q .= sprintf('%s=%s&', $k, urlencode($v));
             }
         }
         return str_replace('&amp;', '&', htmlspecialchars($q));
