@@ -3,13 +3,13 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.3.0
+ * @version  2.0.3.1
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
  * なお、MemcachedがインストールされていないサーバでもDBで代用可能
 CREATE TABLE memcached (
-    memcached_key VARCHAR(255) NOT NULL,
+    memcached_key VARCHAR(80) NOT NULL,
     memcached_value TEXT,
     temp_flag TINYINT NOT NULL DEFAULT 0,
     expires DATETIME DEFAULT NULL,

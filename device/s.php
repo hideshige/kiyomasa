@@ -3,7 +3,7 @@
  * 静的グローバルショートカットエイリアス
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.1
+ * @version  1.0.1.0
  * @package  device
  * 
  */
@@ -22,4 +22,5 @@ class S
     public static $user; // セッション上のユーザーデータ
     public static $ouser; // ページに表示するユーザーデータ
     public static $jflag; // JSON形式かHTML形式か
+    public static $header = []; // ヘッダーに指定があるか
 }

@@ -3,7 +3,7 @@
  * 暗号化(OpenSSL) モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.1.1
  * @package  device/equipment
  * 
  * 
@@ -41,7 +41,7 @@ class Openssl
      */
     public static function decrypt(string $crypt): string
     {
-        $plain = null;
+        $plain = '';
         if ($crypt) {
             $crypt = base64_decode($crypt);
             $res = openssl_get_publickey(OPEN_SSL_PUBLIC_KEY);

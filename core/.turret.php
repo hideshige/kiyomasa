@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.1
+ * @version  1.0.8.0
  * @package  core
  * 
  */
@@ -99,7 +99,13 @@ class Turret
         }
         
         if (S::$jflag === false and count($tpl)) {
-            header('Content-Type: text/html; charset=UTF-8');
+            if (S::$header === []) {
+                header('Content-Type: text/html; charset=UTF-8');
+            } else {
+                foreach (S::$header as $v) {
+                    header($v);
+                }
+            }
             foreach ($tpl as $tk => $tv) {
                 echo View::template($tv, S::$disp[$tk] ?? []);
             }

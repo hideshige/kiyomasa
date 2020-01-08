@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.3
+ * @version  1.0.3.0
  * @package  core
  * 
  */
@@ -21,7 +21,7 @@ trait Wall
      */
     public function __destruct()
     {
-        if ($this->debug and S::$jflag === false) {
+        if ($this->debug and S::$jflag === false and S::$header === []) {
             echo $this->dispDebug();
         }
     }
