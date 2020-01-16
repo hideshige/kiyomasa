@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.8.1
+ * @version  1.0.8.2
  * @package  core
  * 
  */
@@ -145,7 +145,8 @@ class Turret
             $json = ['alert' => 'エラー'];
             $this->jsonDebug($json);
             header('Content-Type: application/json; charset=UTF-8');
-            echo json_encode($json);
+            echo json_encode($json,
+                JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
         }
     }
     

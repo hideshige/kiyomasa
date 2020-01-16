@@ -26,6 +26,8 @@ class ErrorPage
         if (isset($_SESSION['error_message']) and $_SESSION['error_message']) {
             $message = $_SESSION['error_message'];
             unset($_SESSION['error_message']);
+        } else {
+            header('HTTP/1.1 404 Not Found');
         }
         D\S::$disp[1]['MESSAGE'][0]['message'] = $message;
         return true;
