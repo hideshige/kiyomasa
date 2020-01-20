@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.1.0
+ * @version  2.1.1.1
  * @package  device
  * 
  */
@@ -209,6 +209,7 @@ class DebugDb extends Db
         }
         $error_mes = sprintf("%s: %s\n[QUERY] %s;\n[PARAM] %s",
             $class_name, $error, $this->sql, implode(',', $bind));
+        trace();
         throw new \Error($error_mes);
     }
     
