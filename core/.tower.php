@@ -3,7 +3,7 @@
  * タワー　オートロード、エラーハンドラなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.8
+ * @version  1.0.1.9
  * @package  core
  * 
  */
@@ -33,6 +33,7 @@ spl_autoload_register(
         }
         $file_name = SERVER_PATH . implode('/', $arr) . '.php';
         if (!file_exists($file_name)) {
+            trace();
             throw new \Error('Class File Not Found: ' . $file_name);
         }
         // リクワイア実行
@@ -53,15 +54,15 @@ set_error_handler(
      */
     function (int $no, string $message, string $file, int $line): void
     {
-        // 開発環境以外とライブラリ内のエラーは無視する
-        if (ENV > ENV_DEV or strpos($file, '.library') !== false) {
-            return;
-        }
-        
         // ユーザエラーはユーザ用の例外へ
         if ($no === E_USER_ERROR or
             $no === E_USER_WARNING or $no === E_USER_NOTICE) {
             throw new UserEx($message, 10);
+        }
+        
+        // 開発環境以外とライブラリ内のエラーは無視する
+        if (ENV > ENV_DEV or strpos($file, '.library') !== false) {
+            return;
         }
         
         switch ($no) {
