@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.8.2
+ * @version  1.0.8.3
  * @package  core
  * 
  */
@@ -66,7 +66,7 @@ class Turret
                 ['_', '/'], [' ', '\\'], $folder . $pagename))));
             
             $this->gate($class_name);
-        } catch (UserEx|\Error $e) {
+        } catch (UserEx|\Error|\PDOException $e) {
             $this->gateError($e);
         }
     }
