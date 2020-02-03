@@ -29,7 +29,7 @@ class ErrorPage
         } else {
             header('HTTP/1.1 404 Not Found');
         }
-        D\S::$disp[1]['MESSAGE'][0]['message'] = $message;
+        D\S::$disp['MESSAGE'][0]['message'] = $message;
         return true;
     }
 }

@@ -17,7 +17,7 @@
  * 携帯の場合、$_SESSION['mobile_pc_flag']で携帯とPCの表示切り替えができる
  * 
  * @author   Sawada Hideshige
- * @version  1.1.7.3
+ * @version  1.1.8.0
  * @package  device
  * 
  */
@@ -26,6 +26,23 @@ namespace Php\Framework\Device;
 
 class View
 {
+    /**
+     * 複数のテンプレートファイルを読み込みデータを埋め込んで表示させる
+     * @param array $tpls
+     * @param array $disp
+     * @return string
+     */
+    public static function templates(array $tpls, array $disp): string
+    {
+        $contents = '';
+        if ($tpls) {
+            foreach ($tpls as $v) {
+                $contents .= self::template($v, $disp);
+            }
+        }
+        return $contents;
+    }
+    
     /**
      * テンプレートファイルを読み込みデータを埋め込んで表示させる
      * @param string $tpl ファイル名
