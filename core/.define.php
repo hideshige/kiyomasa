@@ -3,7 +3,7 @@
  * 定義
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.1
+ * @version  1.0.1.2
  * @package  core
  */
 
@@ -24,20 +24,10 @@ if ($http_client_ip){
 }
 define('IP_ADDRESS', $ip);
 define('USER_AGENT', filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'));
-define('MOBILE_FLAG', preg_match(
-    '/(iPhone|iPod|Android|BlackBerry|Windows\sPhone)/',
-    USER_AGENT) ? true : false);
+//define('MOBILE_FLAG', preg_match(
+//    '/(iPhone|iPod|Android|BlackBerry|Windows\sPhone)/',
+//    USER_AGENT) ? true : false);
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
-
-// form用パラメータ種別の定義
-const PARAM_TYPE_TEXTAREA = 1;
-const PARAM_TYPE_RADIO = 2;
-const PARAM_TYPE_SELECT = 3;
-const PARAM_TYPE_CHECK = 4;
-const PARAM_TYPE_TEXT = 5;
-const PARAM_TYPE_PASSWORD = 6;
-const PARAM_TYPE_EMAIL = 7;
-const PARAM_TYPE_META = 8;
 
 // curl用結果形式の定義
 const CURL_TYPE_XML = 1;

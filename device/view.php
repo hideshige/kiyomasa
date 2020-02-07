@@ -14,10 +14,8 @@
  *
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
- * 携帯の場合、$_SESSION['mobile_pc_flag']で携帯とPCの表示切り替えができる
- * 
  * @author   Sawada Hideshige
- * @version  1.1.8.0
+ * @version  1.1.8.1
  * @package  device
  * 
  */
@@ -88,12 +86,7 @@ class View
     {
         $content = '';
         $add = strpos($tpl, '.') !== false ? '' : '.tpl';
-        $tpl_folder = (MOBILE_FLAG and !isset($_SESSION['mobile_pc_flag']))
-            ? 'template_mobile/' : 'template/';
-        $fname = SERVER_PATH . $tpl_folder . $tpl . $add;
-        if ($tpl_folder === 'template_mobile/' and !file_exists($fname)) {
-              $fname = SERVER_PATH . 'template/' . $tpl . $add;
-        }
+        $fname = SERVER_PATH . 'template/' . $tpl . $add;
         if (!file_exists($fname)) {
             throw new \Error('No Template ' . $fname);
         }
