@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.1.0
+ * @version  2.1.2.0
  * @package  device
  * 
  */
@@ -63,6 +63,10 @@ class Db
             $this->connect = new \PDO($dsn, $this->db_user, $this->db_password,
                 [\PDO::ATTR_PERSISTENT => false,
                 \PDO::ATTR_EMULATE_PREPARES => false,
+                // 次のオプションはMySQLでファイルを読み込む場合に必要
+                // php.iniでmysqli.allow_local_infile = Onとなっていることが前提
+                // 不要の場合はコメントアウトする
+//                \PDO::MYSQL_ATTR_LOCAL_INFILE => true,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->connect_flag = true;
 
@@ -100,6 +104,17 @@ class Db
         $this->connectCheck();
         $this->stmt[$statement] = $this->connect->query($sql);
         return $this->stmt[$statement];
+    }
+    
+    /**
+     * 実行
+     * @param string $sql
+     * @return int
+     */
+    public function exec(string $sql): int
+    {
+        $this->connectCheck();
+        return $this->connect->exec($sql);
     }
     
     /**

@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.1.1
+ * @version  2.1.3.0
  * @package  device
  * 
  */
@@ -231,6 +231,27 @@ class DebugDb extends Db
             return $res;
         } catch (\PDOException $e) {
             $this->dbLog('query', $e->getMessage());
+        }
+    }
+    
+    /**
+     * 実行
+     * @param string $sql
+     * @return int
+     */
+    public function exec(string $sql): int
+    {
+        try {
+            $this->before();
+            $res = parent::exec($sql);
+            global $g_counter;
+            $this->disp_sql .= sprintf(
+                "{{COUNTER %d}}%s;\n{{TIME}} (%s秒) [行数 %d]\n",
+                $g_counter, $sql, $this->after(), $res);
+            $g_counter ++;
+            return $res;
+        } catch (\PDOException $e) {
+            $this->dbLog('exec', $e->getMessage());
         }
     }
     
