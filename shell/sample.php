@@ -26,7 +26,7 @@ class Sample
             echo 'TEST';
             
         } catch (\Error $e) {
-            echo $e->getMessage();
+            echo $e->getMessage() . "\n";
             $check = false;
         } finally {
             return $check;
