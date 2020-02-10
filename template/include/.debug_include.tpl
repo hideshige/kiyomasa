@@ -14,7 +14,7 @@
         <h4>
             【DB MASTER】
             <input type="button" onclick="FwDebugClass.fwDebugCounter();" value="CHANGE" />
-            <span name="fw_debug_mode" class="fw_debug_mode">Developper Mode</span>
+            <span name="fw_debug_mode" class="fw_debug_mode">Developer Mode</span>
         </h4>
         <p>{db_master}</p>
         <h4>【DB SLAVE】</h4>

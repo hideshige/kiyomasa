@@ -285,7 +285,7 @@ var Js;
                 for (var di in dispMode) {
                     if (dispMode.item(di)) {
                         dispMode.item(di).textContent = openFlag.textContent
-                            === "1" ? "True SQL Mode" : "Developper Mode";
+                            === "1" ? "True SQL Mode" : "Developer Mode";
                     }
                 }
             }
