@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.1
+ * @version  1.0.3.2
  * @package  core
  * 
  */
@@ -108,7 +108,7 @@ trait Wall
             'time' => time(),
             'db_slave' => $this->modDebugSql(S::$dbs->getSql()),
             'db_master' => $this->modDebugSql(S::$dbm->getSql()),
-            'memcached' => nl2br(htmlspecialchars(S::$mem->getDispMem())),
+            'memcached' => S::$mem->getDispMem(),
             'post' => $this->modDebugDump((string)$post),
             'get' => $this->modDebugDump((string)$get),
             'url' => $this->modDebugDump((string)$url),

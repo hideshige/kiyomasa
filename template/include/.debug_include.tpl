@@ -20,7 +20,7 @@
         <h4>【DB SLAVE】</h4>
         <p>{db_slave}</p>
         <h4>【MEMCACHED】</h4>
-        <p>{memcached}</p>
+        <p>{htbr:memcached}</p>
         <h4>【JSON】</h4>
         <pre>{json}</pre>
         <h4>【POST】</h4>
