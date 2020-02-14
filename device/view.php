@@ -11,11 +11,12 @@
  * S::$disp[テンプレート番号]['REPLACE']['???'] = $txt;
  * として指定した場合、<!-- BEGEIN *** -->～<!-- END *** --->を無視して
  * テンプレートの{???}に$txtが置き換えられる。
+ * {ht:???}とするとサニタイズできる
  *
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.8.1
+ * @version  1.1.9.0
  * @package  device
  * 
  */
@@ -133,6 +134,7 @@ class View
     {
         if (isset($disp['REPLACE'])) {
             foreach ($disp['REPLACE'] as $k => $v) {
+                $content = str_replace('{ht:' . $k . '}', htmlspecialchars($v), $content);
                 $content = str_replace('{' . $k . '}', $v, $content);
             }
             unset($disp['REPLACE']);
@@ -218,16 +220,23 @@ class View
         $disp,
         string &$tag_data
     ): void {
-        foreach ($match as $data) {
+        foreach ($match as $disp_data) {
+            $data = str_replace('ht:', '', $disp_data);
+            if (strstr($disp_data, 'ht:') !== false) {
+                $ht_flag = true;
+            } else {
+                $ht_flag = false;
+            }
             if (isset($disp[$data])) {
-                $change_data = $disp[$data];
-            } else if (preg_match('/[ ,:;=]/s', $data)) {
+                $change_data = $ht_flag
+                    ? htmlspecialchars($disp[$data]) : $disp[$data];
+            } else if (preg_match('/[ ,;=]/s', $disp_data)) {
                 // JSデータの{}は変更しない
-                $change_data = '{' . $data . '}';
+                $change_data = '{' . $disp_data . '}';
             } else {
                 $change_data = '';
             }
-            $tag_data = str_replace('{' . $data . '}', $change_data, $tag_data);
+            $tag_data = str_replace('{' . $disp_data . '}', $change_data, $tag_data);
         }
     }
 }

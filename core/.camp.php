@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.7.2
+ * @version  1.1.7.3
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -88,7 +88,7 @@ class Camp
             $gate = new $class_name();
             $res = $gate->execute();
             if ($res === false) {
-                throw new \Error($pagename . ' logic notice', 10);
+                throw new \Error($pagename . " logic notice\n", 10);
             }
         } catch (\Error $e) {
             S::$dbm->rollback();
