@@ -11,13 +11,14 @@
  * S::$disp[テンプレート番号]['REPLACE']['???'] = $txt;
  * として指定した場合、<!-- BEGEIN *** -->～<!-- END *** --->を無視して
  * テンプレートの{???}に$txtが置き換えられる。
- * {ht:???}とするとサニタイズできる
- * {htbr:???}とするとサニタイズしたあと改行を反映できる
+ * {ht:???}とするとHTMLをサニタイズできる
+ * {htbr:???}とするとHTMLをサニタイズしたあと改行を反映できる
+ * {sl:???}とするとJavaScriptをサニタイズできる
  *
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.9.1
+ * @version  1.1.9.2
  * @package  device
  * 
  */
@@ -137,6 +138,7 @@ class View
             foreach ($disp['REPLACE'] as $k => $v) {
                 $content = str_replace('{htbr:' . $k . '}', nl2br(htmlspecialchars($v)), $content);
                 $content = str_replace('{ht:' . $k . '}', htmlspecialchars($v), $content);
+                $content = str_replace('{sl:' . $k . '}', addslashes($v), $content);
                 $content = str_replace('{' . $k . '}', $v, $content);
             }
             unset($disp['REPLACE']);
@@ -229,6 +231,8 @@ class View
                     $change_data = htmlspecialchars($disp[$data]);
                 } else if (strstr($disp_data, 'htbr:') !== false) {
                     $change_data = nl2br(htmlspecialchars($disp[$data]));
+                } else if (strstr($disp_data, 'sl:') !== false) {
+                    $change_data = addslashes($disp[$data]);
                 } else {
                     $change_data = $disp[$data];
                 }
