@@ -13,12 +13,12 @@
  * テンプレートの{???}に$txtが置き換えられる。
  * {ht:???}とするとHTMLをサニタイズできる
  * {htbr:???}とするとHTMLをサニタイズしたあと改行を反映できる
- * {sl:???}とするとJavaScriptをサニタイズできる
+ * {sl:???}とするとHTMLとJavaScriptをサニタイズできる
  *
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.9.2
+ * @version  1.1.9.3
  * @package  device
  * 
  */
@@ -138,7 +138,7 @@ class View
             foreach ($disp['REPLACE'] as $k => $v) {
                 $content = str_replace('{htbr:' . $k . '}', nl2br(htmlspecialchars($v)), $content);
                 $content = str_replace('{ht:' . $k . '}', htmlspecialchars($v), $content);
-                $content = str_replace('{sl:' . $k . '}', addslashes($v), $content);
+                $content = str_replace('{sl:' . $k . '}', addslashes(htmlspecialchars($v)), $content);
                 $content = str_replace('{' . $k . '}', $v, $content);
             }
             unset($disp['REPLACE']);
@@ -225,14 +225,14 @@ class View
         string &$tag_data
     ): void {
         foreach ($match as $disp_data) {
-            $data = str_replace(['htbr:', 'ht:'], '', $disp_data);
+            $data = str_replace(['htbr:', 'ht:', 'sl:'], '', $disp_data);
             if (isset($disp[$data])) {
                 if (strstr($disp_data, 'ht:') !== false) {
                     $change_data = htmlspecialchars($disp[$data]);
                 } else if (strstr($disp_data, 'htbr:') !== false) {
                     $change_data = nl2br(htmlspecialchars($disp[$data]));
                 } else if (strstr($disp_data, 'sl:') !== false) {
-                    $change_data = addslashes($disp[$data]);
+                    $change_data = addslashes(htmlspecialchars($disp[$data]));
                 } else {
                     $change_data = $disp[$data];
                 }
