@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.2.0
+ * @version  2.1.2.1
  * @package  device
  * 
  */
@@ -57,7 +57,7 @@ class Db
     public function connect(): bool {
         try {
             $res = true;
-            $dsn = sprintf('%s:host=%s;dbname=%s;charset=utf8',
+            $dsn = sprintf('%s:host=%s;dbname=%s;charset=utf8mb4',
                 $this->db_driver, $this->db_server, $this->db_name);
             
             $this->connect = new \PDO($dsn, $this->db_user, $this->db_password,

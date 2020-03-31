@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.3.0
+ * @version  2.1.3.1
  * @package  device
  * 
  */
@@ -161,7 +161,6 @@ class DebugDb extends Db
                 $using_arr[] = '{{AT}}@' . $v;
             }
             $using .= implode(', ', $using_arr);
-            $this->bind_params = [];
         }
         return $using;
     }
