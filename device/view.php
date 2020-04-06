@@ -18,7 +18,7 @@
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.9.3
+ * @version  1.1.9.5
  * @package  device
  * 
  */
@@ -138,7 +138,7 @@ class View
             foreach ($disp['REPLACE'] as $k => $v) {
                 $content = str_replace('{htbr:' . $k . '}', nl2br(htmlspecialchars($v)), $content);
                 $content = str_replace('{ht:' . $k . '}', htmlspecialchars($v), $content);
-                $content = str_replace('{sl:' . $k . '}', addslashes(htmlspecialchars($v)), $content);
+                $content = str_replace('{sl:' . $k . '}', htmlspecialchars(str_replace(["\n", "\r"], ' ', addslashes($v)), ENT_QUOTES), $content);
                 $content = str_replace('{' . $k . '}', $v, $content);
             }
             unset($disp['REPLACE']);
@@ -232,7 +232,7 @@ class View
                 } else if (strstr($disp_data, 'htbr:') !== false) {
                     $change_data = nl2br(htmlspecialchars($disp[$data]));
                 } else if (strstr($disp_data, 'sl:') !== false) {
-                    $change_data = addslashes(htmlspecialchars($disp[$data]));
+                    $change_data = htmlspecialchars(str_replace(["\n", "\r"], ' ', addslashes($disp[$data])), ENT_QUOTES);
                 } else {
                     $change_data = $disp[$data];
                 }
