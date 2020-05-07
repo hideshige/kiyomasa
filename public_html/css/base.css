@@ -8,6 +8,11 @@
     padding:0;
 }
 
+body {
+    font-family: 'メイリオ','Meiryo','YuGothic','Yu Gothic',sans-serif;
+    line-height: 1.1em;
+}
+
 h1
 {
     font-size:1.5em;
