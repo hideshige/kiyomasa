@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.2.1
+ * @version  2.1.3.1
  * @package  device
  * 
  */
@@ -342,8 +342,8 @@ class Db
         $i = 1;
         foreach ($params as $k => $v) {
             if ($k === 0 and $this->do[$statement_id] === 'update') {
-                // array_spliceで入れた0の配列キーをupdated_atに変える
-                $k = 'updated_at';
+                // array_spliceで入れた0の配列キーをupdate_timeに変える
+                $k = 'update_time';
             }
             $name = $this->name[$statement_id] ? $k : $i;
             

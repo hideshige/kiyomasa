@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.3.1
+ * @version  2.0.3.2
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -13,8 +13,8 @@ CREATE TABLE memcached (
     memcached_value TEXT,
     temp_flag TINYINT NOT NULL DEFAULT 0,
     expires DATETIME DEFAULT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (memcached_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
  *

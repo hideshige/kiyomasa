@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.3
+ * @version  1.1.6.4
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -81,8 +81,8 @@ class Session
         session_id CHAR(32) NOT NULL,
         session_value TEXT,
         session_expires INT(11) DEFAULT NULL,
-        created_at DATETIME,
-        updated_at DATETIME,
+        create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY  (`session_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
  * 
