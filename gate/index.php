@@ -13,7 +13,7 @@ use Php\Framework\Device as D;
 
 class Index
 {
-    public $tpl = ['part/header', 'index', 'part/footer'];
+    public array $tpl = ['part/header', 'index', 'part/footer'];
 
     /**
      * 実行

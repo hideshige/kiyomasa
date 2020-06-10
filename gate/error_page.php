@@ -13,7 +13,7 @@ use Php\Framework\Device as D;
 
 class ErrorPage
 {
-    public $tpl = ['part/header', 'error_page', 'part/footer'];
+    public array $tpl = ['part/header', 'error_page', 'part/footer'];
 
     /**
      * 実行

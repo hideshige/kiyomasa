@@ -13,7 +13,7 @@ use Php\Framework\Device as D;
 
 class Mainte
 {
-    public $tpl = ['part/header', 'mainte', 'part/footer'];
+    public array $tpl = ['part/header', 'mainte', 'part/footer'];
 
     /**
      * 実行
