@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.4.0
+ * @version  2.1.4.1
  * @package  device
  * 
  */
@@ -13,7 +13,7 @@ namespace Php\Framework\Device;
 class Db
 {
     protected string $sql = ''; // 現在実行中のSQL
-    protected $connect; // PDOインスタンス
+    protected \PDO $connect; // PDOインスタンス
     protected string $db_server; // DBサーバ
     protected string $db_user; // DBユーザ
     protected string $db_password; // DBパスワード
@@ -56,7 +56,7 @@ class Db
      */
     public function connect(): bool {
         try {
-            $res = true;
+            $res = false;
             $dsn = sprintf('%s:host=%s;dbname=%s;charset=utf8mb4',
                 $this->db_driver, $this->db_server, $this->db_name);
             
@@ -69,10 +69,9 @@ class Db
 //                \PDO::MYSQL_ATTR_LOCAL_INFILE => true,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->connect_flag = true;
-
+            $res = true;
         } catch (\PDOException $e) {
             Log::error($e->getMessage());
-            $res = false;
         } finally {
             return $res;
         }
