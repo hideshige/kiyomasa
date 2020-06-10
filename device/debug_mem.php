@@ -3,7 +3,7 @@
  * memcached モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.0.2.0
  * @package  device
  * 
  */
@@ -12,7 +12,7 @@ namespace Php\Framework\Device;
 
 class DebugMem extends Mem
 {
-    private $disp_mem = '';//debug情報
+    private string $disp_mem = '';//debug情報
 
     /**
      * 接続

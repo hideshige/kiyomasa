@@ -3,7 +3,7 @@
  * ログ モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.1
+ * @version  1.0.6.0
  * @package  device
  * 
  * メモ: Linuxのログローテーションは/etc/logrotate.dで設定できる
@@ -14,7 +14,7 @@ namespace Php\Framework\Device;
 
 class Log
 {
-    public static $batch = '';
+    public static string $batch = '';
 
     /**
      * システム上のエラーログを記録する

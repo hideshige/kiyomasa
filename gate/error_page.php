@@ -21,7 +21,6 @@ class ErrorPage
      */
     public function execute(): bool
     {
-        $title = 'エラー';
         $message = 'ページが見つかりません。';
         if (isset($_SESSION['error_message']) and $_SESSION['error_message']) {
             $message = $_SESSION['error_message'];

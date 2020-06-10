@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.3.1
+ * @version  2.1.4.0
  * @package  device
  * 
  */
@@ -12,20 +12,20 @@ namespace Php\Framework\Device;
 
 class Db
 {
-    protected $sql = ''; // 現在実行中のSQL
+    protected string $sql = ''; // 現在実行中のSQL
     protected $connect; // PDOインスタンス
-    protected $db_server; // DBサーバ
-    protected $db_user; // DBユーザ
-    protected $db_password; // DBパスワード
-    protected $db_name; // DB名
-    protected $db_driver; // 使用するドライバ
-    protected $connect_flag = false; // 接続されているかどうか
-    protected $stmt = []; // ステートメント
-    protected $column_count = []; // 更新するカラムの数
-    protected $do = []; // ステートメントで実行中の動作メモを格納
-    protected $name = []; // プレースホルダが名前の場合TRUE
-    protected $transaction_flag = false; // トランザクション実行中の場合TRUE
-    protected $lock_flag = false; // テーブル排他ロック中の場合TRUE
+    protected string $db_server; // DBサーバ
+    protected string $db_user; // DBユーザ
+    protected string $db_password; // DBパスワード
+    protected string $db_name; // DB名
+    protected string $db_driver; // 使用するドライバ
+    protected bool $connect_flag = false; // 接続されているかどうか
+    protected array $stmt = []; // ステートメント
+    protected array $column_count = []; // 更新するカラムの数
+    protected array $do = []; // ステートメントで実行中の動作メモを格納
+    protected array $name = []; // プレースホルダが名前の場合TRUE
+    protected bool $transaction_flag = false; // トランザクション実行中の場合TRUE
+    protected bool $lock_flag = false; // テーブル排他ロック中の場合TRUE
 
     /**
      * パラメータのセット

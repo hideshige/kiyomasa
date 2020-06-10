@@ -25,7 +25,6 @@ class Mainte
             header('Location: /');
             exit(0);
         }
-        $title = 'メンテナンス中';
         if (!isset(S::$user['user_id'])) {
             echo 'ただいまメンテナンス中です';
             exit(0);

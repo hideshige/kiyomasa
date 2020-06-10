@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.7.3
+ * @version  1.1.8.0
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -26,7 +26,7 @@ new Camp;
 
 class Camp
 {
-    private $debug = false; // デバッグモード
+    private bool $debug = false; // デバッグモード
 
     /**
      * コンストラクタ

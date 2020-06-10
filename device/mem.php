@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.3.2
+ * @version  2.0.4.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -24,8 +24,8 @@ namespace Php\Framework\Device;
 
 class Mem
 {
-    protected $memcached_1;//memcachedオブジェクト
-    protected $active;//memcachedが起動しているかどうかのフラグ
+    protected object $memcached_1;//memcachedオブジェクト
+    protected bool $active = true;//memcachedが起動しているかどうかのフラグ
 
     /**
      * 接続

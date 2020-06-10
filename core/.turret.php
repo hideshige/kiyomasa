@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.9.0
+ * @version  1.0.10.0
  * @package  core
  * 
  */
@@ -17,7 +17,7 @@ class Turret
     use Wall;
     
     // UNICODE不可視文字トリム
-    private $invisible_utf8_codes = [
+    private array $invisible_utf8_codes = [
         '&#x00AD;','&#x2000;','&#x2001;','&#x2002;','&#x2003;','&#x2004;',
         '&#x2005;','&#x2006;','&#x2007;','&#x2008;','&#x2009;',
         '&#x200A;','&#x200B;','&#x200C;','&#x200D;','&#x200E;',
@@ -34,10 +34,10 @@ class Turret
         '&#xFE0F;','&#xFEFF;','&#xFFF0;','&#xFFF1;','&#xFFF2;',
         '&#xFFF3;','&#xFFF4;','&#xFFF5;','&#xFFF6;','&#xFFF7;','&#xFFF8;',
     ];
-    private $invisible_strs;
+    private array $invisible_strs;
     
-    private $debug = false; // デバッグモード
-    private $error_flag = false; // 初回エラーかどうか（循環防止のため）
+    private bool $debug = false; // デバッグモード
+    private bool $error_flag = false; // 初回エラーかどうか（循環防止のため）
     
     /**
      * コンストラクタ

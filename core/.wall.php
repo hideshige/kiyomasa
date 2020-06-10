@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.2
+ * @version  1.0.4.0
  * @package  core
  * 
  */
@@ -14,7 +14,7 @@ use Php\Framework\Device\{S, View};
 
 trait Wall
 {
-    private $debug_json = []; // JSONデバッグ用
+    private array $debug_json = []; // JSONデバッグ用
     
     /**
      * デストラクタ

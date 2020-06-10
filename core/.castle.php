@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.6.4
+ * @version  1.4.7.0
  * @package  core
  * 
  */
@@ -18,7 +18,7 @@ require_once(__DIR__ . '/.turret.php');
 
 class Castle
 {
-    private $debug; // デバッグモード
+    private bool $debug; // デバッグモード
 
     /**
      * コンストラクタ
