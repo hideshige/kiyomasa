@@ -9,8 +9,6 @@
 
 namespace Yourname\Yourproject\Gate;
 
-use Php\Framework\Device as D;
-
 class Mainte
 {
     public array $tpl = ['part/header', 'mainte', 'part/footer'];
@@ -21,14 +19,6 @@ class Mainte
      */
     public function execute(): bool
     {
-        if (D\S::$url[0] == 'mainte') {
-            header('Location: /');
-            exit(0);
-        }
-        if (!isset(S::$user['user_id'])) {
-            echo 'ただいまメンテナンス中です';
-            exit(0);
-        }
         return true;
     }
 }
