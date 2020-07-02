@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.0
+ * @version  1.0.5.0
  * @package  core
  * 
  */
@@ -18,10 +18,12 @@ trait Wall
     
     /**
      * デストラクタ
+     * @global bool $g_debug
      */
     public function __destruct()
     {
-        if ($this->debug and S::$jflag === false and S::$header === []) {
+        global $g_debug;
+        if ($g_debug and S::$jflag === false) {
             echo $this->dispDebug();
         }
     }
@@ -236,12 +238,14 @@ trait Wall
     
     /**
      * JSON用デバッグの表示
+     * @global bool $g_debug
      * @param array $json JSON参照渡し
      * @return void
      */
     private function jsonDebug(array &$json): void
     {
-        if ($this->debug) {
+        global $g_debug;
+        if ($g_debug) {
             $this->debug_json = $json;
             
             $arr = $this->dispDebug();

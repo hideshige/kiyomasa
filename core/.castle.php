@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.7.0
+ * @version  1.4.8.0
  * @package  core
  * 
  */
@@ -18,20 +18,18 @@ require_once(__DIR__ . '/.turret.php');
 
 class Castle
 {
-    private bool $debug; // デバッグモード
-
     /**
      * コンストラクタ
+     * @global bool $g_debug
      */
     public function __construct()
     {
         try {
             S::$jflag = false;
-            $this->debug = ENV <= ENV_DEV ? true : false;
-//$this->debug = false;
+            global $g_debug;
             
             // データベースオブジェクトの準備
-            $dbo = $this->debug ?
+            $dbo = $g_debug ?
                 'Php\Framework\Device\DebugDb' : 'Php\Framework\Device\Db';
             S::$dbm = new $dbo(DB_MASTER_SERVER, DB_MASTER_USER,
                 DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER);
@@ -45,11 +43,11 @@ class Castle
             }
             
             // memchached
-            $mem = $this->debug ?
+            $mem = $g_debug ?
                 'Php\Framework\Device\DebugMem' : 'Php\Framework\Device\Mem';
             S::$mem = new $mem;
             
-            $turret = new Turret($this->debug);
+            $turret = new Turret();
 
             // HTMLクエリのセット
             S::$post = $turret->trim($_POST);
@@ -76,7 +74,7 @@ class Castle
         );
         Log::error($error);
         // テスト環境の場合、デバッグ用のエラーを表示する
-        if ($this->debug) {
+        if (ENV <= ENV_DEV) {
             echo $error;
         } else {
             echo 'エラーになりました。 ' . TIMESTAMP;
@@ -86,7 +84,6 @@ class Castle
     
     /**
      * 開く
-     * @global array $g_folder
      * @param object $turret
      * @return void
      */
@@ -102,7 +99,7 @@ class Castle
         if ($pagename === '') {
             $pagename = 'index';
         }
-        if ($this->mainteCheck() and $this->debug === false) {
+        if (MAINTE === 2) {
             $pagename = 'mainte';
             $folder = '';
         }
@@ -111,6 +108,7 @@ class Castle
     
     /**
      * ページ名のセット
+     * @global array $g_folder
      * @return array
      */
     private function setPagename(): array
@@ -132,14 +130,5 @@ class Castle
         S::$url += $url;
         $pagename = (isset($url[0]) and $url[0] !== '') ? $url[0] : '';
         return [$pagename, $folder];
-    }
-    
-    /**
-     * メンテナンスモードの判定
-     * @return bool
-     */
-    private function mainteCheck(): bool
-    {
-        return false;
     }
 }

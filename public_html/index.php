@@ -3,7 +3,7 @@
  * フロントプログラム
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.0
+ * @version  1.0.4.1
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -33,6 +33,7 @@ header('X-Frame-Options: DENY'); // クリックジャック対策
 // コントローラの読み込み
 require_once(__DIR__ . '/../core/.define.php');
 require_once(__DIR__ . '/../core/env.php');
+require_once(__DIR__ . '/../core/mainte.php');
 require_once(__DIR__ . '/../core/config.php');
 require_once(__DIR__ . '/../core/.castle.php');
 new Php\Framework\Core\Castle();

@@ -118,6 +118,4 @@ EOT;
 // URLをフォルダで分ける場合、この配列に追加する
 $g_folder = [];
 
-// メンテ突破IPアドレス
-$g_ip_address = [];
-$g_ip_address[] = '192.168.1.2';
+$g_debug = (ENV <= ENV_DEV) ? true : false;

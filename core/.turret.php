@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.10.0
+ * @version  1.0.10.1
  * @package  core
  * 
  */
@@ -36,16 +36,13 @@ class Turret
     ];
     private array $invisible_strs;
     
-    private bool $debug = false; // デバッグモード
     private bool $error_flag = false; // 初回エラーかどうか（循環防止のため）
     
     /**
      * コンストラクタ
-     * @param bool $debug
      */
-    public function __construct(bool $debug)
+    public function __construct()
     {
-        $this->debug = $debug;
         $this->invisible_strs = array_map(
             function ($code) {
                 return html_entity_decode($code, ENT_NOQUOTES, 'UTF-8');
