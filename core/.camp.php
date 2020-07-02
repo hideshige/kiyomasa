@@ -19,6 +19,7 @@ use Php\Framework\Device\{Db\DbModule, S, Log};
 
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
+require_once(__DIR__ . '/mainte.php');
 require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/.tower.php');
 
