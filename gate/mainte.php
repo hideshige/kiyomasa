@@ -19,6 +19,11 @@ class Mainte
      */
     public function execute(): bool
     {
+        if (MODE !== MODE_MAINTE) {
+            D\S::$header[] = 'Location: /';
+        } else {
+            D\S::$disp = [];
+        }
         return true;
     }
 }

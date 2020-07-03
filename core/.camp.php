@@ -3,7 +3,7 @@
  * キャンプ　シェル土台部
  *
  * @author   Sawada Hideshige
- * @version  1.1.8.0
+ * @version  1.1.8.2
  * @package  core
  *
  * ターミナルから以下のように実行する
@@ -15,11 +15,11 @@
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\{Db\DbModule, S, Log};
+use Php\Framework\Device\{S, Log};
 
 require_once(__DIR__ . '/.define.php');
 require_once(__DIR__ . '/env.php');
-require_once(__DIR__ . '/mainte.php');
+require_once(__DIR__ . '/mode.php');
 require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/.tower.php');
 
@@ -27,8 +27,6 @@ new Camp;
 
 class Camp
 {
-    private bool $debug = false; // デバッグモード
-
     /**
      * コンストラクタ
      * @global array $argv
@@ -42,10 +40,10 @@ class Camp
             }
             Log::$batch = 'batch_';
             
-            $this->debug = ENV <= ENV_DEV ? true : false;
+            $debug = ENV <= ENV_DEV ? true : false;
             
             // データベースオブジェクトの準備
-            $dbo = $this->debug ?
+            $dbo = $debug ?
                 'Php\Framework\Device\DebugDb' : 'Php\Framework\Device\Db';
             S::$dbm = new $dbo(DB_MASTER_SERVER, DB_MASTER_USER,
                 DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER);
@@ -59,13 +57,13 @@ class Camp
             }
             
             // memchached
-            $mem = $this->debug ?
+            $mem = $debug ?
                 'Php\Framework\Device\DebugMem' : 'Php\Framework\Device\Mem';
             S::$mem = new $mem;
            
             $this->exec($argv[1]);
 
-            if ($this->debug) {
+            if ($debug) {
                 echo '<DBS>', PHP_EOL, S::$dbs->getSql(), PHP_EOL;
                 echo '<DBM>', PHP_EOL, S::$dbm->getSql(), PHP_EOL;
             }
@@ -93,12 +91,9 @@ class Camp
             }
         } catch (\Error $e) {
             S::$dbm->rollback();
-            $error = sprintf(
-                '%s(%s) %s',
+            $error = sprintf('%s(%s) %s',
                 str_replace(SERVER_PATH, '', $e->getFile()),
-                $e->getLine(),
-                $e->getMessage()
-            );
+                $e->getLine(), $e->getMessage());
             throw new \Error($error);
         }
     }

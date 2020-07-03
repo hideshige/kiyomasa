@@ -3,14 +3,14 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.10.1
+ * @version  1.0.11.0
  * @package  core
  * 
  */
 
 namespace Php\Framework\Core;
 
-use Php\Framework\Device\{ErrorInfo, S, View, UserEx};
+use Php\Framework\Device\{ErrorInfo, S, View, UserEx, Mainte};
 
 class Turret
 {
@@ -63,6 +63,8 @@ class Turret
                 ['_', '/'], [' ', '\\'], $folder . $pagename))));
             
             $this->gate($class_name);
+        } catch (Mainte $e) {
+            $this->gate(NAME_SPACE . '\Gate\mainte');
         } catch (UserEx|\Error|\PDOException $e) {
             $this->gateError($e);
         }

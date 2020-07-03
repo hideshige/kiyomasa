@@ -1,5 +1,5 @@
-# KIYOMASA V2.1
-2020/07/02  
+# KIYOMASA V2.2
+2020/07/03  
 AUTHUR: SAWADA HIDESHIGE
 
 --------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ *.tower.php      オートロード、エラーハンドラに関するファイル  
 │ ├ *.turret.php     ビュー関連のコントローラ  
 │ ├ *.wall.php       デバッグ関連のコントローラ  
-│ ├ *mainte.php      メンテナンス定数ファイル  
+│ ├ *mode.php        モード定数ファイル  
 │ ├ config.php       プロジェクトの設定ファイル  
 │ └ env.php          プロジェクトの環境設定ファイル（Gitでは更新されない）  
 ├ *device/            様々の便利機能を格納（変更不可）  
@@ -45,6 +45,7 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ *debug_db.php    デバッグ用データベースモジュール  
 │ ├ *error_info.php  エラー情報モジュール  
 │ ├ *log.php         ログ保存モジュール  
+│ ├ *mainte.php      メンテナンスによる例外処理  
 │ ├ *mem.php         memcachedモジュール  
 │ ├ *s.php           静的ショートカット群  
 │ ├ *session.php     セッションモジュール  
@@ -83,23 +84,32 @@ root/                  ルートディレクトリはプロジェクト名に変
  
 2. kiyomasaディレクトリをproject_xにリネームする
 
-3. /var/www/html/project_x/conf/env.phpを以下の内容で作成する  
+3. /var/www/html/project_x/core/env.phpを以下の内容で作成する  
 ```php
 <?php
 const ENV_PRO = 3; // 本番環境
-const ENV_STA = 2; // ステージング環境  
+const ENV_STA = 2; // ステージング環境
 const ENV_DEV = 1; // 開発環境
 const ENV_PHP = 0; // ビルトインサーバ環境
 const ENV = ENV_PHP;
 ```
 
-4. /var/www/html/project_x/conf/config.phpをプロジェクト内容に合わせて変更する
+4. /var/www/html/project_x/core/env.phpを以下の内容で作成する  
+```php
+<?php
+const MODE_NORMAL = 0; // 通常モード
+const MODE_DEBUG  = 1; // デバッグ環境
+const MODE_MAINTE = 2; // メンテナンスモード
+const MODE = MODE_NOMAL;
+```
 
-5. /var/www/html/project_x/直下にlogとlog/batchのディレクトリを作成する
+5. /var/www/html/project_x/core/config.phpをプロジェクト内容に合わせて変更する
 
-6. Webサーバのルートディレクトリを/var/www/html/project_x/public_html/にする
+6. /var/www/html/project_x/直下にlogとlog/batchのディレクトリを作成する
 
-7. Webサーバのリダイレクト設定を行う  
+8. Webサーバのルートディレクトリを/var/www/html/project_x/public_html/にする
+
+8. Webサーバのリダイレクト設定を行う  
 ```Apache
 # Apache
 # /var/www/html/project_x/public_html/.htaccess に記述するだけで良い  
@@ -117,11 +127,11 @@ location / {
 }
 ```
 
-8. project_xディレクトリ配下のオーナーをWebサーバユーザに一括変更する
+9. project_xディレクトリ配下のオーナーをWebサーバユーザに一括変更する
 
-9. project_x/device/mem.phpのコメントの通りDBにmemcachedテーブルを作っておく
+10. project_x/device/mem.phpのコメントの通りDBにmemcachedテーブルを作っておく
 
-10. プロジェクトのURLにアクセスして画面に「YOURSITE OK」と表示されれば完了
+11. プロジェクトのURLにアクセスして画面に「YOURSITE OK」と表示されれば完了
 
 --------------------------------------------------------------------------------
 ## KIYOMASAの大きな特長

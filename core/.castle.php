@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.8.0
+ * @version  1.4.8.1
  * @package  core
  * 
  */
@@ -20,16 +20,14 @@ class Castle
 {
     /**
      * コンストラクタ
-     * @global bool $g_debug
      */
     public function __construct()
     {
         try {
             S::$jflag = false;
-            global $g_debug;
             
             // データベースオブジェクトの準備
-            $dbo = $g_debug ?
+            $dbo = (MODE >= MODE_DEBUG) ?
                 'Php\Framework\Device\DebugDb' : 'Php\Framework\Device\Db';
             S::$dbm = new $dbo(DB_MASTER_SERVER, DB_MASTER_USER,
                 DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER);
@@ -43,7 +41,7 @@ class Castle
             }
             
             // memchached
-            $mem = $g_debug ?
+            $mem = (MODE >= MODE_DEBUG) ?
                 'Php\Framework\Device\DebugMem' : 'Php\Framework\Device\Mem';
             S::$mem = new $mem;
             
@@ -98,10 +96,6 @@ class Castle
         }
         if ($pagename === '') {
             $pagename = 'index';
-        }
-        if (MAINTE === 2) {
-            $pagename = 'mainte';
-            $folder = '';
         }
         $turret->disp($pagename, $folder);
     }

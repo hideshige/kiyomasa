@@ -118,4 +118,5 @@ EOT;
 // URLをフォルダで分ける場合、この配列に追加する
 $g_folder = [];
 
-$g_debug = (ENV <= ENV_DEV) ? true : false;
+$g_debug = (MODE >= MODE_DEBUG and ENV <= ENV_DEV) ? true : false;
+

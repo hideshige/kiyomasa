@@ -1,7 +1,7 @@
 *.log
 *~
 session
-mainte.php
+core/mode.php
 env.php
 .DS_Store
 *.csv
