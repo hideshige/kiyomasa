@@ -18,7 +18,7 @@
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.9.5
+ * @version  1.1.9.6
  * @package  device
  * 
  */
@@ -232,7 +232,8 @@ class View
                 } else if (strstr($disp_data, 'htbr:') !== false) {
                     $change_data = nl2br(htmlspecialchars($disp[$data]));
                 } else if (strstr($disp_data, 'sl:') !== false) {
-                    $change_data = htmlspecialchars(str_replace(["\n", "\r"], ' ', addslashes($disp[$data])), ENT_QUOTES);
+                    $change_data = htmlspecialchars(str_replace(["\n", "\r"],
+                        ' ', addslashes($disp[$data])), ENT_QUOTES);
                 } else {
                     $change_data = $disp[$data];
                 }

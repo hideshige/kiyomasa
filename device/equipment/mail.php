@@ -3,7 +3,7 @@
  * メール モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.2
+ * @version  1.0.7.0
  * @package  device/equipment
  *
  */
@@ -17,13 +17,15 @@ class Mail
      * @param string $to 送信先メールアドレス
      * @param string $subject 件名
      * @param string $body 本文
+     * @param string $cc CC
      * @return bool
      * @throws \Error
      */
     public static function sendMail(
         string $to,
         string $subject,
-        string $body
+        string $body,
+        string $cc
     ): bool {
         $to2 = str_replace(array ("\n", "\r"), '', $to);
         mb_internal_encoding('ISO-2022-JP');
@@ -39,6 +41,10 @@ class Mail
         $headers = "MIME-Version: 1.0 \n";
         $headers .= sprintf("From: %s<%s> \n", $from_name, FROM_EMAIL);
         $headers .= sprintf("Reply-To: %s<%s> \n", $from_name, FROM_EMAIL);
+        if ($cc) {
+            $headers .= sprintf("CC: %s \n",
+                str_replace(array ("\n", "\r"), '', $cc));
+        }
         $headers .= "Content-Type: text/plain;charset=ISO-2022-JP \n";
         $f = sprintf('-f%s', EMAIL_RETURN_PATH);
 

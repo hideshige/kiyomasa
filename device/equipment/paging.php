@@ -3,7 +3,7 @@
  * ページングモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.1
+ * @version  1.1.0.0
  * @package  device/equipment
  *
  */
@@ -14,6 +14,9 @@ use Php\Framework\Device as D;
 
 class Paging
 {
+    public static $void_param = ['page']; // 開いているURLのパラメータをリンク先に継承しないパラメータ
+    public static $link_tag = '<li[ACTIVE_CLASS]><a href="[URL_PARAM]?[GET_PARAM]&page=[PAGE_NUM]">[PAGE_NUM]</a></li>';
+    
     /**
      * ページング処理
      * @param int $counts  全体件数
@@ -58,7 +61,7 @@ class Paging
             ? null : $page_arr['page'] + 1;
 
         $q = self::makeGet($get);
-        $page_arr['tag'] = self::pagingTag($page_arr, sprintf('%s%s', $url, $q));
+        $page_arr['tag'] = self::pagingTag($page_arr, $url, $q);
 
         return $page_arr;
     }
@@ -69,12 +72,16 @@ class Paging
      * @param array $get GETで受け取った値
      * @return string 生成したクエリ
      */
-    private static function makeGet(array $get): string
+    public static function makeGet(array $get): string
     {
-        if (isset($get['page'])) {
-            unset($get['page']);
+        if (self::$void_param) {
+            foreach (self::$void_param as $void_v) {
+                if (isset($get[$void_v])) {
+                    unset($get[$void_v]);
+                }
+            }
         }
-        $q = '?';
+        $q = '';
         foreach ($get as $k => $v) {
             if (is_array($v)) {
                 foreach ($v as $vv) {
@@ -92,10 +99,14 @@ class Paging
      * ページングタグの生成
      * @param array $page_arr
      * @param string $url そのURL
+     * @param string $q そのクエリ
      * @return string
      */
-    private static function pagingTag(array $page_arr, string $url): string
-    {
+    private static function pagingTag(
+        array $page_arr,
+        string $url,
+        string $q
+    ): string {
         $paging_tag = '';
 
         if ($page_arr['num'] > 1) {
@@ -120,8 +131,9 @@ class Paging
             $p = $start_page;
             for ($i = 1; $i <= $link_count; $i ++) {
                 $aclass = ($p === $page_arr['page']) ? ' class="on"' : '';
-                $paging_tag .= sprintf('<li%s><a href="%spage=%d">%s</a></li>',
-                    $aclass, $url, $p, $p);
+                $paging_tag .= str_replace(
+                    ['[GET_PARAM]', '[PAGE_NUM]', '[ACTIVE_CLASS]', '[URL_PARAM]'],
+                    [trim($q, '?'), $p, $aclass, $url], self::$link_tag);
                 $p ++;
             }
         }
