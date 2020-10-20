@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.0
+ * @version  1.0.5.1
  * @package  core
  * 
  */
@@ -109,7 +109,7 @@ trait Wall
             'timestamp' => TIMESTAMP,
             'time' => time(),
             'db_slave' => $this->modDebugSql(S::$dbs->getSql()),
-            'db_master' => $this->modDebugSql(S::$dbm->getSql()),
+//            'db_master' => $this->modDebugSql(S::$dbm->getSql()),
             'memcached' => S::$mem->getDispMem(),
             'post' => $this->modDebugDump((string)$post),
             'get' => $this->modDebugDump((string)$get),
@@ -175,11 +175,12 @@ trait Wall
             '/═══ BEGIN ROW ═══(.*?)═══ END ROW ═══/s', $text, $match);
         if (isset($match[1])) {
             foreach ($match[1] as $v) {
-                $text = preg_replace('/═══ BEGIN ROW ═══' . preg_quote($v, '/')
+                $text = preg_replace('/═══ BEGIN ROW ═══' . preg_quote(
+                        mb_substr($v, 0, 30000), '/')
                     . '═══ END ROW ═══/s', '<span name="fw_debug_process" '
                     . 'class="fw_debug_bold fw_debug_db_select">'
                     // 文字列として使用されているコロンを置換しておく
-                    . preg_replace('/:/', '{{COLON}}', $v) . '</span>', $text);
+                    . str_replace(':', '{{COLON}}', $v) . '</span>', $text);
             }
         }
         $text = preg_replace('/{{AT}}@(\w*)/',

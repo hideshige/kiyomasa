@@ -3,7 +3,7 @@
  * タワー　オートロード、エラーハンドラなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.9
+ * @version  1.0.1.10
  * @package  core
  * 
  */
@@ -77,8 +77,8 @@ set_error_handler(
         $info = new ErrorInfo;
         $info->set($type . ': ' . $message, $file, $line);
         
-        // 注意と非推奨以外は例外処理
-        if ($no !== E_NOTICE and $no !== E_DEPRECATED) {
+        // 警告と注意と非推奨以外は例外処理
+        if ($no !== E_NOTICE and $no !== E_DEPRECATED and $no !== E_WARNING) {
             throw new \Error('エラーハンドラからエラーをスローします', 10);
         }
     }
