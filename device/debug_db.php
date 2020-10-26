@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.4.0
+ * @version  2.1.5.0
  * @package  device
  * 
  */
@@ -266,6 +266,25 @@ class DebugDb extends Db
             $this->dbLog('getId', $e->getMessage());
         }
     }
+
+    /**
+     * 隔離性水準の設定
+     * @param int $level
+     * @return void
+     */
+    public function setIsolationLevel(int $level): void
+    {
+        try {
+            parent::setIsolationLevel($level);
+            global $g_counter;
+            $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
+                . "SET TRANSACTION ISOLATION LEVEL "
+                . ($this->islv[$level] ?? 'REPEATABLE READ') . ";\n";
+            $g_counter ++;
+        } catch (\PDOException $e) {
+            $this->dbLog('setIsolationLevel', $e->getMessage());
+        }
+    }
     
     /**
      * トランザクションの開始
@@ -276,6 +295,7 @@ class DebugDb extends Db
     {
         try {
             if ($this->transaction_flag === false) {
+                $this->connectCheck();
                 global $g_counter;
                 $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
                     . "START TRANSACTION;\n";

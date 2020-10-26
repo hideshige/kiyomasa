@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.4.1
+ * @version  2.1.5.0
  * @package  device
  * 
  */
@@ -26,6 +26,12 @@ class Db
     protected array $name = []; // プレースホルダが名前の場合TRUE
     protected bool $transaction_flag = false; // トランザクション実行中の場合TRUE
     protected bool $lock_flag = false; // テーブル排他ロック中の場合TRUE
+    protected array $islv = [
+        'READ UNCOMMITTED',
+        'READ COMMITTED',
+        'REPEATABLE READ',
+        'SERIALIZABLE'
+    ]; // 隔離性水準
 
     /**
      * パラメータのセット
@@ -248,6 +254,18 @@ class Db
             throw new \Error('GET ID ERROR');
         }
         return $res;
+    }
+    
+    /**
+     * 隔離性水準の設定
+     * @param int $level
+     * @return void
+     */
+    public function setIsolationLevel(int $level): void
+    {
+        $this->connectCheck();
+        $this->connect->query('SET TRANSACTION ISOLATION LEVEL '
+            . ($this->islv[$level] ?? 'REPEATABLE READ'));
     }
     
     /**
