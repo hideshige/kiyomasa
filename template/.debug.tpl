@@ -120,10 +120,8 @@
 }
 
 #fw_debug .fw_debug_header
-{
-    position: absolute;
-    right: 10px;
-    top: 10px;
+{  
+    margin-bottom: 5px;
     color: #999;
 }
 
@@ -175,7 +173,11 @@
 
 #fw_debug .fw_debug_db_select
 {
-    color: #aaf;
+    margin-bottom: 3px;
+    height: 1.2em;
+    line-height: 1.1em;
+    display: block;
+    font-size: 0.9em;
 }
 
 #fw_debug .fw_debug_stmt
@@ -285,7 +287,7 @@ var Js;
                 for (var di in dispMode) {
                     if (dispMode.item(di)) {
                         dispMode.item(di).textContent = openFlag.textContent
-                            === "1" ? "True SQL Mode" : "Developer Mode";
+                            === "1" ? "True SQL Mode" : "Developper Mode";
                     }
                 }
             }

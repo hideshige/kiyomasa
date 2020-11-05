@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.5.2
+ * @version  1.0.6.0
  * @package  core
  * 
  */
@@ -167,25 +167,27 @@ trait Wall
                     . preg_quote($v, '/') . "&#039;/s",
                     '&apos;<span class="fw_debug_bold fw_debug_str">'
                     // 文字列として使用されているコロンを置換しておく
-                    . preg_replace('/:/', '{{COLON}}', $v)
+                    . str_replace(':', '{{COLON}}', $v)
                     . '</span>&apos;', $text);
             }
         }
+        $text = nl2br($text);
         preg_match_all(
             '/═══ BEGIN ROW ═══(.*?)═══ END ROW ═══/s', $text, $match);
         if (isset($match[1])) {
             foreach ($match[1] as $v) {
                 $text = preg_replace('/═══ BEGIN ROW ═══' . preg_quote(
                         mb_substr($v, 0, 30000), '/')
-                    . '═══ END ROW ═══/s', '<span name="fw_debug_process" '
-                    . 'class="fw_debug_bold fw_debug_db_select">'
-                    // 文字列として使用されているコロンを置換しておく
-                    . str_replace(':', '{{COLON}}', $v) . '</span>', $text);
+                    . '═══ END ROW ═══/s', '<textarea name="fw_debug_process" '
+                    . 'class="fw_debug_db_select">'
+                    // 文字列として使用されているコロンと改行タグを置換しておく
+                    . str_replace([':', '<br>', '<br />'],
+                        ['{{COLON}}', '', ''], $v) . '</textarea>', $text);
             }
         }
         $text = preg_replace('/{{AT}}@(\w*)/',
             '@<span class="fw_debug_bold">$1</span>', $text);
-        $text = preg_replace('/{{NULL}}NULL/',
+        $text = str_replace('{{NULL}}NULL',
             '<span class="fw_debug_bold fw_debug_null">NULL</span>', $text);
         $text = preg_replace('/{{INT}}([\d\-\.]*)/',
             '<span class="fw_debug_bold fw_debug_int">$1</span>', $text);
@@ -196,7 +198,7 @@ trait Wall
             . ' style="display: none;">?</span>'
             . '<span name="fw_debug_process" class="fw_debug_bold">:$1</span>',
             $text);
-        $text = preg_replace("/{{COLON}}/", ':', $text);
+        $text = str_replace('{{COLON}}', ':', $text);
         $text = preg_replace("/{{COUNTER (\d*)}}/",
             '<span name="fw_debug_process" class="fw_debug_counter">$1</span> ',
             $text);
@@ -205,11 +207,11 @@ trait Wall
             $text);
         $text = preg_replace('/(FROM|WHERE|GROUP BY|SELECT|'
             . 'ORDER|OFFSET|LIMIT|UPDATE|INSERT|REPLACE|DELETE|VALUES)/',
-            '<br />$1', $text);
+            '<br>$1', $text);
         if ($text === '') {
             $text = 'Not Connected';
         }
-        return nl2br($text);
+        return $text;
     }
     
     /**
@@ -225,7 +227,7 @@ trait Wall
             . '<span class="fw_debug_bold fw_debug_line">$2</span>', $text);
         $text = preg_replace('/{{ERROR_INFO}}(.*)/',
             '<span class="fw_debug_bold fw_debug_str">$1</span>', $text);
-        $text = preg_replace('/NULL/',
+        $text = str_replace('NULL',
             '<span class="fw_debug_null">NULL</span>', $text);
         $text = preg_replace('/\[&quot;(.*?)&quot;\]/',
             '[&quot;<span class="fw_debug_bold">$1</span>&quot;]', $text);

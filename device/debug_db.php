@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.5.0
+ * @version  2.1.6.0
  * @package  device
  * 
  */
@@ -364,8 +364,7 @@ class DebugDb extends Db
             
             $this->disp_sql .= sprintf(
                 "{{COUNTER %d}}PREPARE {{STATEMENT}}%s FROM '%s';\n",
-                $g_counter, $statement_id,
-                preg_replace("/'/", "\\'", $this->sql));
+                $g_counter, $statement_id, $this->sql);
             $g_counter ++;
             return parent::prepare($statement_id, $this->sql);
         } catch (\PDOException $e) {
@@ -447,7 +446,6 @@ class DebugDb extends Db
                 // デバッグ表示
                 $this->disp_sql .= '═══ BEGIN ROW ═══';
                 $this->dbSelectDumpDetail($rows);
-                $this->disp_sql .= "═════════\n";
                 $this->disp_sql .= '═══ END ROW ═══';
             }
             return $rows;
