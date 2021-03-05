@@ -3,7 +3,7 @@
  * 暗号化(OpenSSL) モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.1
+ * @version  1.0.2.0
  * @package  device/equipment
  * 
  * 
@@ -28,7 +28,6 @@ class Openssl
                 OPEN_SSL_PASSPHRASE
             );
             openssl_private_encrypt($plain, $crypt, $res);
-            openssl_free_key($res);
             $crypt = base64_encode($crypt);
         }
         return $crypt;
@@ -46,7 +45,6 @@ class Openssl
             $crypt = base64_decode($crypt);
             $res = openssl_get_publickey(OPEN_SSL_PUBLIC_KEY);
             openssl_public_decrypt($crypt, $plain, $res);
-            openssl_free_key($res);
         }
         return $plain;
     }

@@ -3,7 +3,7 @@
  * フロントプログラム
  *
  * @author   Sawada Hideshige
- * @version  1.0.4.1
+ * @version  1.0.4.3
  * @package  public_html
  * 
  * 標準コーディング規約
@@ -30,10 +30,9 @@ header('X-XSS-Protection: 1; mode=block'); // XSS対策
 header('Content-Security-Policy: reflected-xss block'); // XSS対策
 header('X-Frame-Options: DENY'); // クリックジャック対策
 
-// コントローラの読み込み
-require_once(__DIR__ . '/../core/.define.php');
-require_once(__DIR__ . '/../core/env.php');
-require_once(__DIR__ . '/../core/mode.php');
-require_once(__DIR__ . '/../core/config.php');
-require_once(__DIR__ . '/../core/.castle.php');
+require_once(__DIR__ . '/../core/.define.php'); // システム定義
+require_once(__DIR__ . '/../core/env.php'); // 環境識別
+require_once(__DIR__ . '/../core/mode.php'); // モード識別
+require_once(__DIR__ . '/../core/config.php'); // システム設定
+require_once(__DIR__ . '/../core/.castle.php'); // コントローラ
 new Php\Framework\Core\Castle();
