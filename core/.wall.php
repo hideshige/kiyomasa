@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.0
+ * @version  1.0.6.1
  * @package  core
  * 
  */
@@ -205,8 +205,8 @@ trait Wall
         $text = preg_replace("/{{TIME}}(.*?\])/",
             '<span name="fw_debug_process" class="fw_debug_time">$1</span>',
             $text);
-        $text = preg_replace('/(FROM|WHERE|GROUP BY|SELECT|'
-            . 'ORDER|OFFSET|LIMIT|UPDATE|INSERT|REPLACE|DELETE|VALUES)/',
+        $text = preg_replace('/(FROM |WHERE |GROUP BY |SELECT |ORDER BY |'
+            . 'OFFSET |LIMIT |UPDATE |INSERT |REPLACE |DELETE |VALUES )/',
             '<br>$1', $text);
         if ($text === '') {
             $text = 'Not Connected';
