@@ -4,7 +4,7 @@
  * どこからでも呼び出しでき、プログラムの解析に役立てられる
  *
  * @author   Sawada Hideshige
- * @version  1.0.0.0
+ * @version  1.0.1.0
  * @package  core
  */
 
@@ -56,14 +56,14 @@ function trace(string $id = ''): void
         preg_match('/^(.*\\\)(.*)$/', $cur['class'] ?? '', $match);
         $namespace = trim($match[1] ?? '-', '\\');
         $class_name = $match[2] ?? '-';
-        $ref = '';
         if ($class_name !== '-') {
-            $ref = ReflectionMethod::export(
-                $cur['class'], $cur['function'], true);
+            $reflect = new ReflectionMethod($cur['class'], $cur['function']);
         } else if ($cur['function'] !== 'Php\Framework\Core\{closure}' and
             $cur['function'] !== 'require') {
-            $ref = ReflectionFunction::export($cur['function'], true);
+            $reflect = new ReflectionFunction($cur['function']);
         }
+        $ref = $reflect->__toString();
+        
         // ソースからメソッドのコメントを抽出
         preg_match('</\*\*(.*)?\*/>s', $ref, $match2);
         $comment = isset($match2[1]) ?
