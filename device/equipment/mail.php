@@ -3,7 +3,7 @@
  * メール モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.0
+ * @version  1.0.7.1
  * @package  device/equipment
  *
  */
@@ -25,7 +25,7 @@ class Mail
         string $to,
         string $subject,
         string $body,
-        string $cc
+        string $cc = ''
     ): bool {
         $to2 = str_replace(array ("\n", "\r"), '', $to);
         mb_internal_encoding('ISO-2022-JP');

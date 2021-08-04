@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.5.0
+ * @version  2.1.5.1
  * @package  device
  * 
  */
@@ -72,7 +72,7 @@ class Db
                 // 次のオプションはMySQLでファイルを読み込む場合に必要
                 // php.iniでmysqli.allow_local_infile = Onとなっていることが前提
                 // 不要の場合はコメントアウトする
-//                \PDO::MYSQL_ATTR_LOCAL_INFILE => true,
+                \PDO::MYSQL_ATTR_LOCAL_INFILE => true,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->connect_flag = true;
             $res = true;
@@ -368,7 +368,7 @@ class Db
             $this->bindDebug($name, $v);
 
             $this->stmt[$statement_id]->bindValue($name, $v,
-                is_int($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
+                is_numeric($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
             $i ++;
         }
         $this->executeDebug($statement_id);

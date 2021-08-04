@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.6.4
+ * @version  1.1.7.0
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -84,7 +84,7 @@ class Session
         create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY  (`session_id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
  * 
  */
 class sessionHandlerDb
@@ -130,7 +130,7 @@ class sessionHandlerDb
         S::$dbm->bind($params, 'session');
         $res = S::$dbm->fetch('session');
         if ($res) {
-            $read = $res->session_value;
+            $read = $res['session_value'];
         }
         return $read;
     }
