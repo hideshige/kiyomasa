@@ -9,6 +9,8 @@
 
 namespace Yourname\Yourproject\Gate;
 
+use Php\Framework\Device as D;
+
 class Mainte
 {
     public array $tpl = ['part/header', 'mainte', 'part/footer'];

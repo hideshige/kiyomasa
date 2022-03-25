@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.5.1
+ * @version  2.1.6.0
  * @package  device
  * 
  */
@@ -136,7 +136,8 @@ class Db
         bool $replace = false,
         string $statement_id = 'stmt'
     ): void {
-        if (!empty($params)) {
+        if (($statement_id === 'stmt' or !isset($this->stmt[$statement_id]))
+            and !empty($params)) {
             $this->connectCheck();
             $this->do[$statement_id] = 'insert';
             $this->name[$statement_id] = true;
@@ -170,15 +171,17 @@ class Db
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
-        $this->connectCheck();
-        $this->do[$statement_id] = 'select';
-        
-        // プレースホルダが?か:nameかを判定
-        $this->name[$statement_id] =
-            strpos($where, '?') !== false ? false : true;
+        if ($statement_id === 'stmt' or !isset($this->stmt[$statement_id])) {
+            $this->connectCheck();
+            $this->do[$statement_id] = 'select';
 
-        $this->sql = sprintf('SELECT %s FROM %s %s', $params, $table, $where);
-        $this->prepare($statement_id);
+            // プレースホルダが?か:nameかを判定
+            $this->name[$statement_id] =
+                strpos($where, '?') !== false ? false : true;
+
+            $this->sql = sprintf('SELECT %s FROM %s %s', $params, $table, $where);
+            $this->prepare($statement_id);
+        }
     }
 
 
@@ -196,7 +199,8 @@ class Db
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
-        if (!empty($params)) {
+        if (($statement_id === 'stmt' or !isset($this->stmt[$statement_id]))
+            and !empty($params)) {
             $this->connectCheck();
             $this->do[$statement_id] = 'update';
 
@@ -232,15 +236,17 @@ class Db
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
-        $this->connectCheck();
-        $this->do[$statement_id] = 'delete';
-        
-        // プレースホルダが?か:nameかを判定
-        $this->name[$statement_id] =
-            strpos($where, '?') !== false ? false : true;
-        
-        $this->sql = sprintf('DELETE FROM %s %s', $table, $where);
-        $this->prepare($statement_id);
+        if ($statement_id === 'stmt' or !isset($this->stmt[$statement_id])) {
+            $this->connectCheck();
+            $this->do[$statement_id] = 'delete';
+
+            // プレースホルダが?か:nameかを判定
+            $this->name[$statement_id] =
+                strpos($where, '?') !== false ? false : true;
+
+            $this->sql = sprintf('DELETE FROM %s %s', $table, $where);
+            $this->prepare($statement_id);
+        }
     }
     
     /**
