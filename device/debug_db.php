@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.6.1
+ * @version  2.1.6.2
  * @package  device
  * 
  */
@@ -15,7 +15,7 @@ class DebugDb extends Db
     protected array $bind_params = []; // バインドする値（デバッグ表示およびログ用）
     private string $disp_sql = ''; // デバッグ表示用SQL
     private string $time; // ステートメント開始時間
-    private int $qt_sum = 0; // 実行時間合計
+    private float $qt_sum = 0; // 実行時間合計
     
     /**
      * 接続
