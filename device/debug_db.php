@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.6.2
+ * @version  2.1.7.0
  * @package  device
  * 
  */
@@ -128,7 +128,7 @@ class DebugDb extends Db
      */
     protected function bindDebug($name, $value): void
     {
-        $d_v = (strlen($value) > 5000) ? '[longtext or binary]' : $value;
+        $d_v = (strlen($value ?? 0) > 5000) ? '[longtext or binary]' : $value;
         global $g_counter;
         if ($d_v === null) {
             $this->disp_sql .= sprintf(
