@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.6.0
+ * @version  2.1.7.0
  * @package  device
  * 
  */
@@ -418,16 +418,16 @@ class Db
      */
     public function bindFetchAll(
         array $param = [],
-        string $statement_id = 'stmt',
-        bool $class_flag = false
+        string $statement_id = 'stmt'
     ): array {
+        $rows = [];
         $count = $this->bind($param, $statement_id);
         if ($count) {
             $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_ASSOC);
-        }
-        $rows = $this->stmt[$statement_id]->fetchAll();
-        if ($rows === false) {
-            throw new \Error('Fetch Error');
+            $rows = $this->stmt[$statement_id]->fetchAll();
+            if ($rows === false) {
+                throw new \Error('Fetch Error');
+            }
         }
         return $rows;
     }
@@ -443,14 +443,15 @@ class Db
         array $param = [],
         string $statement_id = 'stmt'
     ): array {
+        $obj = [];
         $count = $this->bind($param, $statement_id);
         if ($count) {
             $this->stmt[$statement_id]->setFetchMode(
                 \PDO::FETCH_CLASS, '\stdClass');
-        }
-        $obj = $this->stmt[$statement_id]->fetchAll();
-        if ($obj === false) {
-            throw new \Error('Fetch Error');
+            $obj = $this->stmt[$statement_id]->fetchAll();
+            if ($obj === false) {
+                throw new \Error('Fetch Error');
+            }
         }
         return $obj;
     }

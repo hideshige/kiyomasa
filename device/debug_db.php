@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.7.0
+ * @version  2.1.8.0
  * @package  device
  * 
  */
@@ -401,8 +401,7 @@ class DebugDb extends Db
      */
     public function bindFetchAll(
         array $param = [],
-        string $statement_id = 'stmt',
-        bool $class_flag = false
+        string $statement_id = 'stmt'
     ): array {
         try {
             $rows = parent::bindFetchAll($param, $statement_id);
