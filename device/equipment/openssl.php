@@ -3,9 +3,8 @@
  * 暗号化(OpenSSL) モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.0
+ * @version  1.0.3.0
  * @package  device/equipment
- * 
  * 
  */
 
@@ -13,6 +12,8 @@ namespace Php\Framework\Device\Equipment;
 
 class Openssl
 {
+    private static $private_key = null;
+    private static $public_key = null;
     
     /**
      * 秘密鍵を使って暗号化
@@ -23,12 +24,17 @@ class Openssl
     {
         $crypt = '';
         if ($plain) {
-            $res = openssl_get_privatekey(
-                OPEN_SSL_PRIVATE_KEY,
-                OPEN_SSL_PASSPHRASE
-            );
-            openssl_private_encrypt($plain, $crypt, $res);
-            $crypt = base64_encode($crypt);
+            if (!self::$private_key) {
+                self::$private_key = openssl_get_privatekey(
+                    OPEN_SSL_PRIVATE_KEY,
+                    OPEN_SSL_PASSPHRASE
+                );
+            }
+            $arr = str_split($plain, 117);
+            foreach ($arr as $v) {
+                openssl_private_encrypt($v, $temp, self::$private_key);
+                $crypt .= base64_encode($temp);
+            }
         }
         return $crypt;
     }
@@ -42,9 +48,15 @@ class Openssl
     {
         $plain = '';
         if ($crypt) {
-            $crypt = base64_decode($crypt);
-            $res = openssl_get_publickey(OPEN_SSL_PUBLIC_KEY);
-            openssl_public_decrypt($crypt, $plain, $res);
+            if (!self::$public_key) {
+                self::$public_key = openssl_get_publickey(OPEN_SSL_PUBLIC_KEY);
+            }
+            $arr = str_split($crypt, 172);
+            foreach ($arr as $v) {
+                openssl_public_decrypt(
+                    base64_decode($v), $temp, self::$public_key);
+                $plain .= $temp;
+            }
         }
         return $plain;
     }
