@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.8.0
+ * @version  2.1.9.0
  * @package  device
  * 
  */
@@ -198,7 +198,7 @@ class DebugDb extends Db
      * @return void
      * @throws \Error
      */
-    private function dbLog(string $class_name, string $error): void
+    protected function dbLog(string $class_name, string $error): void
     {
         $bind = [];
         if ($this->bind_params) {
@@ -222,15 +222,11 @@ class DebugDb extends Db
         string $sql,
         string $statement = 'stmt'
     ): \PDOStatement {
-        try {
-            $this->sql = $sql;
-            $this->before();
-            $res = parent::query($sql, $statement);
-            $this->queryDebug($statement, $this->after());
-            return $res;
-        } catch (\PDOException $e) {
-            $this->dbLog('query', $e->getMessage());
-        }
+        $this->sql = $sql;
+        $this->before();
+        $res = parent::query($sql, $statement);
+        $this->queryDebug($statement, $this->after());
+        return $res;
     }
     
     /**
@@ -240,33 +236,16 @@ class DebugDb extends Db
      */
     public function exec(string $sql): int
     {
-        try {
-            $this->before();
-            $res = parent::exec($sql);
-            global $g_counter;
-            $this->disp_sql .= sprintf(
-                "{{COUNTER %d}}%s;\n{{TIME}} (%s秒) [行数 %d]\n",
-                $g_counter, $sql, $this->after(), $res);
-            $g_counter ++;
-            return $res;
-        } catch (\PDOException $e) {
-            $this->dbLog('exec', $e->getMessage());
-        }
+        $this->before();
+        $res = parent::exec($sql);
+        global $g_counter;
+        $this->disp_sql .= sprintf(
+            "{{COUNTER %d}}%s;\n{{TIME}} (%s秒) [行数 %d]\n",
+            $g_counter, $sql, $this->after(), $res);
+        $g_counter ++;
+        return $res;
     }
     
-    /**
-     * AUTO_INCREMENTで最後に作成した番号を返す
-     * @return int
-     */
-    public function getId(): int
-    {
-        try {
-            return parent::getId();
-        } catch (\PDOException $e) {
-            $this->dbLog('getId', $e->getMessage());
-        }
-    }
-
     /**
      * 隔離性水準の設定
      * @param int $level
@@ -274,16 +253,12 @@ class DebugDb extends Db
      */
     public function setIsolationLevel(int $level): void
     {
-        try {
-            parent::setIsolationLevel($level);
-            global $g_counter;
-            $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
-                . "SET TRANSACTION ISOLATION LEVEL "
-                . ($this->islv[$level] ?? 'REPEATABLE READ') . ";\n";
-            $g_counter ++;
-        } catch (\PDOException $e) {
-            $this->dbLog('setIsolationLevel', $e->getMessage());
-        }
+        parent::setIsolationLevel($level);
+        global $g_counter;
+        $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
+            . "SET TRANSACTION ISOLATION LEVEL "
+            . ($this->islv[$level] ?? 'REPEATABLE READ') . ";\n";
+        $g_counter ++;
     }
     
     /**
@@ -293,18 +268,13 @@ class DebugDb extends Db
      */
     public function transaction(): void
     {
-        try {
-            if ($this->transaction_flag === false) {
-                $this->connectCheck();
-                global $g_counter;
-                $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
-                    . "START TRANSACTION;\n";
-                $g_counter ++;
-            }
-            parent::transaction();
-        } catch (\PDOException $e) {
-            $this->dbLog('transaction', $e->getMessage());
+        if ($this->transaction_flag === false) {
+            global $g_counter;
+            $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
+                . "START TRANSACTION;\n";
+            $g_counter ++;
         }
+        parent::transaction();
     }
     
     /**
@@ -314,16 +284,12 @@ class DebugDb extends Db
      */
     public function commit(): void
     {
-        try {
-            if ($this->transaction_flag) {
-                global $g_counter;
-                $this->disp_sql .= "{{COUNTER " . $g_counter . "}}COMMIT;\n";
-                $g_counter ++;
-            }
-            parent::commit();
-        } catch (\PDOException $e) {
-            $this->dbLog('commit', $e->getMessage());
+        if ($this->transaction_flag) {
+            global $g_counter;
+            $this->disp_sql .= "{{COUNTER " . $g_counter . "}}COMMIT;\n";
+            $g_counter ++;
         }
+        parent::commit();
     }
     
     /**
@@ -333,16 +299,12 @@ class DebugDb extends Db
      */
     public function rollback(): void
     {
-        try {
-            if ($this->transaction_flag) {
-                global $g_counter;
-                $this->disp_sql .= "{{COUNTER " . $g_counter . "}}ROLLBACK;\n";
-                $g_counter ++;
-            }
-            parent::rollback();
-        } catch (\PDOException $e) {
-            $this->dbLog('rollback', $e->getMessage());
+        if ($this->transaction_flag) {
+            global $g_counter;
+            $this->disp_sql .= "{{COUNTER " . $g_counter . "}}ROLLBACK;\n";
+            $g_counter ++;
         }
+        parent::rollback();
     }
     
     /**
@@ -356,20 +318,16 @@ class DebugDb extends Db
         string $statement_id = 'stmt',
         string $sql = ''
     ) {
-        try {
-            global $g_counter;
-            if ($sql) {
-                $this->sql = $sql;
-            }
-            
-            $this->disp_sql .= sprintf(
-                "{{COUNTER %d}}PREPARE {{STATEMENT}}%s FROM '%s';\n",
-                $g_counter, $statement_id, $this->sql);
-            $g_counter ++;
-            return parent::prepare($statement_id, $this->sql);
-        } catch (\PDOException $e) {
-            $this->dbLog('prepare', $e->getMessage());
+        global $g_counter;
+        if ($sql) {
+            $this->sql = $sql;
         }
+
+        $this->disp_sql .= sprintf(
+            "{{COUNTER %d}}PREPARE {{STATEMENT}}%s FROM '%s';\n",
+            $g_counter, $statement_id, $this->sql);
+        $g_counter ++;
+        return parent::prepare($statement_id, $this->sql);
     }
     
     /**
@@ -383,13 +341,9 @@ class DebugDb extends Db
         array $params = [],
         string $statement_id = 'stmt'
     ): int {
-        try {
-            $this->before();
-            $count = parent::bind($params, $statement_id);
-            return $count;
-        } catch (\PDOException $e) {
-            $this->dbLog('bind', $e->getMessage());
-        }
+        $this->before();
+        $count = parent::bind($params, $statement_id);
+        return $count;
     }
     
     /**
@@ -403,13 +357,9 @@ class DebugDb extends Db
         array $param = [],
         string $statement_id = 'stmt'
     ): array {
-        try {
-            $rows = parent::bindFetchAll($param, $statement_id);
-            $this->dbSelectDump($rows);
-            return $rows;
-        } catch (\PDOException $e) {
-            $this->dbLog('bindFetchAll', $e->getMessage());
-        }
+        $rows = parent::bindFetchAll($param, $statement_id);
+        $this->dbSelectDump($rows);
+        return $rows;
     }
     
     /**
@@ -423,13 +373,9 @@ class DebugDb extends Db
         array $param = [],
         string $statement_id = 'stmt'
     ): array {
-        try {
-            $rows = parent::bindFetchAllClass($param, $statement_id);
-            $this->dbSelectDump($rows);
-            return $rows;
-        } catch (\PDOException $e) {
-            $this->dbLog('bindFetchAll', $e->getMessage());
-        }
+        $rows = parent::bindFetchAllClass($param, $statement_id);
+        $this->dbSelectDump($rows);
+        return $rows;
     }
     
     /**
@@ -439,18 +385,14 @@ class DebugDb extends Db
      */
     public function fetch(string $statement_id = 'stmt')
     {
-        try {
-            $rows = parent::fetch($statement_id);
-            if ($rows) {
-                // デバッグ表示
-                $this->disp_sql .= '═══ BEGIN ROW ═══';
-                $this->dbSelectDumpDetail($rows);
-                $this->disp_sql .= '═══ END ROW ═══';
-            }
-            return $rows;
-        } catch (\PDOException $e) {
-            $this->dbLog('fetch', $e->getMessage());
+        $rows = parent::fetch($statement_id);
+        if ($rows) {
+            // デバッグ表示
+            $this->disp_sql .= '═══ BEGIN ROW ═══';
+            $this->dbSelectDumpDetail($rows);
+            $this->disp_sql .= '═══ END ROW ═══';
         }
+        return $rows;
     }
     
     /**
@@ -463,19 +405,15 @@ class DebugDb extends Db
         string $class_name,
         string $statement_id = 'stmt'
     ) {
-        try {
-            $rows = parent::fetchClass($class_name, $statement_id);
-            if ($rows) {
-                // デバッグ表示
-                $this->disp_sql .= '═══ BEGIN ROW ═══';
-                $this->dbSelectDumpDetail($rows);
-                $this->disp_sql .= "═════════\n";
-                $this->disp_sql .= '═══ END ROW ═══';
-            }
-            return $rows;
-        } catch (\PDOException $e) {
-            $this->dbLog('fetch', $e->getMessage());
+        $rows = parent::fetchClass($class_name, $statement_id);
+        if ($rows) {
+            // デバッグ表示
+            $this->disp_sql .= '═══ BEGIN ROW ═══';
+            $this->dbSelectDumpDetail($rows);
+            $this->disp_sql .= "═════════\n";
+            $this->disp_sql .= '═══ END ROW ═══';
         }
+        return $rows;
     }
     
     /**
@@ -487,16 +425,12 @@ class DebugDb extends Db
      */
     public function stmtClose(string $statement_id = 'stmt'): void
     {
-        try {
-            parent::stmtClose($statement_id);
-            
-            global $g_counter;
-            $this->disp_sql .= sprintf(
-                "{{COUNTER %d}}DEALLOCATE PREPARE {{STATEMENT}}%s;\n",
-                $g_counter, $statement_id);
-            $g_counter ++;
-        } catch (\PDOException $e) {
-            $this->dbLog('stmtClose', $e->getMessage());
-        }
+        parent::stmtClose($statement_id);
+
+        global $g_counter;
+        $this->disp_sql .= sprintf(
+            "{{COUNTER %d}}DEALLOCATE PREPARE {{STATEMENT}}%s;\n",
+            $g_counter, $statement_id);
+        $g_counter ++;
     }
 }

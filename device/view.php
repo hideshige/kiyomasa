@@ -14,11 +14,12 @@
  * {ht:???}とするとHTMLをサニタイズできる
  * {htbr:???}とするとHTMLをサニタイズしたあと改行を反映できる
  * {sl:???}とするとHTMLとJavaScriptをサニタイズできる
+ * {url:???}とするとURLエンコードできる
  *
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.9.6
+ * @version  1.1.10.0
  * @package  device
  * 
  */
@@ -139,6 +140,7 @@ class View
                 $content = str_replace('{htbr:' . $k . '}', nl2br(htmlspecialchars($v)), $content);
                 $content = str_replace('{ht:' . $k . '}', htmlspecialchars($v), $content);
                 $content = str_replace('{sl:' . $k . '}', htmlspecialchars(str_replace(["\n", "\r"], ' ', addslashes($v)), ENT_QUOTES), $content);
+                $content = str_replace('{url:' . $k . '}', urlencode($v), $content);
                 $content = str_replace('{' . $k . '}', $v, $content);
             }
             unset($disp['REPLACE']);
@@ -225,7 +227,7 @@ class View
         string &$tag_data
     ): void {
         foreach ($match as $disp_data) {
-            $data = str_replace(['htbr:', 'ht:', 'sl:'], '', $disp_data);
+            $data = str_replace(['htbr:', 'ht:', 'sl:', 'url:'], '', $disp_data);
             if (isset($disp[$data])) {
                 if (strstr($disp_data, 'ht:') !== false) {
                     $change_data = htmlspecialchars($disp[$data]);
@@ -234,6 +236,8 @@ class View
                 } else if (strstr($disp_data, 'sl:') !== false) {
                     $change_data = htmlspecialchars(str_replace(["\n", "\r"],
                         ' ', addslashes($disp[$data])), ENT_QUOTES);
+                } else if (strstr($disp_data, 'url:') !== false) {
+                    $change_data = urlencode($disp[$data]);
                 } else {
                     $change_data = $disp[$data];
                 }

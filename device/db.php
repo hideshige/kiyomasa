@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.7.0
+ * @version  2.1.8.0
  * @package  device
  * 
  */
@@ -97,6 +97,19 @@ class Db
     }
     
     /**
+     * エラーメッセージの成型
+     * @param string $class_name
+     * @param string $error
+     * @return void
+     * @throws \Error
+     */
+    protected function dbLog(string $class_name, string $error): void
+    {
+        // debug_db.phpで継承して実装
+        throw new \Error($class_name . ' ' . $error);
+    }
+    
+    /**
      * クエリ
      * @param string $sql
      * @param string $statement
@@ -106,9 +119,13 @@ class Db
         string $sql,
         string $statement = 'stmt'
     ): \PDOStatement {
-        $this->connectCheck();
-        $this->stmt[$statement] = $this->connect->query($sql);
-        return $this->stmt[$statement];
+        try {
+            $this->connectCheck();
+            $this->stmt[$statement] = $this->connect->query($sql);
+            return $this->stmt[$statement];
+        } catch (\PDOException $e) {
+            $this->dbLog('query', $e->getMessage());
+        }
     }
     
     /**
@@ -118,8 +135,12 @@ class Db
      */
     public function exec(string $sql): int
     {
-        $this->connectCheck();
-        return $this->connect->exec($sql);
+        try {
+            $this->connectCheck();
+            return $this->connect->exec($sql);
+        } catch (\PDOException $e) {
+            $this->dbLog('exec', $e->getMessage());
+        }
     }
     
     /**
@@ -255,11 +276,12 @@ class Db
      */
     public function getId(): int
     {
-        $res = $this->connect->lastInsertId();
-        if ($res === false) {
-            throw new \Error('GET ID ERROR');
+        try {
+            $res = $this->connect->lastInsertId();
+            return $res;
+        } catch (\PDOException $e) {
+            $this->dbLog('getId', $e->getMessage());
         }
-        return $res;
     }
     
     /**
@@ -269,9 +291,13 @@ class Db
      */
     public function setIsolationLevel(int $level): void
     {
-        $this->connectCheck();
-        $this->connect->query('SET TRANSACTION ISOLATION LEVEL '
-            . ($this->islv[$level] ?? 'REPEATABLE READ'));
+        try {
+            $this->connectCheck();
+            $this->connect->query('SET TRANSACTION ISOLATION LEVEL '
+                . ($this->islv[$level] ?? 'REPEATABLE READ'));
+        } catch (\PDOException $e) {
+            $this->dbLog('setIsolationLevel', $e->getMessage());
+        }
     }
     
     /**
@@ -280,10 +306,14 @@ class Db
      */
     public function transaction(): void
     {
-        $this->connectCheck();
-        if ($this->transaction_flag === false) {
-            $this->transaction_flag = true;
-            $this->connect->beginTransaction();
+        try {
+            $this->connectCheck();
+            if ($this->transaction_flag === false) {
+                $this->transaction_flag = true;
+                $this->connect->beginTransaction();
+            }
+        } catch (\PDOException $e) {
+            $this->dbLog('transaction', $e->getMessage());
         }
     }
 
@@ -293,9 +323,13 @@ class Db
      */
     public function commit(): void
     {
-        if ($this->transaction_flag) {
-            $this->transaction_flag = false;
-            $this->connect->commit();
+        try {
+            if ($this->transaction_flag) {
+                $this->transaction_flag = false;
+                $this->connect->commit();
+            }
+        } catch (\PDOException $e) {
+            $this->dbLog('commit', $e->getMessage());
         }
     }
 
@@ -305,9 +339,13 @@ class Db
      */
     public function rollback(): void
     {
-        if ($this->transaction_flag) {
-            $this->transaction_flag = false;
-            $this->connect->rollBack();
+        try {
+            if ($this->transaction_flag) {
+                $this->transaction_flag = false;
+                $this->connect->rollBack();
+            }
+        } catch (\PDOException $e) {
+            $this->dbLog('rollback', $e->getMessage());
         }
     }
     
@@ -321,16 +359,20 @@ class Db
         string $statement_id = 'stmt',
         string $sql = ''
     ) {
-        $this->connectCheck();
-        if (!isset($this->do[$statement_id])) {
-            $this->do[$statement_id] = 'prepare';
-        }
-        if ($sql) {
-            $this->sql = $sql;
-        }
-        $this->stmt[$statement_id] = $this->connect->prepare($this->sql);
+        try {
+            $this->connectCheck();
+            if (!isset($this->do[$statement_id])) {
+                $this->do[$statement_id] = 'prepare';
+            }
+            if ($sql) {
+                $this->sql = $sql;
+            }
+            $this->stmt[$statement_id] = $this->connect->prepare($this->sql);
 
-        return $this->stmt[$statement_id];
+            return $this->stmt[$statement_id];
+        } catch (\PDOException $e) {
+            $this->dbLog('prepare', $e->getMessage());
+        }
     }
     
     /**
@@ -357,34 +399,35 @@ class Db
         array $params = [],
         string $statement_id = 'stmt'
     ): int {
-        if (!isset($this->name[$statement_id])) {
-            $this->name[$statement_id] = true;
-        }
-
-        $this->bind_params = [];
-        $i = 1;
-        foreach ($params as $k => $v) {
-            if ($k === 0 and $this->do[$statement_id] === 'update') {
-                // array_spliceで入れた0の配列キーをupdate_timeに変える
-                $k = 'update_time';
+        try {
+            if (!isset($this->name[$statement_id])) {
+                $this->name[$statement_id] = true;
             }
-            $name = $this->name[$statement_id] ? $k : $i;
-            
-            $this->bind_params[$name] = $v;
-            $this->bindDebug($name, $v);
 
-            $this->stmt[$statement_id]->bindValue($name, $v,
-                is_numeric($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
-            $i ++;
+            $this->bind_params = [];
+            $i = 1;
+            foreach ($params as $k => $v) {
+                if ($k === 0 and $this->do[$statement_id] === 'update') {
+                    // array_spliceで入れた0の配列キーをupdate_timeに変える
+                    $k = 'update_time';
+                }
+                $name = $this->name[$statement_id] ? $k : $i;
+
+                $this->bind_params[$name] = $v;
+                $this->bindDebug($name, $v);
+
+                $this->stmt[$statement_id]->bindValue($name, $v,
+                    is_numeric($v) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
+                $i ++;
+            }
+            $this->executeDebug($statement_id);
+            $this->stmt[$statement_id]->execute();
+            $count = $this->stmt[$statement_id]->rowCount();
+            $this->executeDebugCount($count);
+            return $count;
+        } catch (\PDOException $e) {
+            $this->dbLog('bind', $e->getMessage());
         }
-        $this->executeDebug($statement_id);
-        $res = $this->stmt[$statement_id]->execute();
-        if ($res === false) {
-            throw new \Error('Bind Error');
-        }
-        $count = $this->stmt[$statement_id]->rowCount();
-        $this->executeDebugCount($count);
-        return $count;
     }
     
     /**
@@ -420,16 +463,20 @@ class Db
         array $param = [],
         string $statement_id = 'stmt'
     ): array {
-        $rows = [];
-        $count = $this->bind($param, $statement_id);
-        if ($count) {
-            $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_ASSOC);
-            $rows = $this->stmt[$statement_id]->fetchAll();
-            if ($rows === false) {
-                throw new \Error('Fetch Error');
+        try {
+            $rows = [];
+            $count = $this->bind($param, $statement_id);
+            if ($count) {
+                $this->stmt[$statement_id]->setFetchMode(\PDO::FETCH_ASSOC);
+                $rows = $this->stmt[$statement_id]->fetchAll();
+                if ($rows === false) {
+                    throw new \Error('Fetch Error');
+                }
             }
+            return $rows;
+        } catch (\PDOException $e) {
+            $this->dbLog('bindFetchAll', $e->getMessage());
         }
-        return $rows;
     }
     
     /**
@@ -443,17 +490,21 @@ class Db
         array $param = [],
         string $statement_id = 'stmt'
     ): array {
-        $obj = [];
-        $count = $this->bind($param, $statement_id);
-        if ($count) {
-            $this->stmt[$statement_id]->setFetchMode(
-                \PDO::FETCH_CLASS, '\stdClass');
-            $obj = $this->stmt[$statement_id]->fetchAll();
-            if ($obj === false) {
-                throw new \Error('Fetch Error');
+        try {
+            $obj = [];
+            $count = $this->bind($param, $statement_id);
+            if ($count) {
+                $this->stmt[$statement_id]->setFetchMode(
+                    \PDO::FETCH_CLASS, '\stdClass');
+                $obj = $this->stmt[$statement_id]->fetchAll();
+                if ($obj === false) {
+                    throw new \Error('Fetch Error');
+                }
             }
+            return $obj;
+        } catch (\PDOException $e) {
+            $this->dbLog('bindFetchAll', $e->getMessage());
         }
-        return $obj;
     }
     
     /**
@@ -463,8 +514,12 @@ class Db
      */
     public function fetch(string $statement_id = 'stmt')
     {
-        $rows = $this->stmt[$statement_id]->fetch(\PDO::FETCH_ASSOC);
-        return $rows;
+        try {
+            $rows = $this->stmt[$statement_id]->fetch(\PDO::FETCH_ASSOC);
+            return $rows;
+        } catch (\PDOException $e) {
+            $this->dbLog('fetch', $e->getMessage());
+        }
     }
     
     /**
@@ -477,8 +532,12 @@ class Db
         string $class_name,
         string $statement_id = 'stmt'
     ) {
-        $rows = $this->stmt[$statement_id]->fetchObject($class_name);
-        return $rows;
+        try {
+            $rows = $this->stmt[$statement_id]->fetchObject($class_name);
+            return $rows;
+        } catch (\PDOException $e) {
+            $this->dbLog('fetch', $e->getMessage());
+        }
     }
     
     /**
@@ -489,12 +548,16 @@ class Db
      */
     public function stmtClose(string $statement_id = 'stmt'): void
     {
-        if (!$this->stmt[$statement_id]) {
-            throw new \Error('No Statement');
-        }
+        try {
+            if (!$this->stmt[$statement_id]) {
+                throw new \Error('No Statement');
+            }
 
-        $this->stmt[$statement_id]->closeCursor();
-        unset($this->do[$statement_id]);
-        unset($this->name[$statement_id]);
+            $this->stmt[$statement_id]->closeCursor();
+            unset($this->do[$statement_id]);
+            unset($this->name[$statement_id]);
+        } catch (\PDOException $e) {
+            $this->dbLog('stmtClose', $e->getMessage());
+        }
     }
 }
