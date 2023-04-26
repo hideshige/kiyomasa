@@ -19,7 +19,7 @@
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.10.0
+ * @version  1.1.11.0
  * @package  device
  * 
  */
@@ -137,11 +137,11 @@ class View
     {
         if (isset($disp['REPLACE'])) {
             foreach ($disp['REPLACE'] as $k => $v) {
-                $content = str_replace('{htbr:' . $k . '}', nl2br(htmlspecialchars($v)), $content);
-                $content = str_replace('{ht:' . $k . '}', htmlspecialchars($v), $content);
-                $content = str_replace('{sl:' . $k . '}', htmlspecialchars(str_replace(["\n", "\r"], ' ', addslashes($v)), ENT_QUOTES), $content);
-                $content = str_replace('{url:' . $k . '}', urlencode($v), $content);
-                $content = str_replace('{' . $k . '}', $v, $content);
+                $content = str_replace('{htbr:' . $k . '}', nl2br(htmlspecialchars($v ?? '')), $content);
+                $content = str_replace('{ht:' . $k . '}', htmlspecialchars($v ?? ''), $content);
+                $content = str_replace('{sl:' . $k . '}', htmlspecialchars(str_replace(["\n", "\r"], ' ', addslashes($v ?? '')), ENT_QUOTES), $content);
+                $content = str_replace('{url:' . $k . '}', urlencode($v ?? ''), $content);
+                $content = str_replace('{' . $k . '}', $v ?? '', $content);
             }
             unset($disp['REPLACE']);
         }
