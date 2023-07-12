@@ -72,7 +72,7 @@ class Mail
             $arr = [];
             foreach ($match[1] as $k => $v) {
                 $arr[] = sprintf("%s<%s>",
-                    mb_encode_mimeheader($v, 'ISO-2022-JP', 'B'),
+                    mb_encode_mimeheader(trim($v), 'ISO-2022-JP', 'B'),
                     $match[2][$k]);
             }
             $str .= implode(',', $arr);
