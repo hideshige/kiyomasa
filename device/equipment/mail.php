@@ -3,7 +3,7 @@
  * メール モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.9.0
+ * @version  1.0.10.0
  * @package  device/equipment
  *
  */
@@ -14,6 +14,7 @@ class Mail
 {
     public static string $from_name = FROM_NAME;
     public static string $from_email = FROM_EMAIL;
+    public static string $return_email = EMAIL_RETURN_PATH;
     
     /**
      * メール送信
@@ -47,7 +48,7 @@ class Mail
             $headers .= self::separate($cc);
         }
         $headers .= "Content-Type: text/plain;charset=ISO-2022-JP \n";
-        $f = sprintf('-f%s', EMAIL_RETURN_PATH);
+        $f = sprintf('-f%s', self::$return_email);
 
         $res = mail($to2, $subject3, $body3, $headers, $f);
         if ($res === false) {
