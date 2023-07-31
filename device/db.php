@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.8.0
+ * @version  2.1.9.0
  * @package  device
  * 
  */
@@ -549,11 +549,12 @@ class Db
     public function stmtClose(string $statement_id = 'stmt'): void
     {
         try {
-            if (!$this->stmt[$statement_id]) {
+            if (!isset($this->stmt[$statement_id])) {
                 throw new \Error('No Statement');
             }
 
             $this->stmt[$statement_id]->closeCursor();
+            unset($this->stmt[$statement_id]);
             unset($this->do[$statement_id]);
             unset($this->name[$statement_id]);
         } catch (\PDOException $e) {
