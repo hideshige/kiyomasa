@@ -3,7 +3,7 @@
  * メール モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.10.0
+ * @version  1.1.1.0
  * @package  device/equipment
  *
  */
@@ -32,25 +32,21 @@ class Mail
         string $cc = ''
     ): bool {
         $to2 = str_replace(["\n", "\r"], '', $to);
-        mb_internal_encoding('ISO-2022-JP');
-        $from_name = mb_encode_mimeheader(mb_convert_encoding(self::$from_name,
-            'ISO-2022-JP', 'utf8'), 'ISO-2022-JP', 'B');
-        mb_internal_encoding('utf8');
         
-        $subject2 = mb_convert_encoding($subject, 'ISO-2022-JP', 'utf8');
-        $subject3 = '=?iso-2022-jp?B?' . base64_encode($subject2) . '?=';
-        $body2 = $body;
-        $body3 = mb_convert_encoding($body2, 'ISO-2022-JP', 'utf8');
+        mb_internal_encoding('utf8');
+        $from_name = mb_encode_mimeheader(self::$from_name, 'utf8', 'B');
+        
+        $subject2 = '=?utf8?B?' . base64_encode($subject) . '?=';
         $headers = "MIME-Version: 1.0 \n";
         $headers .= sprintf("From: %s<%s> \n", $from_name, self::$from_email);
         $headers .= sprintf("Reply-To: %s<%s> \n", $from_name, self::$from_email);
         if ($cc) {
             $headers .= self::separate($cc);
         }
-        $headers .= "Content-Type: text/plain;charset=ISO-2022-JP \n";
+        $headers .= "Content-Type: text/plain;charset=utf8 \n";
         $f = sprintf('-f%s', self::$return_email);
 
-        $res = mail($to2, $subject3, $body3, $headers, $f);
+        $res = mail($to2, $subject2, $body, $headers, $f);
         if ($res === false) {
             throw new \Error('send mail error');
         }
@@ -73,7 +69,7 @@ class Mail
             $arr = [];
             foreach ($match[1] as $k => $v) {
                 $arr[] = sprintf("%s<%s>",
-                    mb_encode_mimeheader(trim($v), 'ISO-2022-JP', 'B'),
+                    mb_encode_mimeheader(trim($v), 'utf8', 'B'),
                     $match[2][$k]);
             }
             $str .= implode(',', $arr);
