@@ -37,14 +37,8 @@ const CURL_TYPE_TEXT = 3;
 // セッションが起動しているかどうか
 $g_session_flag = false;
 
-// キャッシュするかどうか
-$g_cache_flag = true;
-
 // データベースデバッグ用表示カウンタ
 $g_counter = 1;
-
-// 開いている画面が管理画面かどうか
-$g_admin_flag = false;
 
 // 使用すると問題のある文字
 $g_change_chara = [];
