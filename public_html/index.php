@@ -33,6 +33,6 @@ header('X-Frame-Options: DENY'); // クリックジャック対策
 require_once(__DIR__ . '/../core/.define.php'); // システム定義
 require_once(__DIR__ . '/../core/env.php'); // 環境識別
 require_once(__DIR__ . '/../core/mode.php'); // モード識別
-require_once(__DIR__ . '/../core/config.php'); // システム設定
+require_once(__DIR__ . '/../core/config.php'); // プロジェクト設定
 require_once(__DIR__ . '/../core/.castle.php'); // コントローラ
 new Php\Framework\Core\Castle();
