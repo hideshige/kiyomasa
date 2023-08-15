@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.7.0
+ * @version  1.1.7.2
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -34,14 +34,11 @@ class Session
     /**
      * コンストラクタ
      * @global bool $g_session_flag
-     * @global bool $g_cache_flag
      */
     public function __construct()
     {
         global $g_session_flag;
-        global $g_cache_flag;
         $g_session_flag = true;
-        $g_cache_flag = false;
         $handler = new sessionHandlerMem();
         session_set_save_handler(
             [$handler, 'open'],
@@ -121,7 +118,7 @@ class sessionHandlerDb
         $params['session_id'] = $ses_id;
         $params['session_expires'] = time();
         S::$dbm->select(
-            't_session',
+            DB_MASTER_NAME . '.t_session',
             'session_value',
             'WHERE session_id = :session_id AND '
             . 'session_expires > :session_expires',
@@ -162,7 +159,7 @@ class sessionHandlerDb
         $params = [];
         $params['session_id'] = $ses_id;
         S::$dbm->delete(
-            't_session',
+            DB_MASTER_NAME . '.t_session',
             'WHERE session_id = :session_id',
             'session'
         );
@@ -180,7 +177,7 @@ class sessionHandlerDb
         $params = [];
         $params['session_expires'] = time();
         S::$dbm->delete(
-            't_session',
+            DB_MASTER_NAME . '.t_session',
             'WHERE session_expires < :session_expires',
             'session'
         );

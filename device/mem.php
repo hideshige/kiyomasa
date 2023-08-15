@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.4.0
+ * @version  2.0.5.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -130,7 +130,7 @@ class Mem
         $var = false;
         $param = ['memcached_key' => $key];
         $where = 'WHERE memcached_key = :memcached_key';
-        S::$dbs->select('memcached', '*', $where, 'memcached');
+        S::$dbs->select(DB_SLAVE_NAME . '.memcached', '*', $where, 'memcached');
         S::$dbs->bind($param, 'memcached');
         $res = S::$dbs->fetchClass('\stdClass', 'memcached');
         if (($res === false or ($res->temp_flag and 
@@ -161,7 +161,7 @@ class Mem
         $params['temp_flag'] = $temp_flag;
         $params['expires'] = $expire !== 0
             ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
-        S::$dbm->insert('memcached', $params, true, 'memcached');
+        S::$dbm->insert(DB_MASTER_NAME . '.memcached', $params, true, 'memcached');
         $res = S::$dbm->bind($params, 'memcached');
         return $res;
     }
@@ -175,7 +175,7 @@ class Mem
     {
         $param = [$key];
         $where = 'WHERE memcached_key = ?';
-        S::$dbm->delete('memcached', $where, 'memcached');
+        S::$dbm->delete(DB_MASTER_NAME . '.memcached', $where, 'memcached');
         S::$dbm->bind($param, 'memcached');
     }
 }
