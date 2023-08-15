@@ -46,7 +46,7 @@ class Camp
             $dbo = $debug ?
                 'Php\Framework\Device\DebugDb' : 'Php\Framework\Device\Db';
             S::$dbm = new $dbo(DB_MASTER_SERVER, DB_MASTER_USER,
-                DB_MASTER_PASSWORD, DB_MASTER_NAME, DB_DRIVER);
+                DB_MASTER_PASSWORD, DB_NAME, DB_DRIVER);
             S::$dbs = new $dbo(DB_SLAVE_SERVER, DB_SLAVE_USER,
                 DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER);
             

@@ -161,7 +161,7 @@ class Mem
         $params['temp_flag'] = $temp_flag;
         $params['expires'] = $expire !== 0
             ? date('Y-m-d H:i:s', $expire) : TIMESTAMP;
-        S::$dbm->insert(DB_MASTER_NAME . '.memcached', $params, true, 'memcached');
+        S::$dbm->insert(DB_NAME . '.memcached', $params, true, 'memcached');
         $res = S::$dbm->bind($params, 'memcached');
         return $res;
     }
@@ -175,7 +175,7 @@ class Mem
     {
         $param = [$key];
         $where = 'WHERE memcached_key = ?';
-        S::$dbm->delete(DB_MASTER_NAME . '.memcached', $where, 'memcached');
+        S::$dbm->delete(DB_NAME . '.memcached', $where, 'memcached');
         S::$dbm->bind($param, 'memcached');
     }
 }

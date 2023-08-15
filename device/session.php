@@ -118,7 +118,7 @@ class sessionHandlerDb
         $params['session_id'] = $ses_id;
         $params['session_expires'] = time();
         S::$dbm->select(
-            DB_MASTER_NAME . '.t_session',
+            DB_NAME . '.t_session',
             'session_value',
             'WHERE session_id = :session_id AND '
             . 'session_expires > :session_expires',
@@ -159,7 +159,7 @@ class sessionHandlerDb
         $params = [];
         $params['session_id'] = $ses_id;
         S::$dbm->delete(
-            DB_MASTER_NAME . '.t_session',
+            DB_NAME . '.t_session',
             'WHERE session_id = :session_id',
             'session'
         );
@@ -177,7 +177,7 @@ class sessionHandlerDb
         $params = [];
         $params['session_expires'] = time();
         S::$dbm->delete(
-            DB_MASTER_NAME . '.t_session',
+            DB_NAME . '.t_session',
             'WHERE session_expires < :session_expires',
             'session'
         );
