@@ -32,7 +32,7 @@ class Castle
             S::$dbm = new $dbo(DB_MASTER_SERVER, DB_MASTER_USER,
                 DB_MASTER_PASSWORD, DB_NAME, DB_DRIVER);
             S::$dbs = new $dbo(DB_SLAVE_SERVER, DB_SLAVE_USER,
-                DB_SLAVE_PASSWORD, DB_SLAVE_NAME, DB_DRIVER);
+                DB_SLAVE_PASSWORD, DB_NAME, DB_DRIVER);
             
             if (DB_MASTER_SERVER !== DB_SLAVE_SERVER and !S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う

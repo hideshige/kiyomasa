@@ -130,7 +130,7 @@ class Mem
         $var = false;
         $param = ['memcached_key' => $key];
         $where = 'WHERE memcached_key = :memcached_key';
-        S::$dbs->select(DB_SLAVE_NAME . '.memcached', '*', $where, 'memcached');
+        S::$dbs->select(DB_NAME . '.memcached', '*', $where, 'memcached');
         S::$dbs->bind($param, 'memcached');
         $res = S::$dbs->fetchClass('\stdClass', 'memcached');
         if (($res === false or ($res->temp_flag and 
