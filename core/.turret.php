@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.11.0
+ * @version  1.0.12.0
  * @package  core
  * 
  */
@@ -126,7 +126,7 @@ class Turret
             $info = new ErrorInfo;
             $info->set($e->getMessage(), $e->getFile(), $e->getLine());
         }
-
+        
         // エラーページの表示
         if (S::$jflag === false) {
             if ($this->error_flag === false) {
@@ -139,7 +139,7 @@ class Turret
                 echo 'エラーになりましたが、エラー画面が表示できませんでした';
             }
         } else {
-            $json = ['alert' => 'エラー'];
+            $json = ['alert' => (ENV <= ENV_DEV ? $e->getMessage() : 'エラー')];
             $this->jsonDebug($json);
             header('Content-Type: application/json; charset=UTF-8');
             echo json_encode($json,
