@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.9.0
+ * @version  2.1.10.0
  * @package  device
  * 
  */
@@ -24,7 +24,7 @@ class DebugDb extends Db
      */
     public function connect(): bool {
         global $g_counter;
-        $this->disp_sql .= sprintf("{{COUNTER %d}}Connected\n", $g_counter);
+        $this->disp_sql .= sprintf("{{COUNTER %d Connected}}\n", $g_counter);
         $g_counter ++;
         return parent::connect();
     }

@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.1
+ * @version  1.0.7.0
  * @package  core
  * 
  */
@@ -199,8 +199,9 @@ trait Wall
             . '<span name="fw_debug_process" class="fw_debug_bold">:$1</span>',
             $text);
         $text = str_replace('{{COLON}}', ':', $text);
-        $text = preg_replace("/{{COUNTER (\d*)}}/",
-            '<span name="fw_debug_process" class="fw_debug_counter">$1</span> ',
+        $text = preg_replace("/{{COUNTER (\d*)(.*?)}}/",
+            '<span name="fw_debug_process" class="fw_debug_counter">$1</span>'
+            . '<span name="fw_debug_process">$2</span> ',
             $text);
         $text = preg_replace("/{{TIME}}(.*?\])/",
             '<span name="fw_debug_process" class="fw_debug_time">$1</span>',
@@ -209,7 +210,7 @@ trait Wall
             . 'OFFSET |LIMIT |UPDATE |INSERT |REPLACE |DELETE |VALUES )/',
             '<br>$1', $text);
         if ($text === '') {
-            $text = 'Not Connected';
+            $text = '<span name="fw_debug_process">Not Connected</span>';
         }
         return $text;
     }
