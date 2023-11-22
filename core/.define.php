@@ -3,14 +3,14 @@
  * 定義
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.2
+ * @version  1.0.1.3
  * @package  core
  */
 
 // php.iniで設定されていない場合ここで設定する
-date_default_timezone_set('Asia/Tokyo');
-mb_language('Japanese');
-mb_internal_encoding('utf8');
+//date_default_timezone_set('Asia/Tokyo');
+//mb_language('Japanese');
+//mb_internal_encoding('utf8');
 
 define('TIMESTAMP', date('Y-m-d H:i:s'));
 $http_client_ip = filter_input(INPUT_SERVER, 'HTTP_CLIENT_IP');
@@ -28,6 +28,9 @@ define('USER_AGENT', filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'));
 //    '/(iPhone|iPod|Android|BlackBerry|Windows\sPhone)/',
 //    USER_AGENT) ? true : false);
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
+
+// UTF8 BOM文字列
+const BOM_STR = "\xEF\xBB\xBF";
 
 // curl用結果形式の定義
 const CURL_TYPE_XML = 1;
