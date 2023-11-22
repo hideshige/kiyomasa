@@ -3,7 +3,7 @@
  * 暗号化(OpenSSL) モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.0
+ * @version  1.0.3.1
  * @package  device/equipment
  * 
  */
@@ -32,6 +32,7 @@ class Openssl
             }
             $arr = str_split($plain, 117);
             foreach ($arr as $v) {
+                $temp = '';
                 openssl_private_encrypt($v, $temp, self::$private_key);
                 $crypt .= base64_encode($temp);
             }
@@ -53,6 +54,7 @@ class Openssl
             }
             $arr = str_split($crypt, 172);
             foreach ($arr as $v) {
+                $temp = '';
                 openssl_public_decrypt(
                     base64_decode($v), $temp, self::$public_key);
                 $plain .= $temp;
