@@ -3,7 +3,7 @@
  * メール モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.0
+ * @version  1.1.2.0
  * @package  device/equipment
  *
  */
@@ -31,7 +31,7 @@ class Mail
         string $body,
         string $cc = ''
     ): bool {
-        $to2 = str_replace(["\n", "\r"], '', $to);
+        $to2 = self::separate(str_replace(["\n", "\r"], '', $to));
         
         mb_internal_encoding('utf8');
         $from_name = mb_encode_mimeheader(self::$from_name, 'utf8', 'B');
@@ -41,7 +41,7 @@ class Mail
         $headers .= sprintf("From: %s<%s> \n", $from_name, self::$from_email);
         $headers .= sprintf("Reply-To: %s<%s> \n", $from_name, self::$from_email);
         if ($cc) {
-            $headers .= self::separate($cc);
+            $headers .= 'CC: ' . self::separate($cc) . "\n";
         }
         $headers .= "Content-Type: text/plain;charset=utf8 \n";
         $f = sprintf('-f%s', self::$return_email);
@@ -60,7 +60,6 @@ class Mail
      */
     private static function separate(string $meta): string
     {
-        $str = 'CC: ';
         $match = [];
         preg_match_all('/(.*?)<(.*?)>/',
             str_replace([';', ',', "\n", "\r"], '', $meta), $match);
@@ -72,10 +71,10 @@ class Mail
                     mb_encode_mimeheader(trim($v), 'utf8', 'B'),
                     $match[2][$k]);
             }
-            $str .= implode(',', $arr);
+            $str = implode(',', $arr);
         } else {
-            $str .= $meta;
+            $str = $meta;
         }
-        return $str . "\n";
+        return $str;
     }
 }

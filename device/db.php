@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.9.0
+ * @version  2.1.9.1
  * @package  device
  * 
  */
@@ -26,6 +26,7 @@ class Db
     protected array $name = []; // プレースホルダが名前の場合TRUE
     protected bool $transaction_flag = false; // トランザクション実行中の場合TRUE
     protected bool $lock_flag = false; // テーブル排他ロック中の場合TRUE
+    protected array $bind_params = []; // BINDパラメータ
     protected array $islv = [
         'READ UNCOMMITTED',
         'READ COMMITTED',

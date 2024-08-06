@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.7.0
+ * @version  1.0.7.1
  * @package  core
  * 
  */
@@ -96,10 +96,10 @@ trait Wall
         $navi_id = microtime(true);
 
         $debug = [
-            'request_url' => filter_input(INPUT_SERVER, 'REQUEST_URI'),
+            'request_url' => $_SERVER['REQUEST_URI'] ?? '',
             'os' => PHP_OS,
             'php_ver' => phpversion(),
-            'web_server' => filter_input(INPUT_SERVER, 'SERVER_SOFTWARE')
+            'web_server' => ($_SERVER['SERVER_SOFTWARE'] ?? '')
                 . '　' . php_sapi_name(),
             'memory1' => number_format($first_memory),
             'memory2' => number_format($peak_memory - $first_memory),
