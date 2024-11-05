@@ -1,7 +1,6 @@
 *.log
 *~
 session
-core/mode.php
 env.php
 .DS_Store
 *.csv
