@@ -1,10 +1,10 @@
 <!-- BEGIN DEBUG_INCLUDE -->
 <div id="fw_debug_area_{disp_type}_{navi_id}" class="fw_debug_area" style="display: {debug_disp};">
     <div class="fw_debug_{disp_type}">
-        <p class="fw_debug_logo">Kiyomasa</p>
+        <p class="fw_debug_logo">YOURSITE</p>
         <div class="fw_debug_header">
-            {namespace}
             <span class="fw_debug_exit_button" onclick="FwDebugClass.fwDebug('{disp_type}_{navi_id}', true);">X</span>
+            {namespace}
         </div>
         <h3>{request_url}</h3>
         <h4><span title="dump()の結果がここに出ます">【DEBUG】</span></h4>
@@ -14,7 +14,7 @@
         <h4>
             【DB MASTER】
             <input type="button" onclick="FwDebugClass.fwDebugCounter();" value="CHANGE" />
-            <span name="fw_debug_mode" class="fw_debug_mode">Developer Mode</span>
+            <span name="fw_debug_mode" class="fw_debug_mode">Developper Mode</span>
         </h4>
         <p>{db_master}</p>
         <h4>【DB SLAVE】</h4>

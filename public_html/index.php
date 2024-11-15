@@ -27,7 +27,6 @@ if ((float)phpversion() < 7.4) {
 
 header("P3P: CP='UNI CUR OUR'"); // コンパクトプライバシーポリシー
 header('X-XSS-Protection: 1; mode=block'); // XSS対策
-header('Content-Security-Policy: reflected-xss block'); // XSS対策
 header('X-Frame-Options: DENY'); // クリックジャック対策
 
 require_once(__DIR__ . '/../core/.define.php'); // システム定義
