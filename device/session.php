@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.7.2
+ * @version  1.2.0.0
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -29,6 +29,8 @@
 
 namespace Php\Framework\Device;
 
+use SessionHandlerInterface;
+
 class Session
 {
     /**
@@ -40,14 +42,7 @@ class Session
         global $g_session_flag;
         $g_session_flag = true;
         $handler = new sessionHandlerMem();
-        session_set_save_handler(
-            [$handler, 'open'],
-            [$handler, 'close'],
-            [$handler, 'read'],
-            [$handler, 'write'],
-            [$handler, 'destroy'],
-            [$handler, 'gc']
-        );
+        session_set_save_handler($handler, false);
         
         ini_set('session.gc_maxlifetime', COOKIE_LIFETIME);
         ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
@@ -84,15 +79,15 @@ class Session
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
  * 
  */
-class sessionHandlerDb
+class sessionHandlerDb implements SessionHandlerInterface
 {
     /**
      * 開く
-     * @param string $save_path
-     * @param string $session_name
+     * @param string $path
+     * @param string $name
      * @return bool
      */
-    public function open(string $save_path, string $session_name): bool
+    public function open(string $path, string $name): bool
     {
         return true;
     }
@@ -108,14 +103,14 @@ class sessionHandlerDb
 
     /**
      * 読み込み
-     * @param string $ses_id
-     * @return string
+     * @param string $id
+     * @return string|false
      */
-    public function read(string $ses_id): string
+    public function read(string $id): string|false
     {
         $read = '';
         $params = [];
-        $params['session_id'] = $ses_id;
+        $params['session_id'] = $id;
         $params['session_expires'] = time();
         S::$dbm->select(
             DB_NAME . '.t_session',
@@ -134,11 +129,11 @@ class sessionHandlerDb
 
     /**
      * 書き込み
-     * @param string $ses_id
+     * @param string $id
      * @param string $data
      * @return bool
      */
-    public function write(string $ses_id, string $data): bool
+    public function write(string $id, string $data): bool
     {
         $params = [];
         $params['session_id'] = $ses_id;
@@ -151,13 +146,13 @@ class sessionHandlerDb
 
     /**
      * 削除
-     * @param string $ses_id
+     * @param string $id
      * @return bool
      */
-    public function destroy(string $ses_id): bool
+    public function destroy(string $id): bool
     {
         $params = [];
-        $params['session_id'] = $ses_id;
+        $params['session_id'] = $id;
         S::$dbm->delete(
             DB_NAME . '.t_session',
             'WHERE session_id = :session_id',
@@ -169,10 +164,10 @@ class sessionHandlerDb
 
     /**
      * 有効期限が切れているものを一括削除
-     * @param int $ses_time
-     * @return bool
+     * @param int $max_lifetime
+     * @return int|false
      */
-    public function gc($ses_time): bool
+    public function gc(int $max_lifetime): int|false
     {
         $params = [];
         $params['session_expires'] = time();
@@ -181,23 +176,22 @@ class sessionHandlerDb
             'WHERE session_expires < :session_expires',
             'session'
         );
-        S::$dbm->bind($params, 'session');
-        return true;
+        return S::$dbm->bind($params, 'session');
     }
 }
 
 /**
  * セッションハンドラのカスタマイズ(memcachedに保存する場合)
  */
-class sessionHandlerMem
+class sessionHandlerMem implements SessionHandlerInterface
 {
     /**
      * 開く
-     * @param string $save_path
-     * @param string $session_name
+     * @param string $path
+     * @param string $name
      * @return bool
      */
-    public function open(string $save_path, string $session_name): bool
+    public function open(string $path, string $name): bool
     {
         return true;
     }
@@ -213,45 +207,45 @@ class sessionHandlerMem
 
     /**
      * 読み込み
-     * @param string $ses_id
-     * @return string
+     * @param string $id
+     * @return string|flase
      */
-    public function read(string $ses_id): string
+    public function read(string $id): string|false
     {
-        $res = S::$mem->get($ses_id);
+        $res = S::$mem->get($id);
         return (string)$res;
     }
 
     /**
      * 書き込み
-     * @param string $ses_id
+     * @param string $id
      * @param string $data
      * @return bool
      */
-    public function write(string $ses_id, string $data): bool
+    public function write(string $id, string $data): bool
     {
-        S::$mem->set($ses_id, $data, time() + COOKIE_LIFETIME);
+        S::$mem->set($id, $data, time() + COOKIE_LIFETIME);
         return true;
     }
 
     /**
      * 削除
-     * @param string $ses_id
+     * @param string $id
      * @return bool
      */
-    public function destroy(string $ses_id): bool
+    public function destroy(string $id): bool
     {
-        S::$mem->delete($ses_id);
+        S::$mem->delete($id);
         return true;
     }
 
     /**
      * 有効期限が切れているものを一括削除
-     * @param int $ses_time
-     * @return bool
+     * @param int $max_lifetime
+     * @return int|false
      */
-    public function gc($ses_time): bool
+    public function gc(int $max_lifetime): int|false
     {
-        return true;
+        return 1;
     }
 }
