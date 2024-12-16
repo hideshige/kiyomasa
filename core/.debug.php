@@ -4,7 +4,7 @@
  * どこからでも呼び出しでき、プログラムの解析に役立てられる
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.0
+ * @version  1.1.0.0
  * @package  core
  */
 
@@ -58,9 +58,10 @@ function trace(string $id = ''): void
         $class_name = $match[2] ?? '-';
         if ($class_name !== '-') {
             $reflect = new ReflectionMethod($cur['class'], $cur['function']);
-        } else if ($cur['function'] !== 'Php\Framework\Core\{closure}' and
-            $cur['function'] !== 'require') {
+        } else if (!str_contains($cur['function'], '{closure')) {
             $reflect = new ReflectionFunction($cur['function']);
+        } else {
+            continue;
         }
         $ref = $reflect->__toString();
         
