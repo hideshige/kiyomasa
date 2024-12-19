@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.0.0
+ * @version  1.2.0.1
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -22,8 +22,8 @@
  * を実行させること
  * 
  * セッションの消し方
- * setcookie(PROJECT_PREFIX . 'login', '', time() - COOKIE_LIFETIME, '/');//COOKIEを消す
- * session_destroy();//DBのレコードを消す
+ * setcookie(PROJECT_PREFIX . 'login_sesid', '', time() - COOKIE_LIFETIME, '/'); // COOKIEを消す
+ * session_destroy(); // DBまたはmemcacheのレコードを消す
  * 
  */
 
