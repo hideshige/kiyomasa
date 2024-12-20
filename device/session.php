@@ -3,13 +3,13 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.0.1
+ * @version  1.2.1.0
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
- * (1)memcachedに保存する → sessionHandlerMemを使用すること
+ * (1)メモリ(memcached)に保存する → sessionHandlerMemを使用すること
  * (2)データベースに保存する → sessionHandlerDbを使用すること
- * (3)ファイルをsessionディレクトリに保存する → ハンドラを使用しないこと
+ * (3)ファイルを指定のディレクトリに保存する → ハンドラを使用しないこと
  * 
  * セッションの読み方
  * new Session;
@@ -23,7 +23,7 @@
  * 
  * セッションの消し方
  * setcookie(PROJECT_PREFIX . 'login_sesid', '', time() - COOKIE_LIFETIME, '/'); // COOKIEを消す
- * session_destroy(); // DBまたはmemcacheのレコードを消す
+ * session_destroy(); // DBまたはmemcacheのセッションレコードまたはセッションファイルを消す
  * 
  */
 
@@ -136,7 +136,7 @@ class sessionHandlerDb implements SessionHandlerInterface
     public function write(string $id, string $data): bool
     {
         $params = [];
-        $params['session_id'] = $ses_id;
+        $params['session_id'] = $id;
         $params['session_value'] = $data;
         $params['session_expires'] = time() + COOKIE_LIFETIME;
         S::$dbm->insert('t_session', $params, true, 'session');
@@ -163,7 +163,7 @@ class sessionHandlerDb implements SessionHandlerInterface
     }
 
     /**
-     * 有効期限が切れているものを一括削除
+     * ガベージコレクション
      * @param int $max_lifetime
      * @return int|false
      */
@@ -174,9 +174,9 @@ class sessionHandlerDb implements SessionHandlerInterface
         S::$dbm->delete(
             DB_NAME . '.t_session',
             'WHERE session_expires < :session_expires',
-            'session'
+            'session' . $max_lifetime
         );
-        return S::$dbm->bind($params, 'session');
+        return S::$dbm->bind($params, 'session' . $max_lifetime);
     }
 }
 
@@ -240,12 +240,15 @@ class sessionHandlerMem implements SessionHandlerInterface
     }
 
     /**
-     * 有効期限が切れているものを一括削除
+     * ガベージコレクション
      * @param int $max_lifetime
      * @return int|false
      */
     public function gc(int $max_lifetime): int|false
     {
-        return 1;
+        $param = ['expires' => TIMESTAMP];
+        $where = 'WHERE temp_flag = 1 AND expires < :expires';
+        S::$dbm->delete(DB_NAME . '.memcached', $where, 'gc' . $max_lifetime);
+        return S::$dbm->bind($param, 'gc' . $max_lifetime);
     }
 }
