@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.10.0
+ * @version  2.1.11.0
  * @package  device
  * 
  */
@@ -68,8 +68,8 @@ class DebugDb extends Db
     {
         foreach ($rows as $k => $v) {
             $this->disp_sql .= sprintf("'%s' : %s\n", $k,
-                is_numeric($v) ? $v : 
-                (is_null($v) ? 'NULL' : 
+                is_numeric($v) ? $v :
+                (is_null($v) ? 'NULL' :
                 (is_array($v) ? json_encode($v) : "'" . $v . "'")));
         }
     }
@@ -89,7 +89,6 @@ class DebugDb extends Db
      */
     private function after(): float
     {
-        $qt = 0;
         $t = microtime(true);
         $qt = round($t - $this->time, 4);
         $this->qt_sum += $qt;
@@ -383,7 +382,7 @@ class DebugDb extends Db
      * @param string $statement_id プリペアドステートメントID
      * @return array|bool
      */
-    public function fetch(string $statement_id = 'stmt')
+    public function fetch(string $statement_id = 'stmt'): array|bool
     {
         $rows = parent::fetch($statement_id);
         if ($rows) {
@@ -404,7 +403,7 @@ class DebugDb extends Db
     public function fetchClass(
         string $class_name,
         string $statement_id = 'stmt'
-    ) {
+    ): object|bool {
         $rows = parent::fetchClass($class_name, $statement_id);
         if ($rows) {
             // デバッグ表示

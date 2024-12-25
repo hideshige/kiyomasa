@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.9.1
+ * @version  2.1.10.0
  * @package  device
  * 
  */
@@ -513,7 +513,7 @@ class Db
      * @param string $statement_id プリペアドステートメントID
      * @return array|bool
      */
-    public function fetch(string $statement_id = 'stmt')
+    public function fetch(string $statement_id = 'stmt'): array|bool
     {
         try {
             $rows = $this->stmt[$statement_id]->fetch(\PDO::FETCH_ASSOC);
@@ -532,7 +532,7 @@ class Db
     public function fetchClass(
         string $class_name,
         string $statement_id = 'stmt'
-    ) {
+    ): object|bool {
         try {
             $rows = $this->stmt[$statement_id]->fetchObject($class_name);
             return $rows;
