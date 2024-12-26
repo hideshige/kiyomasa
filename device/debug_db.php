@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.11.0
+ * @version  2.1.12.0
  * @package  device
  * 
  */
@@ -267,6 +267,7 @@ class DebugDb extends Db
      */
     public function transaction(): void
     {
+        $this->connectCheck();
         if ($this->transaction_flag === false) {
             global $g_counter;
             $this->disp_sql .= "{{COUNTER " . $g_counter . "}}"
