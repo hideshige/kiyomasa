@@ -19,7 +19,7 @@ $first_memory = memory_get_usage() / 1024;
 if ((float)phpversion() < 8.4) {
     echo 'PHP OLD VERSION: ' . phpversion();
     exit(0);
-} else if (!extension_loaded('mbstring')) {
+} elseif (!extension_loaded('mbstring')) {
     echo 'mbstringがインストールされていません';
     exit(0);
 }

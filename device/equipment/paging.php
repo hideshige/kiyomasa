@@ -3,7 +3,7 @@
  * ページングモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.0.0
+ * @version  1.1.1.0
  * @package  device/equipment
  *
  */
@@ -48,16 +48,16 @@ class Paging
 
         //指定のページがない場合
         if ($page_arr['num'] < $page) {
-            trigger_error('ページがありません');
+            trigger_error('ページがありません。');
         }
 
         $page_arr['page'] = $page_arr['num'] < $page
             ? $page_arr['num'] : $page;
 
-        $page_arr['left'] = ($page_arr['page'] === 1 or $counts === 0)
+        $page_arr['left'] = ($page_arr['page'] === 1 || $counts === 0)
             ? null : $page_arr['page'] - 1;
         $page_arr['right'] =
-            ($page_arr['num'] === $page_arr['page'] or $counts === 0)
+            ($page_arr['num'] === $page_arr['page'] || $counts === 0)
             ? null : $page_arr['page'] + 1;
 
         $q = self::makeGet($get);

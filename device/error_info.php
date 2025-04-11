@@ -3,7 +3,7 @@
  * エラー情報モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.3.0
+ * @version  1.0.4.0
  * @package  device
  * 
  */
@@ -28,7 +28,7 @@ class ErrorInfo
         Log::error($error);
 
         // 開発環境の場合デバッグを表示
-        if (MODE >= MODE_DEBUG or ENV <= ENV_DEV) {
+        if (MODE >= MODE_DEBUG || ENV <= ENV_DEV) {
             //trace(sprintf('%s<br />発生場所 %s <strong>%s</strong>',
             //    $message, $short_file, $line));
             global $g_dump;

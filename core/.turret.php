@@ -97,7 +97,7 @@ class Turret
             header('Pragma: no-cache');
         }
         
-        if (S::$jflag === false and count($tpl)) {
+        if (S::$jflag === false && count($tpl)) {
             if (S::$header === []) {
                 header('Content-Type: text/html; charset=UTF-8');
             } else {
@@ -107,7 +107,7 @@ class Turret
             }
             echo View::templates($tpl, S::$disp ?? []);
         }
-        if (S::$jflag === true and is_array($res)) {
+        if (S::$jflag === true && is_array($res)) {
             $this->jsonDebug($res);
             header('Content-Type: application/json; charset=UTF-8');
             echo json_encode($res,

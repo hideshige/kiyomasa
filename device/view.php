@@ -11,6 +11,10 @@
  * S::$disp['REPLACE']['???'] = $txt;
  * として指定した場合、<!-- BEGEIN *** -->～<!-- END *** --->を無視して
  * テンプレートの{???}に$txtが置き換えられる。
+ * 
+ * S::$disp['SHOW']['???'] = 1;
+ * として指定した場合、<!-- BEGEIN ??? -->～<!-- END ??? --->を強制表示できる
+ * 
  * {ht:???}とするとHTMLをサニタイズできる
  * {htbr:???}とするとHTMLをサニタイズしたあと改行を反映できる
  * {sl:???}とするとHTMLとJavaScriptをサニタイズできる
@@ -19,7 +23,7 @@
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.1.11.1
+ * @version  1.2.0.0
  * @package  device
  * 
  */
@@ -28,6 +32,8 @@ namespace Php\Framework\Device;
 
 class View
 {
+    private static array $show = [];
+    
     /**
      * 複数のテンプレートファイルを読み込みデータを埋め込んで表示させる
      * @param array $tpls
@@ -57,7 +63,12 @@ class View
             $content = '';
             $open = self::open($tpl);
             if ($open) {
-                $content = self::setContent($open, $disp);
+                self::showDisp($disp);
+                $content =
+                    self::cleanVariable(
+                    self::match($disp,
+                    self::replace($disp, 
+                    self::elementMatch($open))));
             }
         } catch (\Error $e) {
             $info = new ErrorInfo;
@@ -69,15 +80,39 @@ class View
     }
     
     /**
-     * テキストにデータを埋め込む
-     * @param string $content テキスト内容
-     * @param array $disp テンプレートに埋め込むデータ配列
+     * テンプレートの強制表示
+     * @param array &$disp
+     * @return void
+     */
+    private static function showDisp(array &$disp): void
+    {
+        if (
+            isset($disp['SHOW'])
+            && is_array($disp['SHOW'])
+            && $disp['SHOW']
+        ) {
+            self::$show = $disp['SHOW'];
+            unset($disp['SHOW']);
+        }
+    }
+    
+    /**
+     * 値の入っていない{}を一掃する
+     * @param string $content
      * @return string
      */
-    public static function setContent(string $content, array $disp): string
+    private static function cleanVariable(string $content): string
     {
-        return self::match(
-            $disp, self::replace($disp, self::elementMatch($content)));
+        $match = [];
+        preg_match_all('/{(.*?)}/', $content, $match);
+        if (isset($match[1]) && $match[1]) {
+            foreach ($match[1] as $k => $v) {
+                if (!self::checkCode($v)) {
+                    $content = str_replace($match[0][$k], '', $content);
+                }
+            }
+        }
+        return $content;
     }
 
     /**
@@ -86,7 +121,7 @@ class View
      * @return string 読み込んだコンテンツ
      * @throws \Error
      */
-    public static function open(string $tpl): string
+    private static function open(string $tpl): string
     {
         $content = '';
         $add = strpos($tpl, '.') !== false ? '' : '.tpl';
@@ -114,7 +149,7 @@ class View
         //部分テンプレートの挿入
         $element_match = [];
         preg_match_all('/<!--\sINCLUDE\s(.*?)\s-->/', $content, $element_match);
-
+        
         if ($element_match[1]) {
             $element_match[1] = array_unique($element_match[1]);
             foreach ($element_match[1] as $ek => $element_name) {
@@ -122,6 +157,7 @@ class View
                 $content = str_replace($element_match[0][$ek],
                     $element, $content);
             }
+            // インクルードしたファイルの中に別のインクルードの指定がある場合の対処
             $content = self::elementMatch($content);
         }
         return $content;
@@ -133,7 +169,7 @@ class View
      * @param string $content
      * @return string
      */
-    private static function replace(array &$disp, string $content): string
+    private static function replace(array $disp, string $content): string
     {
         if (isset($disp['REPLACE'])) {
             foreach ($disp['REPLACE'] as $k => $v) {
@@ -150,28 +186,34 @@ class View
 
     /**
      * テンプレートから埋め込み部分を検索
-     * @param array|string $disp テンプレートに埋め込むデータ
+     * @param array $disp テンプレートに埋め込むデータ
      * @param string $content テンプレート
      * @return void
      */
-    private static function match($disp, string $content): string
+    private static function match(array $disp, string $content): string
     {
         $match = $match1 = $match2 = [];
         preg_match_all('/<!--\sBEGIN\s(.*?)\s-->/', $content, $match);
-
-        foreach ($match[1] as $name) {
-            $pattern = '/<!--\sBEGIN\s' . $name . '\s-->(.*)'
-                . '<!--\sEND\s' . $name . '\s-->/s';
-            preg_match_all($pattern, $content, $match1);
-            $tag_data = $original = isset($match1[1][0]) ? $match1[1][0] : '';
-
-            preg_match_all('/{(.*?)}/', $original, $match2);
-
-            if (isset($disp[$name])) {
-                $content = self::matchSet(
-                    $content, $original, $disp, $name, $tag_data, $match2);
-            } else if (isset($match1[0][0])) {
-                $content = str_replace($match1[0][0], '', $content);
+        
+        if (isset($match[1]) && $match[1]) {
+            foreach ($match[1] as $name) {
+                $pattern = '/<!--\sBEGIN\s' . $name . '\s-->(.*?)'
+                    . '<!--\sEND\s' . $name . '\s-->/s';
+                preg_match_all($pattern, $content, $match1);
+                
+                $tag_data = isset($match1[1][0]) ? $match1[1][0] : '';
+                preg_match_all('/{(.*?)}/', $tag_data, $match2);
+                
+                if (isset($disp[$name])) {
+                    $content = self::matchSet(
+                        $content, $tag_data, $disp, $name, $match2);
+                } elseif (
+                    isset($match1[0][0])
+                    && $match1[0][0]
+                    && !isset(self::$show[$name])
+                ) {
+                    $content = str_replace($match1[0][0], '', $content);
+                }
             }
         }
         return $content;
@@ -180,7 +222,7 @@ class View
     /**
      * テンプレートの埋め込み
      * @param string $content
-     * @param string $original
+     * @param string $tag_data
      * @param array $disp
      * @param string $name
      * @param string $tag_data
@@ -189,13 +231,13 @@ class View
      */
     private static function matchSet(
         string $content,
-        string $original,
+        string $tag_data,
         array $disp,
         string $name,
-        string $tag_data,
         array $match2
     ): string {
         $all_tag = '';
+        $original = $tag_data;
         $num = is_array($disp[$name]) ? count($disp[$name]) : 0;
         for ($i = 0; $i < $num; $i ++) {
             if (isset($disp[$name][$i])) {
@@ -207,47 +249,55 @@ class View
             $all_tag .= $tag_data;
             $tag_data = $original;
         }
-        $original = '<!-- BEGIN ' . $name . ' -->'
-            . $original . '<!-- END ' . $name . ' -->';
-        return str_replace(['<!-- BEGIN ' . $name . ' -->',
-            '<!-- END ' . $name . ' -->'], '',
-            str_replace($original, $all_tag, $content));
+        return str_replace('<!-- BEGIN ' . $name . ' -->'
+            . $tag_data . '<!-- END ' . $name . ' -->', $all_tag, $content);
     }
     
     /**
      * {}部のパラメーターの挿入
      * @param array $match 検索結果
-     * @param array|string $disp 表示データ
-     * @param string $tag_data タグデータ 参照渡し
+     * @param array $disp 表示データ
+     * @param string &$tag_data タグデータ 参照渡し
      * @return void
      */
     private static function matchSetParam(
         array $match,
-        $disp,
+        array $disp,
         string &$tag_data
     ): void {
         foreach ($match as $disp_data) {
             $data = str_replace(['htbr:', 'ht:', 'sl:', 'url:'], '', $disp_data);
             if (isset($disp[$data])) {
-                if (strstr($disp_data, 'ht:') !== false) {
+                if (str_contains($disp_data, 'ht:')) {
                     $change_data = htmlspecialchars($disp[$data]);
-                } else if (strstr($disp_data, 'htbr:') !== false) {
+                } elseif (strstr($disp_data, 'htbr:')) {
                     $change_data = nl2br(htmlspecialchars($disp[$data]));
-                } else if (strstr($disp_data, 'sl:') !== false) {
+                } elseif (strstr($disp_data, 'sl:')) {
                     $change_data = htmlspecialchars(str_replace(["\n", "\r"],
                         ' ', addslashes($disp[$data])), ENT_QUOTES);
-                } else if (strstr($disp_data, 'url:') !== false) {
+                } elseif (strstr($disp_data, 'url:')) {
                     $change_data = urlencode($disp[$data]);
                 } else {
                     $change_data = $disp[$data];
                 }
-            } else if (preg_match("/[ ,';=]/s", $disp_data)) {
+            } elseif (self::checkCode($disp_data)) {
                 // JSデータの{}は変更しない
                 $change_data = '{' . $disp_data . '}';
             } else {
+                // 値が設定されていない{}は消す
                 $change_data = '';
             }
             $tag_data = str_replace('{' . $disp_data . '}', $change_data, $tag_data);
         }
+    }
+    
+    /**
+     * コードかどうかの確認
+     * @param string $string
+     * @return bool
+     */
+    private static function checkCode(string $string): bool
+    {
+        return (preg_match("/[ ,'\";=]/s", $string) || $string === '');
     }
 }

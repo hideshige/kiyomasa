@@ -3,7 +3,7 @@
  * memcached モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.0.5.0
+ * @version  2.0.6.0
  * @package  device
  * 
  * DBで無期限データ用バックアップテーブルを準備しておく
@@ -62,7 +62,7 @@ class Mem
         }
 
         // memcachedが有効でない場合か有効期限の指定がない場合DBに値を保存
-        if ($this->active === false or $expire === 0) {
+        if ($this->active === false || $expire === 0) {
             $res = $this->dbSet($key, $var, $expire);
         }
         return $res;
@@ -133,8 +133,10 @@ class Mem
         S::$dbs->select(DB_NAME . '.memcached', '*', $where, 'memcached');
         S::$dbs->bind($param, 'memcached');
         $res = S::$dbs->fetchClass('\stdClass', 'memcached');
-        if (($res === false or ($res->temp_flag and 
-            strtotime($res->expires) < time())) === false) {
+        if (
+            ($res === false ||
+            ($res->temp_flag && strtotime($res->expires) < time())) === false
+        ) {
             $var = unserialize($res->memcached_value);
             $expire = $res->temp_flag === 1 ? time() + COOKIE_LIFETIME : 0;
             if ($this->active) {

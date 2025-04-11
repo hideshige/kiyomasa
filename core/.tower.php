@@ -3,7 +3,7 @@
  * タワー　オートロード、エラーハンドラなど土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.0
+ * @version  1.0.3.0
  * @package  core
  * 
  */
@@ -33,7 +33,7 @@ spl_autoload_register(
         }
         $file_name = SERVER_PATH . implode('/', $arr) . '.php';
         if (!file_exists($file_name)) {
-            if (MODE >= MODE_DEBUG or ENV <= ENV_DEV) {
+            if (MODE >= MODE_DEBUG || ENV <= ENV_DEV) {
                 trace();
             }
             throw new \Error('Class File Not Found: ' . $file_name);
@@ -57,14 +57,20 @@ set_error_handler(
     function (int $no, string $message, string $file, int $line): void
     {
         // ユーザエラーはユーザ用の例外へ
-        if ($no === E_USER_ERROR or
-            $no === E_USER_WARNING or $no === E_USER_NOTICE) {
+        if (
+            $no === E_USER_ERROR 
+            || $no === E_USER_WARNING
+            || $no === E_USER_NOTICE
+        ) {
             throw new UserEx($message, 10);
         }
         
         // 開発環境以外とライブラリ内のエラーは無視する
-        if ((ENV > ENV_DEV and MODE === MODE_NORMAL)
-            or strpos($file, '.library') !== false) {
+        if (
+            (ENV > ENV_DEV
+            && MODE === MODE_NORMAL)
+            || strpos($file, '.library') !== false
+        ) {
             return;
         }
         
@@ -81,7 +87,11 @@ set_error_handler(
         $info->set($type . ': ' . $message, $file, $line);
         
         // 警告と注意と非推奨以外は例外処理
-        if ($no !== E_NOTICE and $no !== E_DEPRECATED and $no !== E_WARNING) {
+        if (
+            $no !== E_NOTICE
+            && $no !== E_DEPRECATED
+            && $no !== E_WARNING
+        ) {
             throw new \Error('エラーハンドラからエラーをスローします', 10);
         }
     }

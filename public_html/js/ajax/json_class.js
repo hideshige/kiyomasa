@@ -24,7 +24,7 @@ var Js;
                         var jsonData = JSON.parse(objJson.responseText);
                         this.jsonDeploy(jsonData);
                     }
-                    else if (objJson.readyState === 4 && objJson.status === 504) {
+                    elseif (objJson.readyState === 4 && objJson.status === 504) {
                         window.alert("タイムアウトエラー");
                     }
                     return true;

@@ -3,7 +3,7 @@
  * 定義
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.3
+ * @version  1.0.1.4
  * @package  core
  */
 
@@ -17,7 +17,7 @@ $http_client_ip = filter_input(INPUT_SERVER, 'HTTP_CLIENT_IP');
 $http_x_forwarded_for = filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR');
 if ($http_client_ip){
     $ip = $http_client_ip;
-} else if ($http_x_forwarded_for) {
+} elseif ($http_x_forwarded_for) {
     $ip = $http_x_forwarded_for;
 } else {
     $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');

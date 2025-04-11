@@ -4,7 +4,7 @@
  * どこからでも呼び出しでき、プログラムの解析に役立てられる
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.0
+ * @version  1.1.2.0
  * @package  core
  */
 
@@ -47,8 +47,10 @@ function trace(string $id = ''): void
     end($backtrace);
     do {
         $cur = current($backtrace);
-        if (empty($cur['file']) or
-            preg_match('/\.router\.php$/', $cur['file'])) {
+        if (
+            empty($cur['file'])
+            || preg_match('/\.router\.php$/', $cur['file'])
+        ) {
             continue;
         }
         
@@ -58,8 +60,10 @@ function trace(string $id = ''): void
         $class_name = $match[2] ?? '-';
         if ($class_name !== '-') {
             $reflect = new ReflectionMethod($cur['class'], $cur['function']);
-        } else if (!str_contains($cur['function'], '{closure') and
-            $cur['function'] !== 'require') {
+        } elseif (
+            !str_contains($cur['function'], '{closure')
+            && $cur['function'] !== 'require'
+        ) {
             $reflect = new ReflectionFunction($cur['function']);
         } else {
             continue;

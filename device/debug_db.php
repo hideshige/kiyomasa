@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.12.0
+ * @version  2.1.12.1
  * @package  device
  * 
  */
@@ -133,7 +133,7 @@ class DebugDb extends Db
             $this->disp_sql .= sprintf(
                 "{{COUNTER %d}}SET {{AT}}@%s = {{NULL}}NULL;\n",
                 $g_counter, $name);
-        } else if (is_numeric($d_v)) {
+        } elseif (is_numeric($d_v)) {
             $this->disp_sql .= sprintf(
                 "{{COUNTER %d}}SET {{AT}}@%s = {{INT}}%s;\n",
                 $g_counter, $name, $d_v);

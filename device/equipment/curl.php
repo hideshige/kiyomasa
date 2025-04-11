@@ -3,7 +3,7 @@
  * cURL(カール)　モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.0.6.0
+ * @version  1.0.6.1
  * @package  device/equipment
  */
 
@@ -40,7 +40,7 @@ class Curl
         if ($data['content']) {
             if ($type === CURL_TYPE_XML) {
                 $data['content'] = simplexml_load_string($data['content']);
-            } else if ($type === CURL_TYPE_JSON) {
+            } elseif ($type === CURL_TYPE_JSON) {
                 $data['content'] = json_decode($data['content']);
             }
         }

@@ -22,7 +22,7 @@ class ErrorPage
     public function execute(): bool
     {
         $message = 'ページが見つかりません。';
-        if (isset($_SESSION['error_message']) and $_SESSION['error_message']) {
+        if (isset($_SESSION['error_message']) && $_SESSION['error_message']) {
             $message = $_SESSION['error_message'];
             unset($_SESSION['error_message']);
         } else {

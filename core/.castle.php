@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.8.1
+ * @version  1.4.9.0
  * @package  core
  * 
  */
@@ -34,7 +34,7 @@ class Castle
             S::$dbs = new $dbo(DB_SLAVE_SERVER, DB_SLAVE_USER,
                 DB_SLAVE_PASSWORD, DB_NAME, DB_DRIVER);
             
-            if (DB_MASTER_SERVER !== DB_SLAVE_SERVER and !S::$dbs->connect()) {
+            if (DB_MASTER_SERVER !== DB_SLAVE_SERVER && !S::$dbs->connect()) {
                 // スレーブが使えない場合、マスターを使う
                 S::$dbs = clone S::$dbm;
                 S::$dbm->connectCheck();
@@ -122,7 +122,7 @@ class Castle
             preg_replace('<^/' . $folder . '>', '', S::$get['url']));
         unset(S::$get['url']);
         S::$url += $url;
-        $pagename = (isset($url[0]) and $url[0] !== '') ? $url[0] : '';
+        $pagename = (isset($url[0]) && $url[0] !== '') ? $url[0] : '';
         return [$pagename, $folder];
     }
 }

@@ -28,7 +28,7 @@ if (ENV === ENV_PHP) {
     define('FROM_NAME', '');
     
     require_once('.debug.php');
-} else if (ENV === ENV_DEV) {
+} elseif (ENV === ENV_DEV) {
     // テスト環境
     ini_set('display_errors', 'On');
     define('SERVER_PATH', '/var/www/html/yoursite/');
@@ -118,5 +118,4 @@ $g_cache_flag = true;
 // URLをフォルダで分ける場合、この配列に追加する
 $g_folder = [];
 
-$g_debug = (MODE >= MODE_DEBUG and ENV <= ENV_DEV) ? true : false;
-
+$g_debug = (MODE >= MODE_DEBUG && ENV <= ENV_DEV) ? true : false;

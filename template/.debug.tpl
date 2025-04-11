@@ -271,7 +271,7 @@ var Js;
                 myArea.style.display = "block";
                 window.scrollTo(0, 0);
             }
-            else if (myArea && exitFlag === true) {
+            elseif (myArea && exitFlag === true) {
                 myArea.style.display = "none";
             }
         };

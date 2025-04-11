@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.10.0
+ * @version  2.1.11.0
  * @package  device
  * 
  */
@@ -158,8 +158,11 @@ class Db
         bool $replace = false,
         string $statement_id = 'stmt'
     ): void {
-        if (($statement_id === 'stmt' or !isset($this->stmt[$statement_id]))
-            and !empty($params)) {
+        if (
+            ($statement_id === 'stmt'
+            || !isset($this->stmt[$statement_id]))
+            && !empty($params)
+        ) {
             $this->connectCheck();
             $this->do[$statement_id] = 'insert';
             $this->name[$statement_id] = true;
@@ -193,7 +196,7 @@ class Db
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
-        if ($statement_id === 'stmt' or !isset($this->stmt[$statement_id])) {
+        if ($statement_id === 'stmt' || !isset($this->stmt[$statement_id])) {
             $this->connectCheck();
             $this->do[$statement_id] = 'select';
 
@@ -221,8 +224,11 @@ class Db
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
-        if (($statement_id === 'stmt' or !isset($this->stmt[$statement_id]))
-            and !empty($params)) {
+        if (
+            ($statement_id === 'stmt'
+            || !isset($this->stmt[$statement_id]))
+            && !empty($params)
+        ) {
             $this->connectCheck();
             $this->do[$statement_id] = 'update';
 
@@ -258,7 +264,7 @@ class Db
         string $where = '',
         string $statement_id = 'stmt'
     ): void {
-        if ($statement_id === 'stmt' or !isset($this->stmt[$statement_id])) {
+        if ($statement_id === 'stmt' || !isset($this->stmt[$statement_id])) {
             $this->connectCheck();
             $this->do[$statement_id] = 'delete';
 
@@ -408,7 +414,7 @@ class Db
             $this->bind_params = [];
             $i = 1;
             foreach ($params as $k => $v) {
-                if ($k === 0 and $this->do[$statement_id] === 'update') {
+                if ($k === 0 && $this->do[$statement_id] === 'update') {
                     // array_spliceで入れた0の配列キーをupdate_timeに変える
                     $k = 'update_time';
                 }

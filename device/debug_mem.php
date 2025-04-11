@@ -3,7 +3,7 @@
  * memcached モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  1.0.2.0
+ * @version  1.0.3.0
  * @package  device
  * 
  */
@@ -21,7 +21,7 @@ class DebugMem extends Mem
     {
         if (!extension_loaded('memcached')) {
             $this->disp_mem .= "Memcached is not installed. Execute it using DB.\n";
-        } else if ($this->active === false) {
+        } elseif ($this->active === false) {
             $this->disp_mem .= "Memcached is down. Execute it using DB.\n";
         }
         parent::__construct();
@@ -54,7 +54,7 @@ class DebugMem extends Mem
     public function get(string $key)
     {
         $var = parent::get($key);
-        if ($this->active and $var !== false) {
+        if ($this->active && $var !== false) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf("■GET %s\n[K]%s [V]%s\n",
@@ -71,7 +71,7 @@ class DebugMem extends Mem
     public function delete(string $key)
     {
         $check = parent::delete($key);
-        if ($check and $this->active) {
+        if ($check && $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf("■DELETE %s\n[K]%s\n", $dump, $key);
@@ -87,7 +87,7 @@ class DebugMem extends Mem
     public function flush(bool $db_flag = false)
     {
         $check = parent::flush($db_flag);
-        if ($check and $this->active) {
+        if ($check && $this->active) {
             $bt = debug_backtrace();
             $dump = sprintf("%s (%s)", $bt[0]['file'], $bt[0]['line']);
             $this->disp_mem .= sprintf("■FLUSH %s\n", $dump);
