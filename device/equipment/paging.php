@@ -3,7 +3,7 @@
  * ページングモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.1.0
+ * @version  1.1.2.0
  * @package  device/equipment
  *
  */
@@ -15,7 +15,8 @@ use Php\Framework\Device as D;
 class Paging
 {
     public static $void_param = ['page']; // 開いているURLのパラメータをリンク先に継承しないパラメータ
-    public static $link_tag = '<li[ACTIVE_CLASS]><a href="[URL_PARAM]?[GET_PARAM]&page=[PAGE_NUM]">[PAGE_NUM]</a></li>';
+    public static $link_tag = '<li[ACTIVE_CLASS]><a href="[URL_PARAM]?[GET_PARAM]&[PARAM_NAME]=[PAGE_NUM]">[PAGE_NUM]</a></li>';
+    public static $param_name = 'page'; // ページ番号を示すURLのパラメータ名
     
     /**
      * ページング処理
@@ -65,7 +66,6 @@ class Paging
 
         return $page_arr;
     }
-
 
     /**
      * ページングのリンクにGET値を引き継ぐ
@@ -132,8 +132,9 @@ class Paging
             for ($i = 1; $i <= $link_count; $i ++) {
                 $aclass = ($p === $page_arr['page']) ? ' class="on"' : '';
                 $paging_tag .= str_replace(
-                    ['[GET_PARAM]', '[PAGE_NUM]', '[ACTIVE_CLASS]', '[URL_PARAM]'],
-                    [trim($q, '?'), $p, $aclass, $url], self::$link_tag);
+                    ['[GET_PARAM]', '[PAGE_NUM]', '[ACTIVE_CLASS]', '[URL_PARAM]', '[PARAM_NAME]'],
+                    [trim($q, '?'), $p, $aclass, $url, self::$param_name],
+                    self::$link_tag);
                 $p ++;
             }
         }
