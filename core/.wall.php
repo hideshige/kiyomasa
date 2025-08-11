@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.0.8.0
+ * @version  1.1.0.0
  * @package  core
  * 
  */
@@ -15,6 +15,7 @@ use Php\Framework\Device\{S, View};
 trait Wall
 {
     private array $debug_json = []; // JSONデバッグ用
+    private array $buffer = []; // 出力バッファ用
     
     /**
      * デストラクタ
@@ -45,26 +46,6 @@ trait Wall
         }
         
         $disp = '';
-        ob_start();
-        if (S::$post) {
-            var_dump(S::$post);
-        }
-        $post = ob_get_clean();
-        ob_start();
-        if (S::$get) {
-            var_dump(S::$get);
-        }
-        $get = ob_get_clean();
-        ob_start();
-        if (S::$url) {
-            var_dump(S::$url);
-        }
-        $url = ob_get_clean();
-        ob_start();
-        if ($_FILES) {
-            var_dump($_FILES);
-        }
-        $files = ob_get_clean();
         ob_start();
         if ($_COOKIE) {
             var_dump($_COOKIE);
@@ -111,10 +92,10 @@ trait Wall
             'db_slave' => $this->modDebugSql(S::$dbs->getSql()),
             'db_master' => $this->modDebugSql(S::$dbm->getSql()),
             'memcached' => S::$mem->getDispMem(),
-            'post' => $this->modDebugDump((string)$post),
-            'get' => $this->modDebugDump((string)$get),
-            'url' => $this->modDebugDump((string)$url),
-            'files' => $this->modDebugDump((string)$files),
+            'post' => $this->modDebugDump((string)$this->buffer['post']),
+            'get' => $this->modDebugDump((string)$this->buffer['get']),
+            'url' => $this->modDebugDump((string)$this->buffer['url']),
+            'files' => $this->modDebugDump((string)$this->buffer['files']),
             'session' => $this->modDebugDump((string)$session),
             'cookie' => $this->modDebugDump((string)$cookie),
             'namespace' => NAME_SPACE,
@@ -150,6 +131,34 @@ trait Wall
             $disp = View::template('.debug.tpl', $view);
         }
         return $disp;
+    }
+    
+    /**
+     * 出力バッファのセット
+     */
+    public function setBuffer()
+    {
+        $this->buffer = [];
+        ob_start();
+        if (S::$post) {
+            var_dump(S::$post);
+        }
+        $this->buffer['post'] = ob_get_clean();
+        ob_start();
+        if (S::$get) {
+            var_dump(S::$get);
+        }
+        $this->buffer['get'] = ob_get_clean();
+        ob_start();
+        if (S::$url) {
+            var_dump(S::$url);
+        }
+        $this->buffer['url'] = ob_get_clean();
+        ob_start();
+        if ($_FILES) {
+            var_dump($_FILES);
+        }
+        $this->buffer['files'] = ob_get_clean();
     }
     
     /**
