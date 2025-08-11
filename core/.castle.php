@@ -3,7 +3,7 @@
  * キャッスル　土台部
  *
  * @author   Sawada Hideshige
- * @version  1.4.10.0
+ * @version  1.4.9.0
  * @package  core
  * 
  */
@@ -52,9 +52,6 @@ class Castle
             S::$get = $turret->trim($_GET);
             
             $this->open($turret);
-            
-            // 初期出力バッファのセット
-            $turret->setBuffer();
         } catch (\Error|\PDOException $e) {
             $this->error($e);
         }

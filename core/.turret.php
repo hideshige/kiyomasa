@@ -3,7 +3,7 @@
  * タレット　土台強化部
  *
  * @author   Sawada Hideshige
- * @version  1.0.12.0
+ * @version  1.0.14.0
  * @package  core
  * 
  */
@@ -61,6 +61,9 @@ class Turret
             $class_name = NAME_SPACE . '\Gate\\' . trim(
                 str_replace(' ', '', ucwords(str_replace(
                 ['_', '/'], [' ', '\\'], $folder . $pagename))));
+            
+            // 初期出力バッファのセット
+            $this->setBuffer();
             
             $this->gate($class_name);
         } catch (Mainte $e) {

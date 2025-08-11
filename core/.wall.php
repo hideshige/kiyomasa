@@ -3,7 +3,7 @@
  * ウォール　デバッグ部
  *
  * @author   Sawada Hideshige
- * @version  1.1.0.0
+ * @version  1.1.1.0
  * @package  core
  * 
  */
@@ -135,30 +135,34 @@ trait Wall
     
     /**
      * 出力バッファのセット
+     * @global bool $g_debug
      */
     public function setBuffer()
     {
-        $this->buffer = [];
-        ob_start();
-        if (S::$post) {
-            var_dump(S::$post);
+        global $g_debug;
+        if ($g_debug) {
+            $this->buffer = [];
+            ob_start();
+            if (S::$post) {
+                var_dump(S::$post);
+            }
+            $this->buffer['post'] = ob_get_clean();
+            ob_start();
+            if (S::$get) {
+                var_dump(S::$get);
+            }
+            $this->buffer['get'] = ob_get_clean();
+            ob_start();
+            if (S::$url) {
+                var_dump(S::$url);
+            }
+            $this->buffer['url'] = ob_get_clean();
+            ob_start();
+            if ($_FILES) {
+                var_dump($_FILES);
+            }
+            $this->buffer['files'] = ob_get_clean();
         }
-        $this->buffer['post'] = ob_get_clean();
-        ob_start();
-        if (S::$get) {
-            var_dump(S::$get);
-        }
-        $this->buffer['get'] = ob_get_clean();
-        ob_start();
-        if (S::$url) {
-            var_dump(S::$url);
-        }
-        $this->buffer['url'] = ob_get_clean();
-        ob_start();
-        if ($_FILES) {
-            var_dump($_FILES);
-        }
-        $this->buffer['files'] = ob_get_clean();
     }
     
     /**
