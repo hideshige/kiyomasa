@@ -3,7 +3,7 @@
  * データベース モジュール（デバッグ用）
  *
  * @author   Sawada Hideshige
- * @version  2.1.12.1
+ * @version  2.1.13.1
  * @package  device
  * 
  */
@@ -112,7 +112,7 @@ class DebugDb extends Db
         // 実行したSQL文と実行時間、変更行数
         global $g_counter;
         $this->disp_sql .= sprintf(
-            "{{COUNTER %d}}%s; {{TIME}} (%s秒) [行数 %d]\n",
+            "{{COUNTER %d}}%s;\n {{TIME}} (%s秒) [行数 %d]\n",
             $g_counter, $this->sql, $qt,
             $this->stmt[$statement_id]->rowCount());
         $g_counter ++;

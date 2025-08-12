@@ -3,7 +3,7 @@
  * データベース モジュール
  *
  * @author   Sawada Hideshige
- * @version  2.1.11.0
+ * @version  2.1.12.0
  * @package  device
  * 
  */
@@ -76,6 +76,7 @@ class Db
                 \PDO::MYSQL_ATTR_LOCAL_INFILE => true,
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->connect_flag = true;
+            $this->connect->exec('SET NAMES utf8mb4 COLLATE utf8mb4_0900_ai_ci');
             $res = true;
         } catch (\PDOException $e) {
             Log::error($e->getMessage());
