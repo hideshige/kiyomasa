@@ -3,7 +3,7 @@
  * 定義
  *
  * @author   Sawada Hideshige
- * @version  1.0.1.4
+ * @version  1.0.2.0
  * @package  core
  */
 
@@ -24,9 +24,6 @@ if ($http_client_ip){
 }
 define('IP_ADDRESS', $ip);
 define('USER_AGENT', filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'));
-//define('MOBILE_FLAG', preg_match(
-//    '/(iPhone|iPod|Android|BlackBerry|Windows\sPhone)/',
-//    USER_AGENT) ? true : false);
 define('REFERER', filter_input(INPUT_SERVER, 'HTTP_REFERER'));
 
 // UTF8 BOM文字列
@@ -48,3 +45,34 @@ $g_change_chara = [];
 $g_change_chara['&#36;'] = '$';// $マークの後に整数が来ると$マークと整数が消えてしまうためISO数値コードに変換しておく
 $g_change_chara['&#xFF5E;'] = '～';// 文字化けしやすいためISO数値コードに変換しておく
 $g_change_chara['&#92;'] = '\\';// \マーク
+
+// 隔離性水準
+// 処理内容に応じて使い分けること
+const READ_UNCOMMITTED = 0;
+// 「コミットされていないものを読み込む」
+// 他のトランザクションを無視して読み取るというもの
+// 他のトランザクションが編集中のデータを読み込んでしまう現象が発生する(ダーティリードという)
+// 待ちが発生しないので一番処理速度が早い
+const READ_COMMITTED = 1;
+// 「コミットされているものを読み込む」
+// 読み取るデータは、他のトランザクションで変更できるが、コミットされるまでは変更前の状態を読み込み、コミットされると変更後の状態を読み込む
+// 繰り返し読み込みができないから、読み込みの再現性がない(ファジーリードという)
+// READ_COMMITTEDでは、ダーティリードを防止することができる
+const REPEATABLE_READ = 2;
+// 「繰り返し読み込みを可能にする」
+// 読み取るデータを占有ロックして、他のトランザクションで変更できないようにする
+// 他のトランザクションはデータの追加はできるから、ないはずのデータが出現する矛盾が発生する(ファントムリードという)
+// REPEATABLE_READでは、ダーティリードとファジーリードを防止することができる
+const SERIALIZABLE = 3;
+// 「直列化を可能にする」
+// 関係するテーブルを共有ロック・占有ロックして実行する
+// SERIALIZABLEでは、ダーティリードとファジーリードとファントムリードを防止することができる
+// 処理を直列に並べて順々に実行していくので、並行処理ができず、他のトランザクションに待ちが発生するのがデメリット
+// 絶対にデータに矛盾が出ては困る処理に利用する
+// 割と早く終わることがわかっている処理のみに使う（トランザクション内にループ処理があるときは使うべきではない）
+
+// 検索タイプ
+const PARTIAL_MATCH = 0;
+const FORWARD_MATCH = 1;
+const EXACT_MATCH = 2;
+const CRYPT_MATCH = 3;
