@@ -17,9 +17,12 @@ DBはMySQL(MariaDB)、PostgreSQLで動作確認済み。
 
 root/  
 ├ core/  
+├ data/  
 ├ device/  
-├ gate/  
-├ log/  
+├ gate/ 
+├ interface/   
+├ log/
+├ module/    
 ├ public_html/  
 ├ shell/  
 └ template/  
@@ -32,15 +35,16 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ *.castle.php     WEBプログラム・コントローラ  
 │ ├ *.debug.php      デバッグ用関数  
 │ ├ *.define.php     定義ファイル  
-│ ├ (*.router.php)   PHPビルトインサーバを利用する場合に必要な設定ファイル  
+│ ├ *.router.php     PHPビルトインサーバを利用する場合に必要な設定ファイル  
 │ ├ *.tower.php      オートロード、エラーハンドラに関するファイル  
 │ ├ *.turret.php     ビュー関連のコントローラ  
 │ ├ *.wall.php       デバッグ関連のコントローラ  
 │ ├ *mode.php        モード定数ファイル  
 │ ├ config.php       プロジェクトの設定ファイル  
 │ └ env.php          プロジェクトの環境設定ファイル（Gitでは更新されない）  
+├ *data/             データベース用モジュールを格納  
 ├ *device/            様々の便利機能を格納（変更不可）  
-│ ├ (*equipment/)    枠組み固有の便利機能を格納  
+│ ├ *equipment/      枠組み固有の便利機能を格納  
 │ ├ *db.php          データベースモジュール  
 │ ├ *debug_db.php    デバッグ用データベースモジュール  
 │ ├ *error_info.php  エラー情報モジュール  
@@ -52,24 +56,20 @@ root/                  ルートディレクトリはプロジェクト名に変
 │ ├ *user_ex.php     ユーザ操作による例外処理  
 │ └ *view.php        テンプレートに値を入れて表示するモジュール  
 ├ gate/               URLより実行されるプログラムファイルを格納  
-├ (interfaces/)       インタフェースを格納  
+├ interfaces/         インタフェースを格納  
 ├ log/                ログを格納（Gitでは更新されない）  
 │ └ batch/           シェルで実行した結果ログを格納  
-├ (module/)          プロジェクト共通プログラムを格納  
+├ module/            プロジェクト共通プログラムを格納  
 ├ public_html/        WEBルートディレクトリ  
 │ ├ css/             プロジェクトのスタイルシートを格納  
-│ ├ js/              プロジェクトのJavaScriptを格納  
-│ │ ├ (ajax/)       Ajax関連ファイル  
-│ │ └ (base.js)     JavaScriptの基本ファイル  
-│ ├ (.htaccess)      サーバ設定ファイル（WEBサーバがApacheの場合に限る）  
+│ ├ js/              プロジェクトのJavaScriptを格納   
+│ ├ .htaccess        サーバ設定ファイル（WEBサーバがApacheの場合に限る）  
 │ └ *index.php       最初にアクセスするファイル。変更不可  
 ├ shell/              プロジェクトのシェルプログラムを格納  
 ├ template/           プロジェクトのテンプレートを格納  
 │ ├ include/         プロジェクトの共通部分テンプレートを格納  
 │ └ *.debug.tpl      デバッグ表示用のテンプレート  
-├ (template_mobile/)  プロジェクトの携帯用テンプレートを格納  
-├ (.library/)         ライブラリ（ここで警告エラーが出ても例外を投げない）  
-└ (.gitignore)        Gitを利用する場合に必要な設定ファイル  
+└ .gitignore         Gitを利用する場合に必要な設定ファイル  
 
 補足  
 ()で囲っているディレクトリおよびファイルは任意のため必要に応じて利用する  
