@@ -128,7 +128,7 @@ trait Wall
             $view['DEBUG'][0]['DEBUG_INCLUDE'][0] = $debug;
             $view['REPLACE']['process'] = $process;
             $view['REPLACE']['navi_id'] = $navi_id;
-            $disp = View::template('.debug.tpl', $view);
+            $disp = View::template('include/.debug.tpl', $view);
         }
         return $disp;
     }

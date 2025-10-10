@@ -19,11 +19,13 @@
  * {htbr:???}とするとHTMLをサニタイズしたあと改行を反映できる
  * {sl:???}とするとHTMLとJavaScriptをサニタイズできる
  * {url:???}とするとURLエンコードできる
+ * 
+ * {co:CONSTANT_NAME}とすると定数CONSTANT_NAMEを代入できる
  *
  * <!-- INCLUDE *** -->には指定のテンプレートが挿入される。
  * 
  * @author   Sawada Hideshige
- * @version  1.2.2.0
+ * @version  1.3.2.0
  * @package  device
  * 
  */
@@ -67,8 +69,9 @@ class View
                 $content =
                     self::cleanVariable(
                     self::match($disp,
-                    self::replace($disp, 
-                    self::elementMatch($open))));
+                    self::replace($disp,
+                    self::setConstant(
+                    self::elementMatch($open)))));
             }
         } catch (\Error $e) {
             $info = new ErrorInfo;
@@ -103,34 +106,51 @@ class View
      */
     private static function cleanVariable(string $content): string
     {
-        $script = [];
-        $match1 = $match2 = $match3 = [];
+        // スクリプト部を除外
+        $exclusion = self::checkExclusion(
+            '/<script(.*?)<\/script>/s', $content);
+        if (ENV !== ENV_PRO) {
+            // dump部を除外
+            $exclusion2 = self::checkExclusion(
+                '/<pre class="fw_debug_dump">(.*?)<\/pre>/s', $content);
+            $exclusion = $exclusion + $exclusion2;
+        }
         
-        // スクリプト部の取得
-        $pattern = '/<script(.*?)<\/script>/s';
+        // 全体の置換
+        $match = [];
+        preg_match_all('/{(.*?)}/', $content, $match);
+        if (isset($match[1]) && $match[1]) {
+            foreach ($match[1] as $k => $v) {
+                if (!self::checkCode($v) && !isset($exclusion[$v])) {
+                    $content = str_replace($match[0][$k], '', $content);
+                }
+            }
+        }
+        return $content;
+    }
+    
+    /**
+     * 除外する項目を確認
+     * @param string $pattern
+     * @param string $content
+     * @return array
+     */
+    private static function checkExclusion(string $pattern, string $content): array
+    {
+        $exclusion = $match1 = $match2 = [];
         preg_match_all($pattern, $content, $match1);
+        
         if (isset($match1[1]) && $match1[1]) {
             foreach ($match1[1] as $v) {
                 preg_match_all('/{(.*?)}/', $v, $match2);
                 if (isset($match2[1]) && $match2[1]) {
                     foreach ($match2[1] as $v) {
-                        $script[$v] = 1;
+                        $exclusion[$v] = 1;
                     }
                 }
             }
         }
-        
-        // 全体の取得
-        preg_match_all('/{(.*?)}/', $content, $match3);
-        if (isset($match3[1]) && $match3[1]) {
-            foreach ($match3[1] as $k => $v) {
-                // スクリプトを除外
-                if (!self::checkCode($v) && !isset($script[$v])) {
-                    $content = str_replace($match3[0][$k], '', $content);
-                }
-            }
-        }
-        return $content;
+        return $exclusion;
     }
 
     /**
@@ -198,6 +218,35 @@ class View
                 $content = str_replace('{' . $k . '}', $v ?? '', $content);
             }
             unset($disp['REPLACE']);
+        }
+        return $content;
+    }
+    
+    /**
+     * 定数のセット
+     * @param string $content
+     * @return string
+     */
+    private static function setConstant(string $content): string
+    {
+        $const = $match = [];
+        preg_match_all('/{co:(.*?)}/', $content, $match);
+        
+        try {
+            if (isset($match[1]) && $match[1]) {
+                foreach ($match[1] as $k => $v) {
+                    if (!isset($const[$v])) {
+                        $content = str_replace(
+                            $match[0][$k], is_array(constant($v))
+                            ? print_r(constant($v), true)
+                            : (string)constant($v), $content);
+                    }
+                    $const[$v] = 1;
+                }
+            }
+        } catch (\Error $e) {
+            // ログに記録して処理は継続
+            Log::error($e->getMessage());
         }
         return $content;
     }
