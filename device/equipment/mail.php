@@ -3,7 +3,7 @@
  * メール モジュール
  *
  * @author   Sawada Hideshige
- * @version  1.1.3.0
+ * @version  1.1.5.0
  * @package  device/equipment
  *
  */
@@ -23,6 +23,7 @@ class Mail
      * @param string $body 本文
      * @param string $cc CC
      * @param array $attachment_paths 添付ファイルパス
+     * @param bool $html_flag HTMLメールの場合TRUE
      * @return bool
      * @throws \Error
      */
@@ -31,7 +32,8 @@ class Mail
         string $subject,
         string $body,
         string $cc = '',
-        array $attachment_paths = []
+        array $attachment_paths = [],
+        bool $html_flag = false
     ): bool {
         // メール送信先
         $to2 = self::separate(str_replace(["\n", "\r"], '', $to));
@@ -46,10 +48,11 @@ class Mail
         if ($cc) {
             $headers .= 'CC: ' . self::separate($cc) . "\n";
         }
+        $type = $html_flag ? 'html' : 'plain';
 
-        if ($attachment_paths == []) {
+        if ($attachment_paths === []) {
             // テキストのみの場合
-            $headers .= "Content-Type: text/plain;charset=utf8 \n";
+            $headers .= "Content-Type: text/$type; charset=utf8 \n";
             // メール本文
             $mail_body = $body;
         } else {
@@ -59,7 +62,7 @@ class Mail
             $headers .= "Content-Type: multipart/mixed; boundary=\"$boundary\"\n";
             // メール本文
             $mail_body = "--$boundary\n";
-            $mail_body .= "Content-Type: text/plain; charset=utf8 \n";
+            $mail_body .= "Content-Type: text/$type; charset=utf8 \n";
             $mail_body .= "Content-Transfer-Encoding: 7bit \n\n";
             $mail_body .= $body . "\n";
             // 添付ファイル読み込み
@@ -103,7 +106,7 @@ class Mail
         if (isset($match[2][0])) {
             $arr = [];
             foreach ($match[1] as $k => $v) {
-                $arr[] = sprintf("%s<%s>",
+                $arr[] = sprintf("%s<%s>\n ",
                     mb_encode_mimeheader(trim($v), 'utf8', 'B'),
                     $match[2][$k]);
             }
