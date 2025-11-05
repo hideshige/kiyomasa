@@ -3,7 +3,7 @@
  * $_SESSION変数を使ってDBに保存可能にするセッションモジュール
  *
  * @author   Sawada Hideshige
- * @version  1.2.1.0
+ * @version  1.2.2.0
  * @package  device
  * 
  * セッションの保存方法は3種類から選べる
@@ -41,6 +41,7 @@ class Session
     {
         global $g_session_flag;
         $g_session_flag = true;
+        ini_set('session.serialize_handler', 'php_serialize');
         $handler = new sessionHandlerMem();
         session_set_save_handler($handler, false);
         
