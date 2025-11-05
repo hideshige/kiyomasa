@@ -94,6 +94,9 @@ const ENV_STA = 2; // ステージング環境
 const ENV_DEV = 1; // 開発環境
 const ENV_PHP = 0; // ビルトインサーバ環境
 const ENV = ENV_PHP;
+
+const ENV_PATH = '/var/www/html'; // 自分の環境
+const ENV_DATA_PASSWORD = ''; // 自分のMySQLのrootパスワード
 ```
 
 4. /var/www/html/project_x/core/env.phpを以下の内容で作成する  
